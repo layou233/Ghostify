@@ -1,0 +1,20 @@
+package com.launium.ghostify.client.mixin;
+
+import com.launium.ghostify.client.feature.LifeSaverTimer;
+import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
+import net.minecraft.network.protocol.common.ClientboundPingPacket;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Mixin(ClientCommonPacketListenerImpl.class)
+public class MixinClientCommonPacketListenerImpl {
+    @Inject(method = "handlePing", at = @At("TAIL"))
+    public void ghostify$handlePing(ClientboundPingPacket packet, CallbackInfo ci) {
+        // act as S32PacketConfirmTransaction (aka ContainerAck)
+        // since it's removed in 1.17 but converted to ping by ViaVersion
+        // see ViaVersion's ClientboundPackets1_16_2.CONTAINER_ACK usage
+        LifeSaverTimer.instance.onServerTick();
+    }
+}
