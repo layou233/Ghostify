@@ -11,6 +11,9 @@
 
 -keepclassmembers class * {
     *** on*(...);
+    void method_***(***);
+    void afterTick(...);
+    int compareTo(...);
 }
 
--repackageclasses lau4sk1d
+-repackageclasses lau4sk1d.ghostify

@@ -71,7 +71,7 @@ public class LifeSaverTimer implements ClientReceiveMessageEvents.Game {
         GhostifyClient.island.show(LifeSaverTimerContainer.instance);
     }
 
-    public void onServerTick() {
+    public void whenServerTick() {
         if (invincibleTicks > 0) invincibleTicks--;
     }
 

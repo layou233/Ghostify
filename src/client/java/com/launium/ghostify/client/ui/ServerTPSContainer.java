@@ -18,7 +18,7 @@ public class ServerTPSContainer implements IContainer, ClientTickEvents.StartTic
     private long lastWorldLoad;
     private float tps = 20F;
 
-    public void onClientboundSetTime() {
+    public void whenClientboundSetTime() {
         tps = 20_000F / (Util.getMillis() - lastTickTimestamp);
         if (tps > 20F) tps = 20F;
         if (tps < 16F) {
@@ -27,7 +27,7 @@ public class ServerTPSContainer implements IContainer, ClientTickEvents.StartTic
         lastTickTimestamp = Util.getMillis();
     }
 
-    public void onRespawn() {
+    public void whenRespawn() {
         lastWorldLoad = Util.getMillis();
         GhostifyClient.island.show(this);
     }

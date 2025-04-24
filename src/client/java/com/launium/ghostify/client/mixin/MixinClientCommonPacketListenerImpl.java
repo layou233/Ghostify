@@ -11,10 +11,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ClientCommonPacketListenerImpl.class)
 public class MixinClientCommonPacketListenerImpl {
     @Inject(method = "handlePing", at = @At("TAIL"))
-    public void ghostify$handlePing(ClientboundPingPacket packet, CallbackInfo ci) {
+    private void ghostify$handlePing(ClientboundPingPacket packet, CallbackInfo ci) {
         // act as S32PacketConfirmTransaction (aka ContainerAck)
         // since it's removed in 1.17 but converted to ping by ViaVersion
         // see ViaVersion's ClientboundPackets1_16_2.CONTAINER_ACK usage
-        LifeSaverTimer.instance.onServerTick();
+        LifeSaverTimer.instance.whenServerTick();
     }
 }
