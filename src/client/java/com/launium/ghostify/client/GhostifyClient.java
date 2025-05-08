@@ -27,10 +27,10 @@ public class GhostifyClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         HudRenderCallback.EVENT.register(island);
-        ClientTickEvents.START_CLIENT_TICK.register(GhostPickaxe.instance);
-        ClientTickEvents.START_CLIENT_TICK.register(ServerTPSContainer.instance);
+        ClientTickEvents.START_CLIENT_TICK.register(GhostPickaxe.INSTANCE);
+        ClientTickEvents.START_CLIENT_TICK.register(ServerTPSContainer.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(ClientTaskScheduler::whenClientStartTick);
-        ClientReceiveMessageEvents.GAME.register(LifeSaverTimer.instance);
+        ClientReceiveMessageEvents.GAME.register(LifeSaverTimer.INSTANCE);
         ClientReceiveMessageEvents.GAME.register(new SpiritPetWarning());
         ClientReceiveMessageEvents.GAME.register(new AutoPetNotification());
         AbstractExperimentSolver.init();
@@ -51,12 +51,12 @@ public class GhostifyClient implements ClientModInitializer {
                                             }))))
                     .then(literal("resetLifeTimer")
                             .executes(context -> {
-                                LifeSaverTimer.instance.reset();
+                                LifeSaverTimer.INSTANCE.reset();
                                 return 0;
                             }))
                     .then(literal("tps")
                             .executes(context -> {
-                                ServerTPSContainer.instance.whenRespawn();
+                                ServerTPSContainer.INSTANCE.whenRespawn();
                                 return 0;
                             }));
             var command = dispatcher.register(builder);

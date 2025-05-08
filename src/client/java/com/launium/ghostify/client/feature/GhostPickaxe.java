@@ -19,7 +19,7 @@ import org.lwjgl.glfw.GLFW;
 import java.util.HashSet;
 
 public class GhostPickaxe implements ClientTickEvents.StartTick {
-    public static final GhostPickaxe instance = new GhostPickaxe();
+    public static final GhostPickaxe INSTANCE = new GhostPickaxe();
 
     public static final KeyMapping GHOST_PICKAXE_KEY = KeyBindingHelper.registerKeyBinding(
             new KeyMapping("key.ghostify.ghost_pickaxe", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, KeyMapping.CATEGORY_GAMEPLAY)

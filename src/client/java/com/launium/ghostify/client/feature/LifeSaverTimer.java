@@ -14,7 +14,7 @@ import net.minecraft.world.item.component.ItemLore;
 import java.util.Arrays;
 
 public class LifeSaverTimer implements ClientReceiveMessageEvents.Game {
-    public static final LifeSaverTimer instance = new LifeSaverTimer();
+    public static final LifeSaverTimer INSTANCE = new LifeSaverTimer();
 
     public enum LifeSavers {
         BONZO_MASK("Bonzo's Mask", 360_000, true), // based on catacomb level

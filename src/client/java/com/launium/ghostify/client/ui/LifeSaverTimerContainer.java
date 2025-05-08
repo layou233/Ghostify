@@ -18,9 +18,9 @@ public class LifeSaverTimerContainer implements IContainer {
 
     @Override
     public boolean isActive() {
-        if (LifeSaverTimer.instance.invincibleTicks > 0) return true;
+        if (LifeSaverTimer.INSTANCE.invincibleTicks > 0) return true;
         long now = Util.getMillis();
-        for (long t : LifeSaverTimer.instance.availableTimestamp) {
+        for (long t : LifeSaverTimer.INSTANCE.availableTimestamp) {
             if (t > now) return true;
         }
         return false;
@@ -28,7 +28,7 @@ public class LifeSaverTimerContainer implements IContainer {
 
     @Override
     public int getLevel() {
-        return LifeSaverTimer.instance.invincibleTicks > 0 ? ContainerLevel.EMERGENCY : ContainerLevel.BACKGROUND;
+        return LifeSaverTimer.INSTANCE.invincibleTicks > 0 ? ContainerLevel.EMERGENCY : ContainerLevel.BACKGROUND;
     }
 
     private ArrayList<TextElement> textElements;
@@ -36,12 +36,12 @@ public class LifeSaverTimerContainer implements IContainer {
     @Override
     public void prepareRender() {
         ArrayList<TextElement> elements = new ArrayList<>(1 + LifeSaverTimer.LifeSavers.values().length);
-        int invincibleTicks = LifeSaverTimer.instance.invincibleTicks;
+        int invincibleTicks = LifeSaverTimer.INSTANCE.invincibleTicks;
         if (invincibleTicks > 0) {
-            elements.add(new TextElement(LifeSaverTimer.instance.lastTriggered.name + " lasts for " + invincibleTicks + " ticks").color(0xFFFFB4AB));
+            elements.add(new TextElement(LifeSaverTimer.INSTANCE.lastTriggered.name + " lasts for " + invincibleTicks + " ticks").color(0xFFFFB4AB));
         }
         long now = Util.getMillis();
-        long[] availableTimestamp = LifeSaverTimer.instance.availableTimestamp;
+        long[] availableTimestamp = LifeSaverTimer.INSTANCE.availableTimestamp;
         IntStream.range(0, availableTimestamp.length)
                 .filter(i -> availableTimestamp[i] > now)
                 .mapToObj(i -> Pair.of(LifeSaverTimer.LifeSavers.values()[i], availableTimestamp[i] - now))

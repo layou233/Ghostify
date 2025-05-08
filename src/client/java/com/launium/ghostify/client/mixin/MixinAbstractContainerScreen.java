@@ -17,13 +17,15 @@ public abstract class MixinAbstractContainerScreen {
     @WrapMethod(method = "slotClicked")
     private void ghostify$hijackSlotClick(Slot slot, int slotId, int mouseButton, ClickType type, Operation<Void> original) {
         if (slot != null && slot.index == 49 && AbstractExperimentSolver.ACTIVE_SOLVER != null) {
-            if (Util.getMillis() - AbstractExperimentSolver.ACTIVE_SOLVER.startSolvingTimestamp < 500L) return;
+            if (Util.getMillis() - AbstractExperimentSolver.ACTIVE_SOLVER.startSolvingTimestamp < 300L) return;
             if (AbstractExperimentSolver.ACTIVE_SOLVER.willRedirectClick()) {
                 slotId = AbstractExperimentSolver.ACTIVE_SOLVER.redirectedSlot();
                 slot = ((AbstractContainerScreen<ChestMenu>) (Object) this).getMenu().getSlot(slotId);
                 // use middle-click
                 mouseButton = GLFW.GLFW_MOUSE_BUTTON_3;
                 type = ClickType.CLONE;
+            } else {
+                return;
             }
         }
         original.call(slot, slotId, mouseButton, type);

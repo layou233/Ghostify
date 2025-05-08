@@ -15,6 +15,6 @@ public class MixinClientCommonPacketListenerImpl {
         // act as S32PacketConfirmTransaction (aka ContainerAck)
         // since it's removed in 1.17 but converted to ping by ViaVersion
         // see ViaVersion's ClientboundPackets1_16_2.CONTAINER_ACK usage
-        LifeSaverTimer.instance.whenServerTick();
+        LifeSaverTimer.INSTANCE.whenServerTick();
     }
 }

@@ -13,11 +13,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinClientPacketListener {
     @Inject(method = "handleSetTime", at = @At("TAIL"))
     private void ghostify$handleSetTime(ClientboundSetTimePacket packet, CallbackInfo ci) {
-        ServerTPSContainer.instance.whenClientboundSetTime();
+        ServerTPSContainer.INSTANCE.whenClientboundSetTime();
     }
 
     @Inject(method = "handleRespawn", at = @At("TAIL"))
     private void ghostify$handleRespawn(ClientboundRespawnPacket packet, CallbackInfo ci) {
-        ServerTPSContainer.instance.whenRespawn();
+        ServerTPSContainer.INSTANCE.whenRespawn();
     }
 }

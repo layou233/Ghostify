@@ -15,16 +15,20 @@ public class ChronomatronSolver extends AbstractExperimentSolver {
     private ArrayList<Integer> memory = new ArrayList<>(49 + 1); // max 49 notes, stores slot IDs
     private boolean isShowingGlint = false;
     private int current = 0;
+    private long lastClickTimestamp = 0;
 
     @Override
     public boolean willRedirectClick() {
-        return state == ExperimentState.SOLVE && !memory.isEmpty();
+        return state == ExperimentState.SOLVE &&
+                !memory.isEmpty() &&
+                (current != memory.size() - 1 || Util.getMillis() - lastClickTimestamp >= 800L);
     }
 
     @Override
     public int redirectedSlot() {
         int slot = memory.get(current++);
         if (current == memory.size()) memory.clear();
+        lastClickTimestamp = Util.getMillis();
         return slot;
     }
 

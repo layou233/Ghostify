@@ -13,7 +13,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import java.util.ArrayList;
 
 public class ServerTPSContainer implements IContainer, ClientTickEvents.StartTick {
-    public static final ServerTPSContainer instance = new ServerTPSContainer();
+    public static final ServerTPSContainer INSTANCE = new ServerTPSContainer();
     public long lastTickTimestamp;
     private long lastWorldLoad;
     private float tps = 20F;
