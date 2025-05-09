@@ -1,7 +1,7 @@
 package com.launium.ghostify.client.feature;
 
 import com.launium.ghostify.client.GhostifyClient;
-import com.launium.ghostify.client.ui.SpiritPetWarningContainer;
+import com.launium.ghostify.client.ui.container.SpiritPetWarningContainer;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;

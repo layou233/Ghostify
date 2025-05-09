@@ -1,7 +1,8 @@
-package com.launium.ghostify.client.ui;
+package com.launium.ghostify.client.ui.container;
 
 import com.launium.ghostify.client.GhostifyClient;
 import com.launium.ghostify.client.mixin.AccessFont;
+import com.launium.ghostify.client.ui.Easy2D;
 import com.launium.ghostify.client.ui.island.ContainerLevel;
 import com.launium.ghostify.client.ui.island.IContainer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;

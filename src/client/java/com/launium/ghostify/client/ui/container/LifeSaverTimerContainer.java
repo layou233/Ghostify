@@ -1,13 +1,15 @@
-package com.launium.ghostify.client.ui;
+package com.launium.ghostify.client.ui.container;
 
 import com.launium.ghostify.client.feature.LifeSaverTimer;
 import com.launium.ghostify.client.mixin.AccessFont;
+import com.launium.ghostify.client.ui.Easy2D;
+import com.launium.ghostify.client.ui.TextElement;
 import com.launium.ghostify.client.ui.island.ContainerLevel;
 import com.launium.ghostify.client.ui.island.IContainer;
+import it.unimi.dsi.fastutil.objects.ObjectLongImmutablePair;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -44,17 +46,17 @@ public class LifeSaverTimerContainer implements IContainer {
         long[] availableTimestamp = LifeSaverTimer.INSTANCE.availableTimestamp;
         IntStream.range(0, availableTimestamp.length)
                 .filter(i -> availableTimestamp[i] > now)
-                .mapToObj(i -> Pair.of(LifeSaverTimer.LifeSavers.values()[i], availableTimestamp[i] - now))
-                .sorted((a, b) -> b.getRight().compareTo(a.getRight()))
+                .mapToObj(i -> ObjectLongImmutablePair.of(LifeSaverTimer.LifeSavers.values()[i], availableTimestamp[i] - now))
+                .sorted((a, b) -> Long.compare(b.rightLong(), a.rightLong()))
                 .forEachOrdered(lifeSaver -> {
                     StringBuilder builder = new StringBuilder(20);
-                    builder.append(lifeSaver.getLeft().name);
+                    builder.append(lifeSaver.left().name);
                     builder.append(" in ");
-                    if (lifeSaver.getRight() < 1000) {
-                        builder.append(lifeSaver.getRight());
+                    if (lifeSaver.rightLong() < 1000L) {
+                        builder.append(lifeSaver.rightLong());
                         builder.append("ms");
                     } else {
-                        builder.append(lifeSaver.getRight() / 1000L);
+                        builder.append(lifeSaver.rightLong() / 1000L);
                         builder.append("s");
                     }
                     elements.add(new TextElement(builder.toString()));

@@ -1,6 +1,6 @@
 package com.launium.ghostify.client.mixin;
 
-import com.launium.ghostify.client.ui.ServerTPSContainer;
+import com.launium.ghostify.client.ui.container.ServerTPSContainer;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTimePacket;

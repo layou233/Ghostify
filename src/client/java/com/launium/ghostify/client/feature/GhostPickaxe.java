@@ -2,7 +2,7 @@ package com.launium.ghostify.client.feature;
 
 import com.google.common.collect.Sets;
 import com.launium.ghostify.client.GhostifyClient;
-import com.launium.ghostify.client.ui.GhostPickaxeContainer;
+import com.launium.ghostify.client.ui.container.GhostPickaxeContainer;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -21,10 +21,10 @@ import java.util.HashSet;
 public class GhostPickaxe implements ClientTickEvents.StartTick {
     public static final GhostPickaxe INSTANCE = new GhostPickaxe();
 
-    public static final KeyMapping GHOST_PICKAXE_KEY = KeyBindingHelper.registerKeyBinding(
+    private static final KeyMapping GHOST_PICKAXE_KEY = KeyBindingHelper.registerKeyBinding(
             new KeyMapping("key.ghostify.ghost_pickaxe", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, KeyMapping.CATEGORY_GAMEPLAY)
     );
-    public static final GhostPickaxeContainer ghostPickaxeContainer = new GhostPickaxeContainer();
+    private static final GhostPickaxeContainer ghostPickaxeContainer = new GhostPickaxeContainer();
     private static final HashSet<Block> ignoreBlockSet = Sets.newHashSet(
             Blocks.CHEST, Blocks.TRAPPED_CHEST, Blocks.LEVER
             //Blocks.PLAYER_WALL_HEAD, Blocks.PLAYER_HEAD

@@ -2,7 +2,7 @@ package com.launium.ghostify.client;
 
 import com.launium.ghostify.client.feature.*;
 import com.launium.ghostify.client.feature.experimentation.AbstractExperimentSolver;
-import com.launium.ghostify.client.ui.ServerTPSContainer;
+import com.launium.ghostify.client.ui.container.ServerTPSContainer;
 import com.launium.ghostify.client.ui.island.HudDynamicIsland;
 import com.launium.ghostify.client.util.ClientTaskScheduler;
 import com.mojang.brigadier.arguments.FloatArgumentType;
@@ -30,6 +30,7 @@ public class GhostifyClient implements ClientModInitializer {
         ClientTickEvents.START_CLIENT_TICK.register(GhostPickaxe.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(ServerTPSContainer.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(ClientTaskScheduler::whenClientStartTick);
+        ClientTickEvents.START_CLIENT_TICK.register(AutoClicker.INSTANCE);
         ClientReceiveMessageEvents.GAME.register(LifeSaverTimer.INSTANCE);
         ClientReceiveMessageEvents.GAME.register(new SpiritPetWarning());
         ClientReceiveMessageEvents.GAME.register(new AutoPetNotification());
@@ -59,6 +60,7 @@ public class GhostifyClient implements ClientModInitializer {
                                 ServerTPSContainer.INSTANCE.whenRespawn();
                                 return 0;
                             }));
+            AutoClicker.registerCommand(builder);
             var command = dispatcher.register(builder);
             dispatcher.register(ClientCommandManager.literal("gy").redirect(command));
         }));

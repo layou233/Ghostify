@@ -8,9 +8,11 @@
     "AccessAbstractContainerScreen",
     "AccessFont",
     "AccessGuiGraphics",
+    "AccessKeyMapping",
     "MixinAbstractContainerScreen",
     "MixinClientCommonPacketListenerImpl",
-    "MixinClientPacketListener"
+    "MixinClientPacketListener",
+    "MixinPlayerGameMode"
   ],
   "injectors": {
     "defaultRequire": 1
