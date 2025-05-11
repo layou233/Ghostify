@@ -2,6 +2,7 @@ package com.launium.ghostify.client;
 
 import com.launium.ghostify.client.feature.*;
 import com.launium.ghostify.client.feature.experimentation.AbstractExperimentSolver;
+import com.launium.ghostify.client.feature.kuudra.KuudraAutoPearl;
 import com.launium.ghostify.client.ui.container.ServerTPSContainer;
 import com.launium.ghostify.client.ui.island.HudDynamicIsland;
 import com.launium.ghostify.client.util.ClientTaskScheduler;
@@ -31,6 +32,7 @@ public class GhostifyClient implements ClientModInitializer {
         ClientTickEvents.START_CLIENT_TICK.register(ServerTPSContainer.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(ClientTaskScheduler::whenClientStartTick);
         ClientTickEvents.START_CLIENT_TICK.register(AutoClicker.INSTANCE);
+        ClientTickEvents.START_CLIENT_TICK.register(KuudraAutoPearl.INSTANCE);
         ClientReceiveMessageEvents.GAME.register(LifeSaverTimer.INSTANCE);
         ClientReceiveMessageEvents.GAME.register(new SpiritPetWarning());
         ClientReceiveMessageEvents.GAME.register(new AutoPetNotification());

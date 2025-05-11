@@ -12,7 +12,10 @@
     "MixinAbstractContainerScreen",
     "MixinClientCommonPacketListenerImpl",
     "MixinClientPacketListener",
-    "MixinPlayerGameMode"
+    "MixinFogRenderer",
+    "MixinMinecraft",
+    "MixinPlayerGameMode",
+    "MixinScreenEffectRenderer"
   ],
   "injectors": {
     "defaultRequire": 1

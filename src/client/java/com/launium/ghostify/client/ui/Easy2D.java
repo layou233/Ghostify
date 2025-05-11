@@ -125,11 +125,11 @@ public class Easy2D {
     public static void drawScreenTextsCentered(Font font, float x, float y, int color, boolean shadow, String... lines) {
         if (lines.length == 0) return;
         StringSplitter splitter = ((AccessFont) font).getSplitter();
-        float startY = y - (float) font.lineHeight * lines.length * 0.5F;
+        float startY = y - font.lineHeight * lines.length * 0.5F;
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i];
             drawScreenText(font, line,
-                    x - splitter.stringWidth(line) * 0.5F, startY + (float) font.lineHeight * i,
+                    x - splitter.stringWidth(line) * 0.5F, startY + font.lineHeight * i,
                     color, shadow);
         }
     }
@@ -137,12 +137,12 @@ public class Easy2D {
     public static void drawScreenTextElements(Font font, float startX, float endX, float centerY, boolean shadow, TextElement... elements) {
         if (elements.length == 0) return;
         StringSplitter splitter = ((AccessFont) font).getSplitter();
-        float startY = centerY - (float) font.lineHeight * elements.length * 0.5F;
+        float startY = centerY - font.lineHeight * elements.length * 0.5F;
         for (int i = 0; i < elements.length; i++) {
             TextElement element = elements[i];
             drawScreenText(font, element.text,
                     element.align.calculate(startX, endX, splitter.stringWidth(element.text)),
-                    startY + (float) font.lineHeight * i,
+                    startY + font.lineHeight * i,
                     element.color, shadow
             );
         }

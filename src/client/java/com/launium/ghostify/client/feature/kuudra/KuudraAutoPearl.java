@@ -1,0 +1,59 @@
+package com.launium.ghostify.client.feature.kuudra;
+
+import com.google.common.collect.ImmutableList;
+import com.launium.ghostify.client.mixin.AccessKeyMapping;
+import com.launium.ghostify.client.util.ClientTaskScheduler;
+import it.unimi.dsi.fastutil.objects.ObjectObjectImmutablePair;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.minecraft.Util;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+
+public class KuudraAutoPearl implements ClientTickEvents.StartTick {
+    public static final KuudraAutoPearl INSTANCE = new KuudraAutoPearl();
+
+    private static final ImmutableList<ObjectObjectImmutablePair<Item, String>> HOLDABLE_LIST = ImmutableList.of(
+            ObjectObjectImmutablePair.of(Items.CHEST, "Elle's Supplies"),
+            ObjectObjectImmutablePair.of(Items.PLAYER_HEAD, "Ballista Fuel Cell")
+    );
+    private final RandomSource random = RandomSource.create();
+    private long lastScheduled = 0L;
+
+    @Override
+    public void onStartTick(Minecraft client) {
+        if (client.player == null) return;
+        long now = Util.getMillis();
+        if (now - lastScheduled < 500L) return;
+        Inventory inventory = client.player.getInventory();
+        ItemStack lastHotbarItem = inventory.items.get(8);
+        if (HOLDABLE_LIST.stream().anyMatch(holdable ->
+                lastHotbarItem.getItem() == holdable.left() && holdable.right().equals(lastHotbarItem.getHoverName().getString())
+        )) {
+            // player is holding something
+            ItemStack mainHandItem = inventory.getSelected();
+            if (mainHandItem.getItem() == Items.ENDER_PEARL && !mainHandItem.hasFoil()) {
+                // not glinting; hopefully regular ender pearl
+                // can also be Fel Pearl or something, but we assume the player got brain
+                int selectedSlot = inventory.selected;
+                long delay = random.nextIntBetweenInclusive(20, 40);
+                ClientTaskScheduler.CLIENT_TASKS.add(new ClientTaskScheduler.AbstractTask(delay) {
+                    @Override
+                    public void execute(Minecraft taskClient) {
+                        if (taskClient.player == null) return;
+                        Inventory taskInventory = taskClient.player.getInventory();
+                        if (taskInventory.selected == selectedSlot &&
+                                taskInventory.items.get(selectedSlot).getItem() == Items.ENDER_PEARL) {
+                            KeyMapping.click(((AccessKeyMapping) client.options.keyUse).getKey());
+                        }
+                    }
+                });
+                lastScheduled = now;
+            }
+        }
+    }
+}

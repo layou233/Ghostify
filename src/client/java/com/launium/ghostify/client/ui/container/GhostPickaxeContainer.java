@@ -41,7 +41,7 @@ public class GhostPickaxeContainer implements IContainer {
         Font font = Minecraft.getInstance().font;
         Easy2D.drawScreenText(font, text,
                 (left + right - ((AccessFont) font).getSplitter().stringWidth(text)) * 0.5F,
-                (top + bottom - (float) font.lineHeight) * 0.5F,
+                (top + bottom - font.lineHeight) * 0.5F,
                 Easy2D.TEXT_DEFAULT_COLOR, false);
     }
 }

@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 
 @SuppressWarnings("unchecked")
 @Mixin(AbstractContainerScreen.class)
-public abstract class MixinAbstractContainerScreen {
+public class MixinAbstractContainerScreen {
     @WrapMethod(method = "slotClicked")
     private void ghostify$hijackSlotClick(Slot slot, int slotId, int mouseButton, ClickType type, Operation<Void> original) {
         if (slot != null && slot.index == 49 && AbstractExperimentSolver.ACTIVE_SOLVER != null) {

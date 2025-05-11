@@ -79,13 +79,13 @@ public class AutoClicker implements ClientTickEvents.StartTick {
             long now = Util.getMillis();
             if (isUnchanged) {
                 if (isLeftDown && now > nextLeftClickTime) {
-                    if (!isBreaking && now > breakingFinishTime) {
+                    if (now > breakingFinishTime) {
                         KeyMapping.click(((AccessKeyMapping) client.options.keyAttack).getKey());
                     }
                     nextLeftClickTime = rollNextClickTime();
                 }
             } else {
-                breakingFinishTime = 0L;
+                //breakingFinishTime = 0L;
                 nextLeftClickTime = rollNextClickTime();
             }
             // break cooldown to avoid to trigger anti-cheat (FastBreak)
