@@ -5,7 +5,6 @@ import com.launium.ghostify.client.mixin.AccessFont;
 import com.launium.ghostify.client.ui.Easy2D;
 import com.launium.ghostify.client.ui.TextElement;
 import com.launium.ghostify.client.ui.island.ContainerLevel;
-import com.launium.ghostify.client.ui.island.IContainer;
 import it.unimi.dsi.fastutil.objects.ObjectLongImmutablePair;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -36,7 +35,7 @@ public class LifeSaverTimerContainer implements IContainer {
     private ArrayList<TextElement> textElements;
 
     @Override
-    public void prepareRender() {
+    public void prepareRender(float scale) {
         ArrayList<TextElement> elements = new ArrayList<>(1 + LifeSaverTimer.LifeSavers.values().length);
         int invincibleTicks = LifeSaverTimer.INSTANCE.invincibleTicks;
         if (invincibleTicks > 0) {

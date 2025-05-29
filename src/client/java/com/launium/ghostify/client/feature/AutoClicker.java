@@ -2,7 +2,6 @@ package com.launium.ghostify.client.feature;
 
 import com.launium.ghostify.client.GhostifyClient;
 import com.launium.ghostify.client.mixin.AccessKeyMapping;
-import com.launium.ghostify.client.ui.container.AutoClickerContainer;
 import com.launium.ghostify.client.util.Remember;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.brigadier.arguments.FloatArgumentType;
@@ -17,15 +16,17 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.BitRandomSource;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
-public class AutoClicker implements ClientTickEvents.StartTick {
+public class AutoClicker extends AbstractModule implements ClientTickEvents.StartTick {
     public static final AutoClicker INSTANCE = new AutoClicker();
     public static int MAX_CLICK_DELAY = 135;
     public static int MIN_CLICK_DELAY = 120;
+    public static FloatFloatImmutablePair CPS = updateCPS();
     private static int MAX_MISS_DELAY = (int) (MAX_CLICK_DELAY * 0.6F);
     private static int MIN_MISS_DELAY = (int) (MIN_CLICK_DELAY * 0.6F);
 
@@ -34,6 +35,7 @@ public class AutoClicker implements ClientTickEvents.StartTick {
         MIN_CLICK_DELAY = 120;
         MAX_MISS_DELAY = (int) (MAX_CLICK_DELAY * 0.6F);
         MIN_MISS_DELAY = (int) (MIN_CLICK_DELAY * 0.6F);
+        CPS = updateCPS();
     }
 
     public static void setCPS(float min, float max) {
@@ -41,13 +43,14 @@ public class AutoClicker implements ClientTickEvents.StartTick {
         MIN_CLICK_DELAY = (int) (1000F / max);
         MAX_MISS_DELAY = (int) (MAX_CLICK_DELAY * 0.6F);
         MIN_MISS_DELAY = (int) (MIN_CLICK_DELAY * 0.6F);
+        CPS = updateCPS();
     }
 
-    public static FloatFloatImmutablePair getCPS() {
+    private static FloatFloatImmutablePair updateCPS() {
         return FloatFloatImmutablePair.of(1000F / MAX_CLICK_DELAY, 1000F / MIN_CLICK_DELAY);
     }
 
-    private static final AutoClickerContainer autoClickerContainer = new AutoClickerContainer();
+    //private static final AutoClickerContainer autoClickerContainer = new AutoClickerContainer();
     private static final KeyMapping SWITCH_AUTO_CLICKER_KEY = KeyBindingHelper.registerKeyBinding(
             new KeyMapping("key.ghostify.switch_auto_clicker", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT_ALT, KeyMapping.CATEGORY_GAMEPLAY)
     );
@@ -70,7 +73,10 @@ public class AutoClicker implements ClientTickEvents.StartTick {
     public void onStartTick(Minecraft client) {
         if (SWITCH_AUTO_CLICKER_KEY.consumeClick()) {
             this.isEnabled = !this.isEnabled;
-            if (this.isEnabled) GhostifyClient.island.show(autoClickerContainer);
+            if (this.isEnabled) {
+                //GhostifyClient.island.show(autoClickerContainer);
+                GhostifyClient.moduleList.showModule(this);
+            }
         }
         if (this.isEnabled && client.player != null && client.screen == null) {
             boolean isLeftDown = client.options.keyAttack.isDown();
@@ -116,12 +122,26 @@ public class AutoClicker implements ClientTickEvents.StartTick {
                             return 0;
                         }))
                         .executes(context -> {
-                            FloatFloatImmutablePair cps = AutoClicker.getCPS();
                             context.getSource().sendFeedback(
                                     Component.literal("[Ghostify] Current Auto Clicker CPS range is ["
-                                            + cps.leftFloat() + ", " + cps.rightFloat() + "]."));
+                                            + CPS.leftFloat() + ", " + CPS.rightFloat() + "]."));
                             return 0;
                         })
         );
+    }
+
+    @Override
+    public String title() {
+        return "AutoClicker";
+    }
+
+    @Override
+    public @Nullable String subtitle() {
+        return String.format("%.1f %.1f", CPS.leftFloat(), CPS.rightFloat());
+    }
+
+    @Override
+    public boolean isActive() {
+        return isEnabled;
     }
 }

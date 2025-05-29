@@ -1,4 +1,4 @@
-package com.launium.ghostify.client.ui.island;
+package com.launium.ghostify.client.ui.container;
 
 import net.minecraft.client.gui.GuiGraphics;
 
@@ -7,7 +7,7 @@ public interface IContainer {
 
     int getLevel();
 
-    void prepareRender();
+    void prepareRender(float scale);
 
     float estimateHeight();
 

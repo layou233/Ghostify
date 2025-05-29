@@ -10,8 +10,10 @@ import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.TriState;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
@@ -24,9 +26,13 @@ public class Easy2D {
         context = newContext;
     }
 
+    public static void cleanup() {
+        context = null;
+    }
+
     private static final ShaderProgram SHADER_ROUND_RECT = new ShaderProgram(
             ResourceLocation.fromNamespaceAndPath("ghostify", "core/round_rect"),
-            DefaultVertexFormat.POSITION_COLOR,
+            DefaultVertexFormat.POSITION,
             ShaderDefines.EMPTY
     );
 
@@ -50,14 +56,28 @@ public class Easy2D {
     );
 
     static final RenderType
-            ROUND_RECT = new RenderType("core/round_rect", DefaultVertexFormat.POSITION_COLOR,
+            ROUND_RECT = new RenderType("core/round_rect", DefaultVertexFormat.POSITION,
             VertexFormat.Mode.QUADS, 1536, false, false,
             () -> ROUND_RECT_STATES.forEach(RenderStateShard::setupRenderState),
             () -> ROUND_RECT_STATES.forEach(RenderStateShard::clearRenderState)) {
     };
 
+    public static RenderType createTextureRenderType(DynamicTexture texture) {
+        return RenderType.create("ghostify_dynamic_texture",
+                DefaultVertexFormat.POSITION_TEX_COLOR,
+                VertexFormat.Mode.QUADS,
+                786432,
+                RenderType.CompositeState.builder()
+                        .setTextureState(new DynamicTextureStateShard(texture, TriState.FALSE, false))
+                        .setShaderState(POSITION_TEXTURE_COLOR_SHADER)
+                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                        .setDepthTestState(NO_DEPTH_TEST)
+                        .createCompositeState(false)
+        );
+    }
+
     public static void drawRoundRect(float left, float top, float right, float bottom,
-                                     float depth, float radius, int color) {
+                                     float depth, float radius, float shadow, int color) {
         if (!(left < right && top < bottom)) { // also capture NaN
             return;
         }
@@ -75,9 +95,9 @@ public class Easy2D {
         float extentY = bottom - top;
         radius = Math.min(radius, Math.min(extentX, extentY) * 0.5F);
         final float outset = 14F; // conservative
-        boolean isTranslating = (pose.properties() & Matrix4f.PROPERTY_TRANSLATION) != 0;
-        if (isTranslating) {
-            // pure translation
+        boolean isPureTranslation = (pose.properties() & Matrix4f.PROPERTY_TRANSLATION) != 0;
+        if (isPureTranslation) {
+            // fast path
             shader.safeGetUniform("u_Rect")
                     .set(centerX + pose.m30(), centerY + pose.m31(), extentX, extentY);
         } else {
@@ -102,16 +122,16 @@ public class Easy2D {
         shader.safeGetUniform("u_edgeSoftness")
                 .set(1F);
         shader.safeGetUniform("u_shadowSoftness")
-                .set(16F);
+                .set(shadow);
         var buffer = ((AccessGuiGraphics) context).getBufferSource().getBuffer(ROUND_RECT);
-        buffer.addVertex(pose, left - outset, top - outset, depth).setColor(0);
-        buffer.addVertex(pose, left - outset, bottom + outset, depth).setColor(0);
-        buffer.addVertex(pose, right + outset, bottom + outset, depth).setColor(0);
-        buffer.addVertex(pose, right + outset, top - outset, depth).setColor(0);
+        buffer.addVertex(pose, left - outset, top - outset, depth);
+        buffer.addVertex(pose, left - outset, bottom + outset, depth);
+        buffer.addVertex(pose, right + outset, bottom + outset, depth);
+        buffer.addVertex(pose, right + outset, top - outset, depth);
 
         // we modify uniform for each draw, so cannot do batch rendering
         context.flush();
-        if (!isTranslating)
+        if (!isPureTranslation)
             RenderSystem.getModelViewStack().popMatrix();
     }
 

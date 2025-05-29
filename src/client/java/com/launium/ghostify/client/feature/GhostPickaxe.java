@@ -2,6 +2,7 @@ package com.launium.ghostify.client.feature;
 
 import com.google.common.collect.Sets;
 import com.launium.ghostify.client.GhostifyClient;
+import com.launium.ghostify.client.ui.modulelist.HudModuleList;
 import com.launium.ghostify.client.ui.container.GhostPickaxeContainer;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -14,11 +15,12 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashSet;
 
-public class GhostPickaxe implements ClientTickEvents.StartTick {
+public class GhostPickaxe extends AbstractModule implements ClientTickEvents.StartTick {
     public static final GhostPickaxe INSTANCE = new GhostPickaxe();
 
     private static final KeyMapping GHOST_PICKAXE_KEY = KeyBindingHelper.registerKeyBinding(
@@ -35,6 +37,7 @@ public class GhostPickaxe implements ClientTickEvents.StartTick {
         if (client.player != null && GHOST_PICKAXE_KEY.isDown()) {
             ghostPickaxeContainer.isActivated = true;
             GhostifyClient.island.show(ghostPickaxeContainer);
+            GhostifyClient.moduleList.showModule(this);
             if (client.options.keyAttack.isDown()) {
                 HitResult hitResult = client.player.pick(20F, 0, false);
                 if (hitResult.getType() == HitResult.Type.BLOCK) {
@@ -48,5 +51,20 @@ public class GhostPickaxe implements ClientTickEvents.StartTick {
         } else {
             ghostPickaxeContainer.isActivated = false;
         }
+    }
+
+    @Override
+    public String title() {
+        return "GhostPickaxe";
+    }
+
+    @Override
+    public @Nullable String subtitle() {
+        return null;
+    }
+
+    @Override
+    public boolean isActive() {
+        return ghostPickaxeContainer.isActivated;
     }
 }

@@ -40,8 +40,10 @@ public class KuudraAutoPearl implements ClientTickEvents.StartTick {
                 // not glinting; hopefully regular ender pearl
                 // can also be Fel Pearl or something, but we assume the player got brain
                 int selectedSlot = inventory.selected;
-                long delay = random.nextIntBetweenInclusive(20, 40);
-                ClientTaskScheduler.CLIENT_TASKS.add(new ClientTaskScheduler.AbstractTask(delay) {
+                //long delay = random.nextIntBetweenInclusive(0, 10);
+                // wtf it's so fast; maybe Hypixel pre-sends slot switch packet?
+                // use zero delay then, throw instantly or in next client tick
+                ClientTaskScheduler.CLIENT_TASKS.add(new ClientTaskScheduler.AbstractTask(0) {
                     @Override
                     public void execute(Minecraft taskClient) {
                         if (taskClient.player == null) return;

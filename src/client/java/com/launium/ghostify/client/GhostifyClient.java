@@ -3,7 +3,9 @@ package com.launium.ghostify.client;
 import com.launium.ghostify.client.feature.*;
 import com.launium.ghostify.client.feature.experimentation.AbstractExperimentSolver;
 import com.launium.ghostify.client.feature.kuudra.KuudraAutoPearl;
+import com.launium.ghostify.client.ui.modulelist.HudModuleList;
 import com.launium.ghostify.client.ui.container.ServerTPSContainer;
+import com.launium.ghostify.client.ui.font.FontManager;
 import com.launium.ghostify.client.ui.island.HudDynamicIsland;
 import com.launium.ghostify.client.util.ClientTaskScheduler;
 import com.mojang.brigadier.arguments.FloatArgumentType;
@@ -24,15 +26,19 @@ public class GhostifyClient implements ClientModInitializer {
     public static Logger LOGGER = LogUtils.getLogger();
 
     public static final HudDynamicIsland island = new HudDynamicIsland();
+    public static final HudModuleList moduleList = new HudModuleList();
 
     @Override
     public void onInitializeClient() {
+        FontManager.init();
         HudRenderCallback.EVENT.register(island);
+        HudRenderCallback.EVENT.register(moduleList);
         ClientTickEvents.START_CLIENT_TICK.register(GhostPickaxe.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(ServerTPSContainer.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(ClientTaskScheduler::whenClientStartTick);
         ClientTickEvents.START_CLIENT_TICK.register(AutoClicker.INSTANCE);
-        ClientTickEvents.START_CLIENT_TICK.register(KuudraAutoPearl.INSTANCE);
+        //ClientTickEvents.START_CLIENT_TICK.register(KuudraAutoPearl.INSTANCE);
+        ClientTickEvents.START_CLIENT_TICK.register(CameraNoClip.INSTANCE);
         ClientReceiveMessageEvents.GAME.register(LifeSaverTimer.INSTANCE);
         ClientReceiveMessageEvents.GAME.register(new SpiritPetWarning());
         ClientReceiveMessageEvents.GAME.register(new AutoPetNotification());
@@ -63,6 +69,7 @@ public class GhostifyClient implements ClientModInitializer {
                                 return 0;
                             }));
             AutoClicker.registerCommand(builder);
+            moduleList.registerCommand(builder);
             var command = dispatcher.register(builder);
             dispatcher.register(ClientCommandManager.literal("gy").redirect(command));
         }));

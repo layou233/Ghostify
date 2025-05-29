@@ -4,7 +4,6 @@ import com.launium.ghostify.client.feature.AutoClicker;
 import com.launium.ghostify.client.mixin.AccessFont;
 import com.launium.ghostify.client.ui.Easy2D;
 import com.launium.ghostify.client.ui.island.ContainerLevel;
-import com.launium.ghostify.client.ui.island.IContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -23,7 +22,7 @@ public class AutoClickerContainer implements IContainer {
     }
 
     @Override
-    public void prepareRender() {
+    public void prepareRender(float scale) {
     }
 
     @Override

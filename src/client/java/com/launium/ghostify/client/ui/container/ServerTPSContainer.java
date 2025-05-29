@@ -4,7 +4,6 @@ import com.launium.ghostify.client.GhostifyClient;
 import com.launium.ghostify.client.mixin.AccessFont;
 import com.launium.ghostify.client.ui.Easy2D;
 import com.launium.ghostify.client.ui.island.ContainerLevel;
-import com.launium.ghostify.client.ui.island.IContainer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -51,7 +50,7 @@ public class ServerTPSContainer implements IContainer, ClientTickEvents.StartTic
     }
 
     @Override
-    public void prepareRender() {
+    public void prepareRender(float scale) {
     }
 
     @Override
