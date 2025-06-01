@@ -1,7 +1,7 @@
 package com.launium.ghostify.client.ui.font;
 
 import com.launium.ghostify.client.mixin.AccessGuiGraphics;
-import com.launium.ghostify.client.ui.Easy2D;
+import com.launium.ghostify.client.ui.GhostifyRenderTypes;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import lombok.AllArgsConstructor;
@@ -50,7 +50,7 @@ public class RenderedText implements AutoCloseable {
             }
         }
         DynamicTexture texture = new DynamicTexture(nativeImage);
-        return new RenderedText(texture, bounds, baseline, Easy2D.createTextureRenderType(texture));
+        return new RenderedText(texture, bounds, baseline, GhostifyRenderTypes.createTextureRenderType(texture));
     }
 
     public void draw(GuiGraphics context, float x, float y, float z, float scale, int color) {

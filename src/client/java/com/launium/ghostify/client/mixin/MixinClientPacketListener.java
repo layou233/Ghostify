@@ -1,5 +1,6 @@
 package com.launium.ghostify.client.mixin;
 
+import com.launium.ghostify.client.feature.PickobulusPreview;
 import com.launium.ghostify.client.ui.container.ServerTPSContainer;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
@@ -19,5 +20,6 @@ public class MixinClientPacketListener {
     @Inject(method = "handleRespawn", at = @At("TAIL"))
     private void ghostify$handleRespawn(ClientboundRespawnPacket packet, CallbackInfo ci) {
         ServerTPSContainer.INSTANCE.whenRespawn();
+        PickobulusPreview.INSTANCE.resetCooldown();
     }
 }

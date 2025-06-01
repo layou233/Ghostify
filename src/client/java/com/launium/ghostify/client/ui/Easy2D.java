@@ -1,23 +1,15 @@
 package com.launium.ghostify.client.ui;
 
-import com.google.common.collect.ImmutableList;
 import com.launium.ghostify.client.mixin.AccessFont;
 import com.launium.ghostify.client.mixin.AccessGuiGraphics;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
-import net.minecraft.util.TriState;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
-
-import static net.minecraft.client.renderer.RenderStateShard.*;
 
 public class Easy2D {
     private static GuiGraphics context;
@@ -30,52 +22,6 @@ public class Easy2D {
         context = null;
     }
 
-    private static final ShaderProgram SHADER_ROUND_RECT = new ShaderProgram(
-            ResourceLocation.fromNamespaceAndPath("ghostify", "core/round_rect"),
-            DefaultVertexFormat.POSITION,
-            ShaderDefines.EMPTY
-    );
-
-    static final RenderStateShard.ShaderStateShard
-            RENDERTYPE_ROUND_RECT = new RenderStateShard.ShaderStateShard(SHADER_ROUND_RECT);
-
-    static final ImmutableList<RenderStateShard> ROUND_RECT_STATES = ImmutableList.of(
-            RENDERTYPE_ROUND_RECT,
-            NO_TEXTURE,
-            TRANSLUCENT_TRANSPARENCY,
-            //LEQUAL_DEPTH_TEST,
-            NO_CULL,
-            LIGHTMAP,
-            NO_OVERLAY,
-            NO_LAYERING,
-            MAIN_TARGET,
-            DEFAULT_TEXTURING,
-            COLOR_DEPTH_WRITE,
-            DEFAULT_LINE,
-            NO_COLOR_LOGIC
-    );
-
-    static final RenderType
-            ROUND_RECT = new RenderType("core/round_rect", DefaultVertexFormat.POSITION,
-            VertexFormat.Mode.QUADS, 1536, false, false,
-            () -> ROUND_RECT_STATES.forEach(RenderStateShard::setupRenderState),
-            () -> ROUND_RECT_STATES.forEach(RenderStateShard::clearRenderState)) {
-    };
-
-    public static RenderType createTextureRenderType(DynamicTexture texture) {
-        return RenderType.create("ghostify_dynamic_texture",
-                DefaultVertexFormat.POSITION_TEX_COLOR,
-                VertexFormat.Mode.QUADS,
-                786432,
-                RenderType.CompositeState.builder()
-                        .setTextureState(new DynamicTextureStateShard(texture, TriState.FALSE, false))
-                        .setShaderState(POSITION_TEXTURE_COLOR_SHADER)
-                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-                        .setDepthTestState(NO_DEPTH_TEST)
-                        .createCompositeState(false)
-        );
-    }
-
     public static void drawRoundRect(float left, float top, float right, float bottom,
                                      float depth, float radius, float shadow, int color) {
         if (!(left < right && top < bottom)) { // also capture NaN
@@ -85,7 +31,7 @@ public class Easy2D {
             radius = 0;
         }
         Matrix4f pose = context.pose().last().pose();
-        CompiledShaderProgram shader = RenderSystem.setShader(SHADER_ROUND_RECT);
+        CompiledShaderProgram shader = RenderSystem.setShader(GhostifyRenderTypes.SHADER_ROUND_RECT);
         if (shader == null) {
             return;
         }
@@ -123,7 +69,7 @@ public class Easy2D {
                 .set(1F);
         shader.safeGetUniform("u_shadowSoftness")
                 .set(shadow);
-        var buffer = ((AccessGuiGraphics) context).getBufferSource().getBuffer(ROUND_RECT);
+        var buffer = ((AccessGuiGraphics) context).getBufferSource().getBuffer(GhostifyRenderTypes.ROUND_RECT);
         buffer.addVertex(pose, left - outset, top - outset, depth);
         buffer.addVertex(pose, left - outset, bottom + outset, depth);
         buffer.addVertex(pose, right + outset, bottom + outset, depth);

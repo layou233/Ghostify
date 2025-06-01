@@ -16,6 +16,7 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.network.chat.Component;
 import org.slf4j.Logger;
 
@@ -39,9 +40,12 @@ public class GhostifyClient implements ClientModInitializer {
         ClientTickEvents.START_CLIENT_TICK.register(AutoClicker.INSTANCE);
         //ClientTickEvents.START_CLIENT_TICK.register(KuudraAutoPearl.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(CameraNoClip.INSTANCE);
+        ClientTickEvents.END_CLIENT_TICK.register(PickobulusPreview.INSTANCE);
         ClientReceiveMessageEvents.GAME.register(LifeSaverTimer.INSTANCE);
         ClientReceiveMessageEvents.GAME.register(new SpiritPetWarning());
         ClientReceiveMessageEvents.GAME.register(new AutoPetNotification());
+        ClientReceiveMessageEvents.GAME.register(PickobulusPreview.INSTANCE);
+        WorldRenderEvents.AFTER_ENTITIES.register(PickobulusPreview.INSTANCE);
         AbstractExperimentSolver.init();
         HarpBot.INSTANCE.init();
         ClientCommandRegistrationCallback.EVENT.register(((dispatcher, buildContext) -> {
