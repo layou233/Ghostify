@@ -37,7 +37,7 @@ import org.lwjgl.glfw.GLFW;
 public class PickobulusPreview extends AbstractModule implements WorldRenderEvents.AfterEntities, ClientTickEvents.EndTick, ClientReceiveMessageEvents.Game {
     public static final PickobulusPreview INSTANCE = new PickobulusPreview();
     private static final KeyMapping PICKOBULUS_PREVIEW_KEY = KeyBindingHelper.registerKeyBinding(
-            new KeyMapping("key.ghostify.switch_pickobulus_preview", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_X, KeyMapping.CATEGORY_GAMEPLAY)
+            new KeyMapping("key.ghostify.switch_pickobulus_preview", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_X, GhostifyClient.KEY_CATEGORY)
     );
 
     private boolean isEnabled = false;
@@ -160,7 +160,8 @@ public class PickobulusPreview extends AbstractModule implements WorldRenderEven
     public void onReceiveGameMessage(Component message, boolean isOverlay) {
         if (isOverlay || !isEnabled) return;
         String text = message.getString();
-        if ("You used your Pickobulus Pickaxe Ability!".equals(text)) {
+        if ("You used your Pickobulus Pickaxe Ability!".equals(text) ||
+                text.startsWith("Your pickaxe ability is on cooldown for ")) {
             onCooldown = true;
         } else if ("Pickobulus is now available!".equals(text)) {
             onCooldown = false;

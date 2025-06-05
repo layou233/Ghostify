@@ -52,7 +52,7 @@ public class AutoClicker extends AbstractModule implements ClientTickEvents.Star
 
     //private static final AutoClickerContainer autoClickerContainer = new AutoClickerContainer();
     private static final KeyMapping SWITCH_AUTO_CLICKER_KEY = KeyBindingHelper.registerKeyBinding(
-            new KeyMapping("key.ghostify.switch_auto_clicker", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT_ALT, KeyMapping.CATEGORY_GAMEPLAY)
+            new KeyMapping("key.ghostify.switch_auto_clicker", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT_ALT, GhostifyClient.KEY_CATEGORY)
     );
 
     public boolean isEnabled = false;
@@ -71,31 +71,32 @@ public class AutoClicker extends AbstractModule implements ClientTickEvents.Star
 
     @Override
     public void onStartTick(Minecraft client) {
-        if (SWITCH_AUTO_CLICKER_KEY.consumeClick()) {
+        while (SWITCH_AUTO_CLICKER_KEY.consumeClick()) {
             this.isEnabled = !this.isEnabled;
-            if (this.isEnabled) {
-                //GhostifyClient.island.show(autoClickerContainer);
-                GhostifyClient.moduleList.showModule(this);
-            }
         }
-        if (this.isEnabled && client.player != null && client.screen == null) {
-            boolean isLeftDown = client.options.keyAttack.isDown();
-            boolean isUnchanged = rememberLeftClick.update(isLeftDown);
-            boolean isBreaking = client.gameMode.isDestroying();
-            long now = Util.getMillis();
-            if (isUnchanged) {
-                if (isLeftDown && now > nextLeftClickTime) {
-                    if (now > breakingFinishTime) {
-                        KeyMapping.click(((AccessKeyMapping) client.options.keyAttack).getKey());
+        if (GhostPickaxe.INSTANCE.isActive()) return;
+        if (this.isEnabled) {
+            //GhostifyClient.island.show(autoClickerContainer);
+            GhostifyClient.moduleList.showModule(this);
+            if (client.player != null && client.screen == null) {
+                boolean isLeftDown = client.options.keyAttack.isDown();
+                boolean isUnchanged = rememberLeftClick.update(isLeftDown);
+                boolean isBreaking = client.gameMode.isDestroying();
+                long now = Util.getMillis();
+                if (isUnchanged) {
+                    if (isLeftDown && now > nextLeftClickTime) {
+                        if (now > breakingFinishTime) {
+                            KeyMapping.click(((AccessKeyMapping) client.options.keyAttack).getKey());
+                        }
+                        nextLeftClickTime = rollNextClickTime();
                     }
+                } else {
+                    //breakingFinishTime = 0L;
                     nextLeftClickTime = rollNextClickTime();
                 }
-            } else {
-                //breakingFinishTime = 0L;
-                nextLeftClickTime = rollNextClickTime();
+                // break cooldown to avoid to trigger anti-cheat (FastBreak)
+                if (isBreaking && client.gameMode.getDestroyStage() > 8) breakingFinishTime = now + 400L;
             }
-            // break cooldown to avoid to trigger anti-cheat (FastBreak)
-            if (isBreaking && client.gameMode.getDestroyStage() > 8) breakingFinishTime = now + 400L;
         }
     }
 
@@ -142,6 +143,6 @@ public class AutoClicker extends AbstractModule implements ClientTickEvents.Star
 
     @Override
     public boolean isActive() {
-        return isEnabled;
+        return isEnabled && !GhostPickaxe.INSTANCE.isActive();
     }
 }

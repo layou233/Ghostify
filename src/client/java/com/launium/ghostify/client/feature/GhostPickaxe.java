@@ -2,7 +2,6 @@ package com.launium.ghostify.client.feature;
 
 import com.google.common.collect.Sets;
 import com.launium.ghostify.client.GhostifyClient;
-import com.launium.ghostify.client.ui.modulelist.HudModuleList;
 import com.launium.ghostify.client.ui.container.GhostPickaxeContainer;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -24,7 +23,7 @@ public class GhostPickaxe extends AbstractModule implements ClientTickEvents.Sta
     public static final GhostPickaxe INSTANCE = new GhostPickaxe();
 
     private static final KeyMapping GHOST_PICKAXE_KEY = KeyBindingHelper.registerKeyBinding(
-            new KeyMapping("key.ghostify.ghost_pickaxe", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, KeyMapping.CATEGORY_GAMEPLAY)
+            new KeyMapping("key.ghostify.ghost_pickaxe", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, GhostifyClient.KEY_CATEGORY)
     );
     private static final GhostPickaxeContainer ghostPickaxeContainer = new GhostPickaxeContainer();
     private static final HashSet<Block> ignoreBlockSet = Sets.newHashSet(

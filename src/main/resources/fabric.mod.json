@@ -7,6 +7,9 @@
   "authors": [
     "Launium"
   ],
+  "contact": {
+    "homepage": "https://launium.com/doc/Ghostify"
+  },
   "license": "PolyForm-Shield-1.0.0",
   "environment": "client",
   "entrypoints": {
@@ -21,5 +24,13 @@
     "fabricloader": ">=0.16.9",
     "fabric": "*",
     "minecraft": "${minecraft_version}"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "ghostify.bilibili": "https://space.bilibili.com/404017926",
+        "modmenu.donate": "https://www.afdian.com/a/launium"
+      }
+    }
   }
 }

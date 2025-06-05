@@ -2,11 +2,10 @@ package com.launium.ghostify.client;
 
 import com.launium.ghostify.client.feature.*;
 import com.launium.ghostify.client.feature.experimentation.AbstractExperimentSolver;
-import com.launium.ghostify.client.feature.kuudra.KuudraAutoPearl;
-import com.launium.ghostify.client.ui.modulelist.HudModuleList;
 import com.launium.ghostify.client.ui.container.ServerTPSContainer;
 import com.launium.ghostify.client.ui.font.FontManager;
 import com.launium.ghostify.client.ui.island.HudDynamicIsland;
+import com.launium.ghostify.client.ui.modulelist.HudModuleList;
 import com.launium.ghostify.client.util.ClientTaskScheduler;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.logging.LogUtils;
@@ -25,6 +24,7 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.lit
 
 public class GhostifyClient implements ClientModInitializer {
     public static Logger LOGGER = LogUtils.getLogger();
+    public static final String KEY_CATEGORY = "category.ghostify.main";
 
     public static final HudDynamicIsland island = new HudDynamicIsland();
     public static final HudModuleList moduleList = new HudModuleList();
@@ -40,6 +40,7 @@ public class GhostifyClient implements ClientModInitializer {
         ClientTickEvents.START_CLIENT_TICK.register(AutoClicker.INSTANCE);
         //ClientTickEvents.START_CLIENT_TICK.register(KuudraAutoPearl.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(CameraNoClip.INSTANCE);
+        ClientTickEvents.START_CLIENT_TICK.register(HarpBot.INSTANCE);
         ClientTickEvents.END_CLIENT_TICK.register(PickobulusPreview.INSTANCE);
         ClientReceiveMessageEvents.GAME.register(LifeSaverTimer.INSTANCE);
         ClientReceiveMessageEvents.GAME.register(new SpiritPetWarning());
