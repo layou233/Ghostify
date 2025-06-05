@@ -10,11 +10,11 @@ buildscript {
 }
 
 plugins {
-    id 'fabric-loom' version '1.9-SNAPSHOT'
+    id 'fabric-loom' version '1.10-SNAPSHOT'
     id 'maven-publish'
 }
 
-version = project.mod_version
+version = project.mod_version + '+' + project.minecraft_version
 group = project.maven_group
 
 base {
@@ -53,7 +53,7 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.layered() {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.21.4:2025.03.23@zip")
+        parchment("org.parchmentmc.data:parchment-1.21.5:2025.06.01@zip")
     }
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
@@ -148,7 +148,7 @@ tasks.register('proguard', ProGuardTask) {
     }
     libraryjars loom.getIntermediaryMinecraftProvider().getMinecraftJarPaths()
     injars tasks.remapJar.outputs.files.singleFile
-    outjars(layout.buildDirectory.file("libs/${project.archivesBaseName}-${project.mod_version}-minified.jar"))
+    outjars(layout.buildDirectory.file("libs/${project.archives_base_name}-${version}-minified.jar"))
 }
 
 // configure the maven publication

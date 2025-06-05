@@ -1,12 +1,14 @@
 package com.launium.ghostify.client.ui;
 
-import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.platform.DepthTestFunction;
+import com.mojang.blaze3d.platform.LogicOp;
+import com.mojang.blaze3d.shaders.UniformType;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import net.minecraft.client.renderer.RenderStateShard;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ShaderDefines;
-import net.minecraft.client.renderer.ShaderProgram;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.TriState;
@@ -16,79 +18,84 @@ import java.util.OptionalDouble;
 import static net.minecraft.client.renderer.RenderStateShard.*;
 
 public class GhostifyRenderTypes {
-    static final ShaderProgram SHADER_ROUND_RECT = new ShaderProgram(
-            ResourceLocation.fromNamespaceAndPath("ghostify", "core/round_rect"),
-            DefaultVertexFormat.POSITION,
-            ShaderDefines.EMPTY
-    );
-
-    static final RenderStateShard.ShaderStateShard
-            RENDERTYPE_ROUND_RECT = new RenderStateShard.ShaderStateShard(SHADER_ROUND_RECT);
-
-    static final ImmutableList<RenderStateShard> ROUND_RECT_STATES = ImmutableList.of(
-            RENDERTYPE_ROUND_RECT,
-            NO_TEXTURE,
-            TRANSLUCENT_TRANSPARENCY,
-            //LEQUAL_DEPTH_TEST,
-            NO_CULL,
-            LIGHTMAP,
-            NO_OVERLAY,
-            NO_LAYERING,
-            MAIN_TARGET,
-            DEFAULT_TEXTURING,
-            COLOR_DEPTH_WRITE,
-            DEFAULT_LINE,
-            NO_COLOR_LOGIC
+    static final RenderPipeline PIPELINE_ROUND_RECT = RenderPipelines.register(
+            RenderPipeline.builder()
+                    .withLocation(ResourceLocation.fromNamespaceAndPath("ghostify", "pipeline/round_rect"))
+                    .withFragmentShader(ResourceLocation.fromNamespaceAndPath("ghostify", "core/round_rect"))
+                    .withVertexShader(ResourceLocation.fromNamespaceAndPath("ghostify", "core/round_rect"))
+                    .withColorWrite(true)
+                    .withDepthWrite(true)
+                    .withCull(false)
+                    .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+                    .withColorLogic(LogicOp.NONE)
+                    .withBlend(BlendFunction.TRANSLUCENT)
+                    .withUniform("ModelViewMat", UniformType.MATRIX4X4)
+                    .withUniform("ProjMat", UniformType.MATRIX4X4)
+                    .withUniform("u_Rect", UniformType.VEC4)
+                    .withUniform("u_Radii", UniformType.VEC4)
+                    .withUniform("u_edgeSoftness", UniformType.FLOAT)
+                    .withUniform("u_colorRect", UniformType.VEC4)
+                    .withUniform("u_colorRect2", UniformType.VEC4)
+                    .withUniform("u_gradientDirectionVector", UniformType.VEC2)
+                    .withUniform("u_colorShadow", UniformType.VEC4)
+                    .withUniform("u_shadowSoftness", UniformType.FLOAT)
+                    .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
+                    .build()
     );
 
     static final RenderType
-            ROUND_RECT = new RenderType("ghostify_round_rect", DefaultVertexFormat.POSITION,
-            VertexFormat.Mode.QUADS, RenderType.TRANSIENT_BUFFER_SIZE, false, false,
-            () -> ROUND_RECT_STATES.forEach(RenderStateShard::setupRenderState),
-            () -> ROUND_RECT_STATES.forEach(RenderStateShard::clearRenderState)) {
-    };
+            ROUND_RECT = RenderType.create("ghostify_round_rect", RenderType.TRANSIENT_BUFFER_SIZE,
+            false, false, PIPELINE_ROUND_RECT,
+            RenderType.CompositeState.builder()
+                    .setTextureState(NO_TEXTURE)
+                    .setLayeringState(NO_LAYERING)
+                    .setLightmapState(LIGHTMAP)
+                    .setOutputState(MAIN_TARGET)
+                    .setOverlayState(NO_OVERLAY)
+                    .setTexturingState(DEFAULT_TEXTURING)
+                    .setLineState(DEFAULT_LINE)
+                    .createCompositeState(false));
+
+    static final RenderPipeline PIPELINE_BOX_FILLED_NO_CULL = RenderPipelines.register(
+            RenderPipeline.builder(RenderPipelines.DEBUG_FILLED_SNIPPET)
+                    .withLocation(ResourceLocation.fromNamespaceAndPath("ghostify", "pipeline/box_filled_no_cull"))
+                    .withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.TRIANGLE_STRIP)
+                    .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+                    .build()
+    );
 
     public static final RenderType.CompositeRenderType BOX_FILLED_NO_CULL = RenderType.create(
             "ghostify_box_filled_no_cull",
-            DefaultVertexFormat.POSITION_COLOR,
-            VertexFormat.Mode.TRIANGLE_STRIP,
             RenderType.TRANSIENT_BUFFER_SIZE,
+            false, false, PIPELINE_BOX_FILLED_NO_CULL,
             RenderType.CompositeState.builder()
-                    .setShaderState(POSITION_COLOR_SHADER)
                     .setLayeringState(VIEW_OFFSET_Z_LAYERING)
-                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                     .setOutputState(ITEM_ENTITY_TARGET)
-                    .setWriteMaskState(COLOR_DEPTH_WRITE)
-                    .setCullState(NO_CULL)
-                    .setDepthTestState(NO_DEPTH_TEST)
                     .createCompositeState(false));
+
+    static final RenderPipeline PIPELINE_BOX_OUTLINE_NO_CULL = RenderPipelines.register(
+            RenderPipeline.builder(RenderPipelines.LINES_SNIPPET)
+                    .withLocation(ResourceLocation.fromNamespaceAndPath("ghostify", "pipeline/box_outline_no_cull"))
+                    .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+                    .build()
+    );
 
     public static final RenderType.CompositeRenderType BOX_OUTLINE_NO_CULL = RenderType.create(
             "ghostify_box_outline_no_cull",
-            DefaultVertexFormat.POSITION_COLOR_NORMAL,
-            VertexFormat.Mode.LINES,
             RenderType.TRANSIENT_BUFFER_SIZE,
+            false, false, PIPELINE_BOX_OUTLINE_NO_CULL,
             RenderType.CompositeState.builder()
-                    .setShaderState(RENDERTYPE_LINES_SHADER)
-                    .setLineState(new LineStateShard(OptionalDouble.of(3.0)))
+                    .setLineState(new LineStateShard(OptionalDouble.of(3.0))) // line width
                     .setLayeringState(VIEW_OFFSET_Z_LAYERING)
-                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                     .setOutputState(ITEM_ENTITY_TARGET)
-                    .setWriteMaskState(COLOR_DEPTH_WRITE)
-                    .setCullState(NO_CULL)
-                    .setDepthTestState(NO_DEPTH_TEST)
                     .createCompositeState(false));
 
     public static RenderType createTextureRenderType(DynamicTexture texture) {
         return RenderType.create("ghostify_dynamic_texture",
-                DefaultVertexFormat.POSITION_TEX_COLOR,
-                VertexFormat.Mode.QUADS,
                 RenderType.SMALL_BUFFER_SIZE,
+                RenderPipelines.GUI_TEXTURED,
                 RenderType.CompositeState.builder()
                         .setTextureState(new DynamicTextureStateShard(texture, TriState.FALSE, false))
-                        .setShaderState(POSITION_TEXTURE_COLOR_SHADER)
-                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-                        .setDepthTestState(NO_DEPTH_TEST)
                         .createCompositeState(false)
         );
     }

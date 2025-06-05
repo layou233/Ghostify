@@ -30,16 +30,16 @@ public class KuudraAutoPearl implements ClientTickEvents.StartTick {
         long now = Util.getMillis();
         if (now - lastScheduled < 500L) return;
         Inventory inventory = client.player.getInventory();
-        ItemStack lastHotbarItem = inventory.items.get(8);
+        ItemStack lastHotbarItem = inventory.getItem(8);
         if (HOLDABLE_LIST.stream().anyMatch(holdable ->
                 lastHotbarItem.getItem() == holdable.left() && holdable.right().equals(lastHotbarItem.getHoverName().getString())
         )) {
             // player is holding something
-            ItemStack mainHandItem = inventory.getSelected();
+            ItemStack mainHandItem = inventory.getSelectedItem();
             if (mainHandItem.getItem() == Items.ENDER_PEARL && !mainHandItem.hasFoil()) {
                 // not glinting; hopefully regular ender pearl
                 // can also be Fel Pearl or something, but we assume the player got brain
-                int selectedSlot = inventory.selected;
+                int selectedSlot = inventory.getSelectedSlot();
                 //long delay = random.nextIntBetweenInclusive(0, 10);
                 // wtf it's so fast; maybe Hypixel pre-sends slot switch packet?
                 // use zero delay then, throw instantly or in next client tick
@@ -48,8 +48,8 @@ public class KuudraAutoPearl implements ClientTickEvents.StartTick {
                     public void execute(Minecraft taskClient) {
                         if (taskClient.player == null) return;
                         Inventory taskInventory = taskClient.player.getInventory();
-                        if (taskInventory.selected == selectedSlot &&
-                                taskInventory.items.get(selectedSlot).getItem() == Items.ENDER_PEARL) {
+                        if (taskInventory.getSelectedSlot() == selectedSlot &&
+                                taskInventory.getItem(selectedSlot).getItem() == Items.ENDER_PEARL) {
                             KeyMapping.click(((AccessKeyMapping) client.options.keyUse).getKey());
                         }
                     }

@@ -16,7 +16,7 @@ public class DynamicTextureStateShard extends RenderStateShard.EmptyTextureState
     public DynamicTextureStateShard(DynamicTexture texture, TriState blur, boolean mipmap) {
         super(() -> {
             texture.setFilter(blur, mipmap);
-            RenderSystem.setShaderTexture(0, texture.getId());
+            RenderSystem.setShaderTexture(0, texture.getTexture());
         }, () -> {
         });
         this.texture = texture;

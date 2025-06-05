@@ -7,6 +7,7 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
@@ -77,7 +78,7 @@ public class LifeSaverTimer implements ClientReceiveMessageEvents.Game {
 
     private long readCooldownFromHelmet() {
         Inventory inventory = Minecraft.getInstance().player.getInventory();
-        ItemStack helmet = inventory.getArmor(3);
+        ItemStack helmet = inventory.getItem(EquipmentSlot.HEAD.getIndex(36));
         if (helmet.isEmpty()) { // how?
             throw new IllegalStateException("failed to read lore from helmet: helmet is empty");
         }

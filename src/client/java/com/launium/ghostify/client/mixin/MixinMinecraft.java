@@ -15,7 +15,7 @@ public class MixinMinecraft {
         if (AutoClicker.INSTANCE.isEnabled) {
             // we are unable to handle mining fatigue by now
             // mining islands etc. are really buggy
-            if (instance.player.hasEffect(MobEffects.DIG_SLOWDOWN)) {
+            if (instance.player.hasEffect(MobEffects.MINING_FATIGUE)) {
                 instance.gameMode.stopDestroyBlock();
                 return false;
             }

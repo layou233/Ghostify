@@ -2,14 +2,18 @@ package com.launium.ghostify.client.ui;
 
 import com.launium.ghostify.client.mixin.AccessFont;
 import com.launium.ghostify.client.mixin.AccessGuiGraphics;
+import com.mojang.blaze3d.buffers.GpuBuffer;
+import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.*;
 import net.minecraft.util.ARGB;
 import org.joml.Matrix4f;
-import org.joml.Vector4f;
+
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
 
 public class Easy2D {
     private static GuiGraphics context;
@@ -31,54 +35,64 @@ public class Easy2D {
             radius = 0;
         }
         Matrix4f pose = context.pose().last().pose();
-        CompiledShaderProgram shader = RenderSystem.setShader(GhostifyRenderTypes.SHADER_ROUND_RECT);
-        if (shader == null) {
-            return;
-        }
         float centerX = (left + right) * 0.5f;
         float centerY = (top + bottom) * 0.5f;
         float extentX = right - left;
         float extentY = bottom - top;
         radius = Math.min(radius, Math.min(extentX, extentY) * 0.5F);
         final float outset = 14F; // conservative
-        boolean isPureTranslation = (pose.properties() & Matrix4f.PROPERTY_TRANSLATION) != 0;
-        if (isPureTranslation) {
-            // fast path
-            shader.safeGetUniform("u_Rect")
-                    .set(centerX + pose.m30(), centerY + pose.m31(), extentX, extentY);
-        } else {
-            // here we modify global model view, so cannot do batch rendering
-            context.flush();
+        try (ByteBufferBuilder allocator = new ByteBufferBuilder(DefaultVertexFormat.POSITION.getVertexSize() * 4)) {
+            BufferBuilder bufferBuilder = new BufferBuilder(allocator, VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
+            bufferBuilder.addVertex(pose, left - outset, top - outset, depth);
+            bufferBuilder.addVertex(pose, left - outset, bottom + outset, depth);
+            bufferBuilder.addVertex(pose, right + outset, bottom + outset, depth);
+            bufferBuilder.addVertex(pose, right + outset, top - outset, depth);
+            boolean isPureTranslation = (pose.properties() & Matrix4f.PROPERTY_TRANSLATION) != 0;
+            if (!isPureTranslation) {
+                // here we modify global model view, so cannot do batch rendering
+                context.flush();
+            }
+            try (MeshData mesh = bufferBuilder.build()) {
+                GpuBuffer vertexBuffer = DefaultVertexFormat.POSITION.uploadImmediateVertexBuffer(mesh.vertexBuffer());
+                GpuBuffer indexBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS).getBuffer(mesh.drawState().indexCount());
+                try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(
+                        GhostifyRenderTypes.ROUND_RECT.getRenderTarget().getColorTexture(),
+                        OptionalInt.empty(),
+                        GhostifyRenderTypes.ROUND_RECT.getRenderTarget().getDepthTexture(),
+                        OptionalDouble.empty()
+                )) {
+                    renderPass.setPipeline(GhostifyRenderTypes.PIPELINE_ROUND_RECT);
+                    renderPass.setVertexBuffer(0, vertexBuffer);
+                    renderPass.setIndexBuffer(indexBuffer, RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS).type());
+                    if (isPureTranslation) {
+                        // fast path
+                        renderPass.setUniform("u_Rect",
+                                centerX + pose.m30(), centerY + pose.m31(), extentX, extentY);
+                    } else {
+                        // we expect local coordinates, concat pose with model view
+                        RenderSystem.getModelViewStack().pushMatrix();
+                        RenderSystem.getModelViewStack().mul(pose);
+                        renderPass.setUniform("u_Rect",
+                                centerX, centerY, extentX, extentY);
+                    }
+                    renderPass.setUniform("ModelViewMat", RenderSystem.getModelViewMatrix());
+                    renderPass.setUniform("ProjMat", RenderSystem.getProjectionMatrix());
+                    renderPass.setUniform("u_Radii", radius, radius, radius, radius);
+                    float[] colorVector = new float[]{(float) ARGB.red(color) / 255F, (float) ARGB.green(color) / 255F, (float) ARGB.blue(color) / 255F, ARGB.alpha(color) / 255F};
+                    renderPass.setUniform("u_colorRect", colorVector);
+                    renderPass.setUniform("u_colorRect2", colorVector);
+                    renderPass.setUniform("u_colorShadow", 0F, 0F, 0F, ARGB.alpha(color) / 255F);
+                    renderPass.setUniform("u_edgeSoftness", 1F);
+                    renderPass.setUniform("u_shadowSoftness", shadow);
+                    renderPass.drawIndexed(0, mesh.drawState().indexCount());
 
-            // we expect local coordinates, concat pose with model view
-            RenderSystem.getModelViewStack().pushMatrix();
-            RenderSystem.getModelViewStack().mul(pose);
-            shader.safeGetUniform("u_Rect")
-                    .set(centerX, centerY, extentX, extentY);
+                    if (!isPureTranslation)
+                        RenderSystem.getModelViewStack().popMatrix();
+                }
+            }
         }
-        shader.safeGetUniform("u_Radii")
-                .set(radius, radius, radius, radius);
-        Vector4f colorVector = new Vector4f((float) ARGB.red(color) / 255F, (float) ARGB.green(color) / 255F, (float) ARGB.blue(color) / 255F, ARGB.alpha(color) / 255F);
-        shader.safeGetUniform("u_colorRect")
-                .set(colorVector);
-        shader.safeGetUniform("u_colorRect2")
-                .set(colorVector);
-        shader.safeGetUniform("u_colorShadow")
-                .set(0F, 0F, 0F, ARGB.alpha(color) / 255F);
-        shader.safeGetUniform("u_edgeSoftness")
-                .set(1F);
-        shader.safeGetUniform("u_shadowSoftness")
-                .set(shadow);
-        var buffer = ((AccessGuiGraphics) context).getBufferSource().getBuffer(GhostifyRenderTypes.ROUND_RECT);
-        buffer.addVertex(pose, left - outset, top - outset, depth);
-        buffer.addVertex(pose, left - outset, bottom + outset, depth);
-        buffer.addVertex(pose, right + outset, bottom + outset, depth);
-        buffer.addVertex(pose, right + outset, top - outset, depth);
-
         // we modify uniform for each draw, so cannot do batch rendering
         context.flush();
-        if (!isPureTranslation)
-            RenderSystem.getModelViewStack().popMatrix();
     }
 
     public static final int TEXT_DEFAULT_COLOR = -1;
