@@ -46,6 +46,7 @@ public class GhostifyClient implements ClientModInitializer {
         ClientReceiveMessageEvents.GAME.register(new SpiritPetWarning());
         ClientReceiveMessageEvents.GAME.register(new AutoPetNotification());
         ClientReceiveMessageEvents.GAME.register(PickobulusPreview.INSTANCE);
+        ClientReceiveMessageEvents.GAME.register(LobbyHistory.INSTANCE);
         WorldRenderEvents.AFTER_ENTITIES.register(PickobulusPreview.INSTANCE);
         AbstractExperimentSolver.init();
         HarpBot.INSTANCE.init();
