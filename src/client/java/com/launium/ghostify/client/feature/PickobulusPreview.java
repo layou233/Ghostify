@@ -86,10 +86,10 @@ public class PickobulusPreview extends AbstractModule implements WorldRenderEven
         } else {
             eyeHeight += 1.62F;
         }
-        Vec3 cameraPosition = new Vec3(player.getX(), eyeHeight, player.getZ());
+        Vec3 firePosition = new Vec3(player.getX(), eyeHeight, player.getZ());
         Vec3 viewVector = player.getViewVector(0F);
-        Vec3 rayEnd = cameraPosition.add(viewVector.x * 30F, viewVector.y * 30F, viewVector.z * 30F);
-        BlockHitResult hitResult = context.world().clip(new ClipContext(cameraPosition, rayEnd,
+        Vec3 rayEnd = firePosition.add(viewVector.x * 30F, viewVector.y * 30F, viewVector.z * 30F);
+        BlockHitResult hitResult = context.world().clip(new ClipContext(firePosition, rayEnd,
                 ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
         if (hitResult.getType() == HitResult.Type.BLOCK) {
             BlockPos hitPos = hitResult.getBlockPos();
