@@ -1,5 +1,6 @@
 package com.launium.ghostify.client.mixin;
 
+import com.launium.ghostify.client.feature.DayViewer;
 import com.launium.ghostify.client.feature.PickobulusPreview;
 import com.launium.ghostify.client.ui.container.ServerTPSContainer;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -15,6 +16,7 @@ public class MixinClientPacketListener {
     @Inject(method = "handleSetTime", at = @At("TAIL"))
     private void ghostify$handleSetTime(ClientboundSetTimePacket packet, CallbackInfo ci) {
         ServerTPSContainer.INSTANCE.whenClientboundSetTime();
+        DayViewer.INSTANCE.whenClientboundSetTime();
     }
 
     @Inject(method = "handleRespawn", at = @At("TAIL"))

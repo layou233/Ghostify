@@ -78,7 +78,8 @@ public class HudModuleList implements HudRenderCallback {
                             new RenderInfo(FontManager.DEFAULT_FONT, module.subtitle(), 8F), scale);
                 }
             }
-            float elementWidth = 6F + title.bounds.width / scale + (subtitle == null ? 0F : 1.5F + subtitle.bounds.width / scale);
+            float titleScaledBoundsWidth = (title.bounds.x + title.bounds.width) / scale;
+            float elementWidth = 6F + titleScaledBoundsWidth + (subtitle == null ? 0F : 1.5F + (subtitle.bounds.x + subtitle.bounds.width) / scale);
             float y = space.allocateVertical(verticalAlignment, elementHeight, 2F);
             float x = space.borrowHorizontal(horizontalAlignment, elementWidth, 2F);
             if (module.moduleList.initializeAnimation) {
@@ -110,7 +111,7 @@ public class HudModuleList implements HudRenderCallback {
                     module.moduleList.animatedY.current + (elementHeight - title.lineHeight / scale) / 2,
                     5F, scale, ChromaColor.pale(3L, ((long) (y - animatedStartingY.current)) << 9, 0xFF));
             if (subtitle != null) {
-                subtitle.draw(context, module.moduleList.animatedX.current + 3F + title.bounds.width / scale + 1.5F,
+                subtitle.draw(context, module.moduleList.animatedX.current + 3F + titleScaledBoundsWidth + 1.5F,
                         module.moduleList.animatedY.current + +(elementHeight - subtitle.lineHeight / scale) / 2,
                         5F, scale, FadingColor.aqua(3L, ((long) (y - animatedStartingY.current)) << 9, 0xFF));
             }

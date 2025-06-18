@@ -29,12 +29,12 @@ public class RenderedText implements AutoCloseable {
         GlyphVector glyphVector = font.createGlyphVector(FontManager.FONT_RENDER_CONTEXT, info.text());
         Rectangle bounds = glyphVector.getPixelBounds(null, 0, 0);
         int baseline = -bounds.y;
-        BufferedImage bufferedImage = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage bufferedImage = new BufferedImage(bounds.x + bounds.width, bounds.height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D imageGraphics = bufferedImage.createGraphics();
         imageGraphics.setFont(font);
         imageGraphics.setPaint(COLOR_TRANSPARENT);
         imageGraphics.setComposite(AlphaComposite.Clear);
-        imageGraphics.fillRect(0, 0, bounds.width, bounds.height);
+        imageGraphics.fillRect(0, 0, bounds.x + bounds.width, bounds.height);
         imageGraphics.setPaint(Color.WHITE);
         imageGraphics.setComposite(AlphaComposite.SrcOver);
         imageGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -57,13 +57,14 @@ public class RenderedText implements AutoCloseable {
         context.pose().pushPose();
         context.pose().scale(1f / scale, 1f / scale, 1f);
         Matrix4f pose = context.pose().last().pose();
+        int width = this.bounds.x + this.bounds.width;
         // from GuiGraphics.innerBlit
         MultiBufferSource.BufferSource bufferSource = ((AccessGuiGraphics) context).getBufferSource();
         VertexConsumer buffer = bufferSource.getBuffer(this.renderType);
         buffer.addVertex(pose, x * scale, y * scale, z).setUv(0f, 0f).setColor(color);
         buffer.addVertex(pose, x * scale, y * scale + this.bounds.height, z).setUv(0f, 1f).setColor(color);
-        buffer.addVertex(pose, x * scale + this.bounds.width, y * scale + this.bounds.height, z).setUv(1f, 1f).setColor(color);
-        buffer.addVertex(pose, x * scale + this.bounds.width, y * scale, z).setUv(1f, 0f).setColor(color);
+        buffer.addVertex(pose, x * scale + width, y * scale + this.bounds.height, z).setUv(1f, 1f).setColor(color);
+        buffer.addVertex(pose, x * scale + width, y * scale, z).setUv(1f, 0f).setColor(color);
         context.pose().popPose();
     }
 

@@ -42,6 +42,7 @@ public class GhostifyClient implements ClientModInitializer {
         //ClientTickEvents.START_CLIENT_TICK.register(KuudraAutoPearl.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(CameraNoClip.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(HarpBot.INSTANCE);
+        ClientTickEvents.START_CLIENT_TICK.register(DayViewer.INSTANCE);
         ClientTickEvents.END_CLIENT_TICK.register(PickobulusPreview.INSTANCE);
         ClientReceiveMessageEvents.GAME.register(LifeSaverTimer.INSTANCE);
         ClientReceiveMessageEvents.GAME.register(new SpiritPetWarning());
