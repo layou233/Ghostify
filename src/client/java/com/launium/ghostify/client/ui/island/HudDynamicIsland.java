@@ -18,8 +18,8 @@ public class HudDynamicIsland implements HudRenderCallback {
     private long lastEventTime;
     private boolean lastVisibility;
 
-    Animation halfWidth = new Smooth(0, 40), halfHeight = new Smooth(0, 30);
-
+    private final Animation halfWidth = new Smooth(0, 40);
+    private final Animation halfHeight = new Smooth(0, 30);
     private final HashSet<IContainer> activeContainers = HashSet.newHashSet(8);
 
     @Override
@@ -41,12 +41,9 @@ public class HudDynamicIsland implements HudRenderCallback {
         long now = Util.getMillis();
         long timeDiff = now - lastEventTime;
         if (timeDiff > 40) timeDiff = 40;
-        IContainer container;
-        synchronized (this) {
-            container = activeContainers.stream()
-                    .reduce(((a, b) -> a.getLevel() > b.getLevel() ? a : b))
-                    .orElse(null);
-        }
+        IContainer container = activeContainers.stream()
+                .reduce(((a, b) -> a.getLevel() > b.getLevel() ? a : b))
+                .orElse(null);
         if (container != null) container.prepareRender(scale);
         halfWidth.update(container == null ? 0F : Math.max(24F, container.estimateWidth()) * 0.5F);
         halfHeight.update(container == null ? 0F : Math.max(10F, container.estimateHeight()) * 0.5F);
@@ -66,9 +63,7 @@ public class HudDynamicIsland implements HudRenderCallback {
 
     public void show(IContainer container) {
         if (container.isActive()) {
-            synchronized (this) {
-                activeContainers.add(container);
-            }
+            activeContainers.add(container);
         }
     }
 

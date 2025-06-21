@@ -40,7 +40,7 @@ public class RenderedText implements AutoCloseable {
         imageGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         imageGraphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         imageGraphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
-        imageGraphics.drawString(info.text(), 0, baseline);
+        imageGraphics.drawString(info.text(), -bounds.x, baseline);
         imageGraphics.dispose();
         NativeImage nativeImage = new NativeImage(NativeImage.Format.RGBA, bufferedImage.getWidth(), bufferedImage.getHeight(), false);
         // Fuck Minecraft native image
