@@ -19,6 +19,7 @@
     void method_***(***);
     void afterTick(...);
     void afterEntities(...);
+    void render(net.minecraft.client.gui.GuiGraphics, net.minecraft.client.DeltaTracker);
     int compareTo(...);
 }
 

@@ -15,9 +15,9 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
@@ -33,8 +33,14 @@ public class GhostifyClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         FontManager.init();
-        HudRenderCallback.EVENT.register(island);
-        HudRenderCallback.EVENT.register(moduleList);
+        HudLayerRegistrationCallback.EVENT.register(layeredDrawer -> {
+            layeredDrawer.attachLayerAfter(IdentifiedLayer.MISC_OVERLAYS,
+                    ResourceLocation.fromNamespaceAndPath("ghostify", "dynamic_island"),
+                    island);
+            layeredDrawer.attachLayerAfter(IdentifiedLayer.MISC_OVERLAYS,
+                    ResourceLocation.fromNamespaceAndPath("ghostify", "module_list"),
+                    moduleList);
+        });
         ClientTickEvents.START_CLIENT_TICK.register(GhostPickaxe.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(ServerTPSContainer.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(ClientTaskScheduler::whenClientStartTick);

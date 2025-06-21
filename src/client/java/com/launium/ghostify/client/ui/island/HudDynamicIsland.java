@@ -5,15 +5,15 @@ import com.launium.ghostify.client.ui.animation.Animation;
 import com.launium.ghostify.client.ui.animation.Smooth;
 import com.launium.ghostify.client.ui.container.IContainer;
 import com.mojang.blaze3d.platform.Window;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.Util;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 
 import java.util.HashSet;
 
-public class HudDynamicIsland implements HudRenderCallback {
+public class HudDynamicIsland implements LayeredDraw.Layer {
 
     private long lastEventTime;
     private boolean lastVisibility;
@@ -23,7 +23,7 @@ public class HudDynamicIsland implements HudRenderCallback {
     private final HashSet<IContainer> activeContainers = HashSet.newHashSet(8);
 
     @Override
-    public void onHudRender(GuiGraphics drawContext, DeltaTracker deltaTracker) {
+    public void render(GuiGraphics drawContext, DeltaTracker deltaTracker) {
         activeContainers.removeIf(container -> !container.isActive());
         if (activeContainers.isEmpty() && halfWidth.current < 0.6F && halfHeight.current < 0.6F) {
             lastVisibility = false;
