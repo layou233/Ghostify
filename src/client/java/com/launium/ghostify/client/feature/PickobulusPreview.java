@@ -161,7 +161,7 @@ public class PickobulusPreview extends AbstractModule implements WorldRenderEven
         if (isOverlay || !isEnabled) return;
         String text = message.getString();
         if ("You used your Pickobulus Pickaxe Ability!".equals(text) ||
-                text.startsWith("Your pickaxe ability is on cooldown for ")) {
+                text.startsWith("Your Pickaxe ability is on cooldown for ")) {
             onCooldown = true;
         } else if ("Pickobulus is now available!".equals(text)) {
             onCooldown = false;

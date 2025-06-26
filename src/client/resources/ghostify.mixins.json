@@ -14,7 +14,9 @@
     "MixinClientCommonPacketListenerImpl",
     "MixinClientPacketListener",
     "MixinFogRenderer",
+    "MixinItemStack",
     "MixinMinecraft",
+    "MixinPlayer",
     "MixinPlayerGameMode",
     "MixinScreenEffectRenderer"
   ],

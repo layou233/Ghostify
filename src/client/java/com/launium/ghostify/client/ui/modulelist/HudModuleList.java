@@ -1,5 +1,6 @@
 package com.launium.ghostify.client.ui.modulelist;
 
+import com.launium.ghostify.client.compat.SkyblockerCompat;
 import com.launium.ghostify.client.feature.AbstractModule;
 import com.launium.ghostify.client.ui.Alignment;
 import com.launium.ghostify.client.ui.Easy2D;
@@ -122,6 +123,9 @@ public class HudModuleList implements LayeredDraw.Layer {
 
     private static float calculateStartingY(Player player) {
         int startingY = 1;
+        if (SkyblockerCompat.isEffectOverlayHidden()) {
+            return startingY;
+        }
         boolean beneficialFound = false;
         // constants are from net.minecraft.client.gui.Gui::renderEffects
         for (MobEffectInstance effect : player.getActiveEffects()) {

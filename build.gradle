@@ -46,6 +46,18 @@ repositories {
         name = 'ParchmentMC'
         url = 'https://maven.parchmentmc.org'
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
 }
 
 dependencies {
@@ -56,8 +68,10 @@ dependencies {
         parchment("org.parchmentmc.data:parchment-1.21.5:2025.06.01@zip")
     }
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    // for compat
+    modCompileOnly "maven.modrinth:skyblocker-liap:v5.3.0+1.21.5"
 
     compileOnly("org.projectlombok:lombok:1.18.+")
     annotationProcessor("org.projectlombok:lombok:1.18.+")

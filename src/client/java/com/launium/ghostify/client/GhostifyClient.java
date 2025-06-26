@@ -1,5 +1,6 @@
 package com.launium.ghostify.client;
 
+import com.launium.ghostify.client.compat.Compat;
 import com.launium.ghostify.client.feature.*;
 import com.launium.ghostify.client.feature.experimentation.AbstractExperimentSolver;
 import com.launium.ghostify.client.ui.container.ServerTPSContainer;
@@ -32,6 +33,7 @@ public class GhostifyClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        Compat.init();
         FontManager.init();
         HudLayerRegistrationCallback.EVENT.register(layeredDrawer -> {
             layeredDrawer.attachLayerAfter(IdentifiedLayer.MISC_OVERLAYS,

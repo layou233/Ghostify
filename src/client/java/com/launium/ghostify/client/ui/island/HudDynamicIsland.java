@@ -1,5 +1,6 @@
 package com.launium.ghostify.client.ui.island;
 
+import com.launium.ghostify.client.compat.SkyCubedCompat;
 import com.launium.ghostify.client.ui.Easy2D;
 import com.launium.ghostify.client.ui.animation.Animation;
 import com.launium.ghostify.client.ui.animation.Smooth;
@@ -51,8 +52,11 @@ public class HudDynamicIsland implements LayeredDraw.Layer {
         halfHeight.tick(timeDiff / 180F);
         float left = (float) windowWidth / 2 - halfWidth.current;
         float top = 36F;
+        if (SkyCubedCompat.IS_EXISTS) {
+            top = 50F;
+        }
         float right = (float) windowWidth / 2 + halfWidth.current;
-        float bottom = 36F + 2 * halfHeight.current;
+        float bottom = top + 2 * halfHeight.current;
         Easy2D.drawRoundRect(left, top, right, bottom, 5, 12, 16F, 0xDB000000);
         if (container != null && halfWidth.ratio() > 0.8F)
             container.render(drawContext, left, top, right, bottom, scale);

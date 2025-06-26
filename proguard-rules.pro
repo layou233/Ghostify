@@ -10,6 +10,9 @@
 -keepclassmembers,allowobfuscation public class com.launium.ghostify.client.mixin.* {
     *;
 }
+-keepclassmembers public class com.launium.ghostify.client.mixin.* {
+    @org.spongepowered.asm.mixin.Shadow *;
+}
 -keepclassmembers,allowoptimization public class com.launium.ghostify.client.GhostifyClient {
     <methods>;
 }
