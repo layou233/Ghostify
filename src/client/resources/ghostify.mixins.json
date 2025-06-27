@@ -3,7 +3,6 @@
   "minVersion": "0.8",
   "package": "com.launium.ghostify.client.mixin",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [],
   "client": [
     "AccessAbstractContainerScreen",
     "AccessFont",
@@ -18,7 +17,8 @@
     "MixinMinecraft",
     "MixinPlayer",
     "MixinPlayerGameMode",
-    "MixinScreenEffectRenderer"
+    "MixinScreenEffectRenderer",
+    "skyblocker.MixinMobGlow"
   ],
   "injectors": {
     "defaultRequire": 1

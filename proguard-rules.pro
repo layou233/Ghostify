@@ -6,11 +6,11 @@
 -adaptresourcefilecontents
 
 -keepattributes *Annotation*,Signature
--keep,allowoptimization public class com.launium.ghostify.client.mixin.*
--keepclassmembers,allowobfuscation public class com.launium.ghostify.client.mixin.* {
+-keep,allowoptimization public class com.launium.ghostify.client.mixin.**
+-keepclassmembers,allowobfuscation public class com.launium.ghostify.client.mixin.** {
     *;
 }
--keepclassmembers public class com.launium.ghostify.client.mixin.* {
+-keepclassmembers public class com.launium.ghostify.client.mixin.** {
     @org.spongepowered.asm.mixin.Shadow *;
 }
 -keepclassmembers,allowoptimization public class com.launium.ghostify.client.GhostifyClient {
