@@ -1,15 +1,14 @@
 package com.launium.ghostify.client.ui.font;
 
-import com.launium.ghostify.client.mixin.AccessGuiGraphics;
-import com.launium.ghostify.client.ui.GhostifyRenderTypes;
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import lombok.AllArgsConstructor;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.gui.render.TextureSetup;
+import net.minecraft.client.gui.render.state.BlitRenderState;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import org.joml.Matrix4f;
+import org.joml.Matrix3x2f;
+import org.joml.Matrix3x2fStack;
 
 import java.awt.*;
 import java.awt.font.GlyphVector;
@@ -20,7 +19,7 @@ public class RenderedText implements AutoCloseable {
     public DynamicTexture texture;
     public Rectangle bounds;
     public int lineHeight;
-    public RenderType renderType;
+    public TextureSetup textureSetup;
 
     private static final Color COLOR_TRANSPARENT = new Color(0, true);
 
@@ -50,21 +49,23 @@ public class RenderedText implements AutoCloseable {
             }
         }
         DynamicTexture texture = new DynamicTexture(() -> "Ghostify Smooth Font Texture", nativeImage);
-        return new RenderedText(texture, bounds, baseline, GhostifyRenderTypes.createTextureRenderType(texture));
+        return new RenderedText(texture, bounds, baseline, TextureSetup.singleTexture(texture.getTextureView()));
     }
 
     public void draw(GuiGraphics context, float x, float y, float z, float scale, int color) {
-        context.pose().pushPose();
-        context.pose().scale(1f / scale, 1f / scale, 1f);
-        Matrix4f pose = context.pose().last().pose();
+        Matrix3x2fStack pose = context.pose().pushMatrix();
+        pose.translate(x, y);
+        pose.scale(1f / scale, 1f / scale, pose);
         // from GuiGraphics.innerBlit
-        MultiBufferSource.BufferSource bufferSource = ((AccessGuiGraphics) context).getBufferSource();
-        VertexConsumer buffer = bufferSource.getBuffer(this.renderType);
-        buffer.addVertex(pose, x * scale, y * scale, z).setUv(0f, 0f).setColor(color);
-        buffer.addVertex(pose, x * scale, y * scale + this.bounds.height, z).setUv(0f, 1f).setColor(color);
-        buffer.addVertex(pose, x * scale + this.bounds.width, y * scale + this.bounds.height, z).setUv(1f, 1f).setColor(color);
-        buffer.addVertex(pose, x * scale + this.bounds.width, y * scale, z).setUv(1f, 0f).setColor(color);
-        context.pose().popPose();
+        context.guiRenderState.submitGuiElement(new BlitRenderState(
+                RenderPipelines.GUI_TEXTURED, textureSetup,
+                new Matrix3x2f(pose),
+                0, 0,
+                this.bounds.width, this.bounds.height,
+                0f, 1f, 0f, 1f, color,
+                context.scissorStack.peek()
+        ));
+        pose.popMatrix();
     }
 
     @Override

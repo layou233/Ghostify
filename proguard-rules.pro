@@ -24,6 +24,7 @@
     *** on*(...);
     void method_***(***);
     void afterTick(...);
+    void afterEntities(...);
     int compareTo(...);
     @com.launium.ghostify.client.annotations.SkipObfuscation public <methods>;
 }

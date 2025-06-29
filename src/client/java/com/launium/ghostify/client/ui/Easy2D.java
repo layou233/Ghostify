@@ -1,22 +1,32 @@
 package com.launium.ghostify.client.ui;
 
 import com.launium.ghostify.client.mixin.AccessFont;
-import com.launium.ghostify.client.mixin.AccessGuiGraphics;
+import com.mojang.blaze3d.ProjectionType;
 import com.mojang.blaze3d.buffers.GpuBuffer;
+import com.mojang.blaze3d.buffers.GpuBufferSlice;
+import com.mojang.blaze3d.buffers.Std140Builder;
+import com.mojang.blaze3d.buffers.Std140SizeCalculator;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.CachedOrthoProjectionMatrixBuffer;
+import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.util.ARGB;
-import org.joml.Matrix4f;
+import org.joml.Matrix3x2f;
+import org.joml.Matrix3x2fStack;
+import org.joml.Vector4f;
 
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 
 public class Easy2D {
     private static GuiGraphics context;
+    private static final CachedOrthoProjectionMatrixBuffer guiProjectionMatrixBuffer = new CachedOrthoProjectionMatrixBuffer("gui", 1000.0F, 11000.0F, true);
 
     public static void configure(GuiGraphics newContext) {
         context = newContext;
@@ -26,6 +36,32 @@ public class Easy2D {
         context = null;
     }
 
+    private static final int roundRectBufferSize = new Std140SizeCalculator()
+            .putVec4() // u_Rect
+            .putVec4() // u_Radii
+            .putVec4() // u_colorRect
+            .putVec4() // u_colorRect2
+            .putVec4() // u_colorShadow
+            .putVec2() // u_gradientDirectionVector
+            .putFloat() // u_edgeSoftness
+            .putFloat() // u_shadowSoftness
+            .get();
+
+//    private static final MappableRingBuffer roundRectUBO = new MappableRingBuffer(
+//            () -> "Ghostify Round Rect UBO",
+//            GpuBuffer.USAGE_UNIFORM | GpuBuffer.USAGE_MAP_WRITE,
+//            new Std140SizeCalculator()
+//                    .putVec4() // u_Rect
+//                    .putVec4() // u_Radii
+//                    .putVec4() // u_colorRect
+//                    .putVec4() // u_colorRect2
+//                    .putVec4() // u_colorShadow
+//                    .putVec2() // u_gradientDirectionVector
+//                    .putFloat() // u_edgeSoftness
+//                    .putFloat() // u_shadowSoftness
+//                    .get()
+//    );
+
     public static void drawRoundRect(float left, float top, float right, float bottom,
                                      float depth, float radius, float shadow, int color, int shadowColor) {
         if (!(left < right && top < bottom)) { // also capture NaN
@@ -34,113 +70,113 @@ public class Easy2D {
         if (!Float.isFinite(radius) || radius < 0.0f) { // NaN, Inf, negative
             radius = 0;
         }
-        Matrix4f pose = context.pose().last().pose();
+        Matrix3x2f pose = context.pose();
         float centerX = (left + right) * 0.5f;
         float centerY = (top + bottom) * 0.5f;
         float extentX = right - left;
         float extentY = bottom - top;
         radius = Math.min(radius, Math.min(extentX, extentY) * 0.5F);
         final float outset = 14F; // conservative
+        // build vertex buffer
         try (ByteBufferBuilder allocator = new ByteBufferBuilder(DefaultVertexFormat.POSITION.getVertexSize() * 4)) {
             BufferBuilder bufferBuilder = new BufferBuilder(allocator, VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
-            bufferBuilder.addVertex(pose, left - outset, top - outset, depth);
-            bufferBuilder.addVertex(pose, left - outset, bottom + outset, depth);
-            bufferBuilder.addVertex(pose, right + outset, bottom + outset, depth);
-            bufferBuilder.addVertex(pose, right + outset, top - outset, depth);
-            boolean isPureTranslation = (pose.properties() & Matrix4f.PROPERTY_TRANSLATION) != 0;
-            if (!isPureTranslation) {
-                // here we modify global model view, so cannot do batch rendering
-                context.flush();
-            }
+            bufferBuilder.addVertexWith2DPose(pose, left - outset, top - outset, depth);
+            bufferBuilder.addVertexWith2DPose(pose, left - outset, bottom + outset, depth);
+            bufferBuilder.addVertexWith2DPose(pose, right + outset, bottom + outset, depth);
+            bufferBuilder.addVertexWith2DPose(pose, right + outset, top - outset, depth);
             try (MeshData mesh = bufferBuilder.build()) {
+                // build uniform buffer
+                //roundRectUBO.rotate();
+                GpuBuffer uniformBuffer = RenderSystem.getDevice().createBuffer(
+                        () -> "Ghostify Round Rect UBO",
+                        GpuBuffer.USAGE_UNIFORM | GpuBuffer.USAGE_MAP_WRITE, roundRectBufferSize
+                );
+                Vector4f colorVector = new Vector4f((float) ARGB.red(color) / 255F, (float) ARGB.green(color) / 255F, (float) ARGB.blue(color) / 255F, ARGB.alpha(color) / 255F);
+                try (GpuBuffer.MappedView view = RenderSystem.getDevice().createCommandEncoder().mapBuffer(uniformBuffer, false, true)) { // false, true means write only
+                    Std140Builder.intoBuffer(view.data())
+                            .putVec4(centerX, centerY, extentX, extentY) // u_Rect
+                            .putVec4(radius, radius, radius, radius) // u_Radii
+                            .putVec4(colorVector) // u_colorRect
+                            .putVec4(colorVector) // u_colorRect2
+                            .putVec4(ARGB.red(shadowColor) / 255F, ARGB.green(shadowColor) / 255F, ARGB.blue(shadowColor) / 255F, ARGB.alpha(shadowColor) / 255F) // u_colorShadow
+                            .putVec2(0F, 0F) // u_gradientDirectionVector
+                            .putFloat(1F) // u_edgeSoftness
+                            .putFloat(shadow); // u_shadowSoftness
+                }
+
+                Window window = Minecraft.getInstance().getWindow();
+                GhostifyRenderTypes.ROUND_RECT.setupRenderState();
+                RenderSystem.setProjectionMatrix(
+                        guiProjectionMatrixBuffer.getBuffer((float) window.getWidth() / window.getGuiScale(), (float) window.getHeight() / window.getGuiScale()),
+                        ProjectionType.ORTHOGRAPHIC
+                );
+                GpuBufferSlice dynamicTransforms = RenderSystem.getDynamicUniforms().writeTransform(
+                        RenderSystem.getModelViewMatrix(),
+                        colorVector,
+                        RenderSystem.getModelOffset(),
+                        RenderSystem.getTextureMatrix(),
+                        RenderSystem.getShaderLineWidth());
                 GpuBuffer vertexBuffer = DefaultVertexFormat.POSITION.uploadImmediateVertexBuffer(mesh.vertexBuffer());
-                GpuBuffer indexBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS).getBuffer(mesh.drawState().indexCount());
+                RenderSystem.AutoStorageIndexBuffer shapeIndexBuffer = RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS);
+                GpuBuffer indexBuffer = shapeIndexBuffer.getBuffer(mesh.drawState().indexCount());
                 try (RenderPass renderPass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(
-                        GhostifyRenderTypes.ROUND_RECT.getRenderTarget().getColorTexture(),
+                        () -> "Ghostify Round Rect Pass",
+                        RenderSystem.outputColorTextureOverride == null ? RenderStateShard.MAIN_TARGET.getRenderTarget().getColorTextureView() : RenderSystem.outputColorTextureOverride,
                         OptionalInt.empty(),
-                        GhostifyRenderTypes.ROUND_RECT.getRenderTarget().getDepthTexture(),
+                        RenderSystem.outputDepthTextureOverride == null ? RenderStateShard.MAIN_TARGET.getRenderTarget().getDepthTextureView() : RenderSystem.outputDepthTextureOverride,
                         OptionalDouble.empty()
                 )) {
                     renderPass.setPipeline(GhostifyRenderTypes.PIPELINE_ROUND_RECT);
                     renderPass.setVertexBuffer(0, vertexBuffer);
-                    renderPass.setIndexBuffer(indexBuffer, RenderSystem.getSequentialBuffer(VertexFormat.Mode.QUADS).type());
-                    if (isPureTranslation) {
-                        // fast path
-                        renderPass.setUniform("u_Rect",
-                                centerX + pose.m30(), centerY + pose.m31(), extentX, extentY);
-                    } else {
-                        // we expect local coordinates, concat pose with model view
-                        RenderSystem.getModelViewStack().pushMatrix();
-                        RenderSystem.getModelViewStack().mul(pose);
-                        renderPass.setUniform("u_Rect",
-                                centerX, centerY, extentX, extentY);
-                    }
-                    renderPass.setUniform("ModelViewMat", RenderSystem.getModelViewMatrix());
-                    renderPass.setUniform("ProjMat", RenderSystem.getProjectionMatrix());
-                    renderPass.setUniform("u_Radii", radius, radius, radius, radius);
-                    float[] colorVector = new float[]{ARGB.red(color) / 255F, ARGB.green(color) / 255F, ARGB.blue(color) / 255F, ARGB.alpha(color) / 255F};
-                    renderPass.setUniform("u_colorRect", colorVector);
-                    renderPass.setUniform("u_colorRect2", colorVector);
-                    renderPass.setUniform("u_colorShadow", ARGB.red(shadowColor) / 255F, ARGB.green(shadowColor) / 255F, ARGB.blue(shadowColor) / 255F, ARGB.alpha(shadowColor) / 255F);
-                    renderPass.setUniform("u_edgeSoftness", 1F);
-                    renderPass.setUniform("u_shadowSoftness", shadow);
-                    renderPass.drawIndexed(0, mesh.drawState().indexCount());
-
-                    if (!isPureTranslation)
-                        RenderSystem.getModelViewStack().popMatrix();
+                    renderPass.setIndexBuffer(indexBuffer, shapeIndexBuffer.type());
+                    renderPass.setUniform("Projection", RenderSystem.getProjectionMatrixBuffer());
+                    renderPass.setUniform("DynamicTransforms", dynamicTransforms);
+                    renderPass.setUniform("u", uniformBuffer);
+                    renderPass.drawIndexed(0, 0, mesh.drawState().indexCount(), 1);
                 }
+                GhostifyRenderTypes.ROUND_RECT.clearRenderState();
+                uniformBuffer.close();
             }
         }
         // we modify uniform for each draw, so cannot do batch rendering
-        context.flush();
+        //context.flush();
     }
-
-//    public static void drawArc(float xCenter, float yCenter, float radius, float thickness, int color, double startAngle, double endAngle) {
-//        context.drawSpecial(bufferSource -> {
-//            VertexConsumer buffer = bufferSource.getBuffer(GhostifyRenderTypes.ARC_LINE_NO_CULL);
-//            Matrix4f pose = context.pose().last().pose();
-//            for (double i = startAngle; i <= endAngle; i += 1) {
-//                double innerX = xCenter + Math.sin(Math.toRadians(i)) * (radius - thickness);
-//                double innerY = yCenter + Math.cos(Math.toRadians(i)) * (radius - thickness);
-//                double outerX = xCenter + Math.sin(Math.toRadians(i)) * radius;
-//                double outerY = yCenter + Math.cos(Math.toRadians(i)) * radius;
-//
-//                buffer.addVertex(pose, (float) innerX, (float) innerY, 0).setColor(color);
-//                buffer.addVertex(pose, (float) outerX, (float) outerY, 0).setColor(color);
-//            }
-//        });
-//    }
 
     public static final int TEXT_DEFAULT_COLOR = -1;
 
     public static void drawScreenText(Font font, String text, float x, float y, int color, boolean shadow) {
-        font.drawInBatch(text, x, y, color, shadow, context.pose().last().pose(),
-                ((AccessGuiGraphics) context).getBufferSource(), Font.DisplayMode.SEE_THROUGH, 0, Integer.MAX_VALUE);
+        Matrix3x2fStack pose = context.pose().pushMatrix();
+        pose.translate(x, y);
+        context.drawString(font, text, 0, 0, color, shadow);
+        pose.popMatrix();
     }
 
     public static void drawScreenTextsCentered(Font font, float x, float y, int color, boolean shadow, String... lines) {
         if (lines.length == 0) return;
         StringSplitter splitter = ((AccessFont) font).getSplitter();
         float startY = y - font.lineHeight * lines.length * 0.5F;
+        Matrix3x2fStack pose = context.pose().pushMatrix();
+        pose.translate(0f, 0f);
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i];
-            drawScreenText(font, line,
-                    x - splitter.stringWidth(line) * 0.5F, startY + font.lineHeight * i,
-                    color, shadow);
+            pose.setTranslation(x - splitter.stringWidth(line) * 0.5F, startY + font.lineHeight * i);
+            context.drawString(font, line, 0, 0, color, shadow);
         }
+        pose.popMatrix();
     }
 
     public static void drawScreenTextElements(Font font, float startX, float endX, float centerY, boolean shadow, VanillaText... elements) {
         if (elements.length == 0) return;
         StringSplitter splitter = ((AccessFont) font).getSplitter();
         float startY = centerY - font.lineHeight * elements.length * 0.5F;
+        Matrix3x2fStack pose = context.pose().pushMatrix();
+        pose.translate(0f, 0f);
         for (int i = 0; i < elements.length; i++) {
-            VanillaText element = elements[i];
-            drawScreenText(font, element.text,
-                    element.align.calculate(startX, endX, splitter.stringWidth(element.text)),
-                    startY + font.lineHeight * i,
-                    element.color, shadow
-            );
+            TextElement element = elements[i];
+            pose.setTranslation(element.align.calculate(startX, endX, splitter.stringWidth(element.text)),
+                    startY + font.lineHeight * i);
+            context.drawString(font, element.text, 0, 0, element.color, shadow);
         }
+        pose.popMatrix();
     }
 }

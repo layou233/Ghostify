@@ -1,13 +1,15 @@
 #version 150
 
-uniform vec4 u_Rect;
-uniform vec4 u_Radii; // The radius of each corner, (r1, r2, r3, r4)
-uniform float u_edgeSoftness; // Softness of edges, free antialiasing, but breaks rounded corners over certain values.
-uniform vec4 u_colorRect; // First color of gradient
-uniform vec4 u_colorRect2; // Second color for gradient
-uniform vec2 u_gradientDirectionVector; // Direction of the gradient based on which variable to use, for example a gradient from left to right will use (1.0, 0.0) to use the positive x value of the length from the middle of the rectangle
-uniform vec4 u_colorShadow; // Color of the shadow.
-uniform float u_shadowSoftness; // Softness of shadow. At 0 this will make shadow invisible.
+layout(std140) uniform u {
+    vec4 u_Rect;
+    vec4 u_Radii; // The radius of each corner, (r1, r2, r3, r4)
+    vec4 u_colorRect; // First color of gradient
+    vec4 u_colorRect2; // Second color for gradient
+    vec4 u_colorShadow; // Color of the shadow.
+    vec2 u_gradientDirectionVector; // Direction of the gradient based on which variable to use, for example a gradient from left to right will use (1.0, 0.0) to use the positive x value of the length from the middle of the rectangle
+    float u_edgeSoftness; // Softness of edges, free antialiasing, but breaks rounded corners over certain values.
+    float u_shadowSoftness; // Softness of shadow. At 0 this will make shadow invisible.
+};
 
 #define u_rectCenter u_Rect.xy // center of rectangle, (x, y)
 #define u_rectSize u_Rect.zw // size of rectangle, (width, height)

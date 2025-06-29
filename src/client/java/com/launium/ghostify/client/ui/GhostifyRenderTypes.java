@@ -9,9 +9,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.TriState;
 
 import java.util.OptionalDouble;
 
@@ -23,27 +21,19 @@ public class GhostifyRenderTypes {
                     .withLocation(ResourceLocation.fromNamespaceAndPath("ghostify", "pipeline/round_rect"))
                     .withFragmentShader(ResourceLocation.fromNamespaceAndPath("ghostify", "core/round_rect"))
                     .withVertexShader(ResourceLocation.fromNamespaceAndPath("ghostify", "core/round_rect"))
-                    .withColorWrite(true)
+                    //.withColorWrite(true)
                     .withDepthWrite(true)
                     .withCull(false)
                     .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
                     .withColorLogic(LogicOp.NONE)
                     .withBlend(BlendFunction.TRANSLUCENT)
-                    .withUniform("ModelViewMat", UniformType.MATRIX4X4)
-                    .withUniform("ProjMat", UniformType.MATRIX4X4)
-                    .withUniform("u_Rect", UniformType.VEC4)
-                    .withUniform("u_Radii", UniformType.VEC4)
-                    .withUniform("u_edgeSoftness", UniformType.FLOAT)
-                    .withUniform("u_colorRect", UniformType.VEC4)
-                    .withUniform("u_colorRect2", UniformType.VEC4)
-                    .withUniform("u_gradientDirectionVector", UniformType.VEC2)
-                    .withUniform("u_colorShadow", UniformType.VEC4)
-                    .withUniform("u_shadowSoftness", UniformType.FLOAT)
+                    .withUniform("DynamicTransforms", UniformType.UNIFORM_BUFFER)
+                    .withUniform("u", UniformType.UNIFORM_BUFFER)
                     .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
                     .build()
     );
 
-    static final RenderType
+    static final RenderType.CompositeRenderType
             ROUND_RECT = RenderType.create("ghostify_round_rect", RenderType.TRANSIENT_BUFFER_SIZE,
             false, false, PIPELINE_ROUND_RECT,
             RenderType.CompositeState.builder()
@@ -89,14 +79,4 @@ public class GhostifyRenderTypes {
                     .setLayeringState(VIEW_OFFSET_Z_LAYERING)
                     .setOutputState(ITEM_ENTITY_TARGET)
                     .createCompositeState(false));
-
-    public static RenderType createTextureRenderType(DynamicTexture texture) {
-        return RenderType.create("ghostify_dynamic_texture",
-                RenderType.SMALL_BUFFER_SIZE,
-                RenderPipelines.GUI_TEXTURED,
-                RenderType.CompositeState.builder()
-                        .setTextureState(new DynamicTextureStateShard(texture, TriState.FALSE, false))
-                        .createCompositeState(false)
-        );
-    }
 }

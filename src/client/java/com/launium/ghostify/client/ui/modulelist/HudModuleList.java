@@ -16,11 +16,11 @@ import com.launium.ghostify.client.util.FadingColor;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
 import net.minecraft.Util;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 
@@ -28,7 +28,7 @@ import java.util.TreeSet;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
-public class HudModuleList implements LayeredDraw.Layer {
+public class HudModuleList implements HudElement {
     private long lastEventTime = 0;
     private final TreeSet<AbstractModule> moduleSet = new TreeSet<>();
     private final Smooth animatedStartingY = new Smooth(52, 52);
