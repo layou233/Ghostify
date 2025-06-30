@@ -21,9 +21,8 @@
     *** on*(...);
     void method_***(***);
     void afterTick(...);
-    void afterEntities(...);
-    void render(net.minecraft.client.gui.GuiGraphics, net.minecraft.client.DeltaTracker);
     int compareTo(...);
+    @com.launium.ghostify.client.annotations.SkipObfuscation public <methods>;
 }
 
 -repackageclasses lau4sk1d.ghostify

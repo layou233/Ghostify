@@ -1,6 +1,7 @@
 package com.launium.ghostify.client.feature;
 
 import com.launium.ghostify.client.GhostifyClient;
+import com.launium.ghostify.client.annotations.SkipObfuscation;
 import com.launium.ghostify.client.ui.GhostifyRenderTypes;
 import com.launium.ghostify.client.ui.container.PickobulusPreviewContainer;
 import com.launium.ghostify.client.util.FadingColor;
@@ -70,6 +71,7 @@ public class PickobulusPreview extends AbstractModule implements WorldRenderEven
                 .anyMatch(line -> line.getString().startsWith("Ability: Pickobulus"));
     }
 
+    @SkipObfuscation
     @Override
     public void afterEntities(WorldRenderContext context) {
         if (!isEnabled || !isHoldingPickobulus || onCooldown) {

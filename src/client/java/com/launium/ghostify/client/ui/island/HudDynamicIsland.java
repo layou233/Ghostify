@@ -1,5 +1,6 @@
 package com.launium.ghostify.client.ui.island;
 
+import com.launium.ghostify.client.annotations.SkipObfuscation;
 import com.launium.ghostify.client.compat.SkyCubedCompat;
 import com.launium.ghostify.client.ui.Easy2D;
 import com.launium.ghostify.client.ui.animation.Animation;
@@ -12,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class HudDynamicIsland implements LayeredDraw.Layer {
@@ -23,6 +25,7 @@ public class HudDynamicIsland implements LayeredDraw.Layer {
     private final Animation halfHeight = new Smooth(0, 30);
     private final HashSet<IContainer> activeContainers = HashSet.newHashSet(8);
 
+    @SkipObfuscation
     @Override
     public void render(GuiGraphics drawContext, DeltaTracker deltaTracker) {
         activeContainers.removeIf(container -> !container.isActive());
