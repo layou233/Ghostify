@@ -16,6 +16,9 @@
 -keepclassmembers,allowoptimization public class com.launium.ghostify.client.GhostifyClient {
     <methods>;
 }
+-keep,allowobfuscation,allowoptimization public class com.launium.ghostify.client.GhostifyModMenuIntegration {
+    <methods>;
+}
 
 -keepclassmembers class * {
     *** on*(...);

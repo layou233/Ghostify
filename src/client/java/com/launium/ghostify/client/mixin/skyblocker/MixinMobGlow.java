@@ -1,5 +1,6 @@
 package com.launium.ghostify.client.mixin.skyblocker;
 
+import com.launium.ghostify.client.config.ConfigManager;
 import de.hysky.skyblocker.skyblock.entity.MobGlow;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
@@ -12,6 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinMobGlow {
     @Inject(method = "atLeastOneMobHasCustomGlow", at = @At("HEAD"), cancellable = true)
     private static void ghostify$noGlowDepthTestModification(CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(false);
+        if (ConfigManager.PATCHES.OVERRULE_SKYBLOCKER_GLOW_DEPTH_TEST) {
+            cir.setReturnValue(false);
+        }
     }
 }

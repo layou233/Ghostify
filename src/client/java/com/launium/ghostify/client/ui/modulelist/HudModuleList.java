@@ -108,7 +108,7 @@ public class HudModuleList implements LayeredDraw.Layer {
                     module.moduleList.animatedY.current,
                     module.moduleList.animatedX.current + elementWidth,
                     module.moduleList.animatedY.current + elementHeight,
-                    4F, 5F, 0F, 0x66454545);
+                    4F, 5F, 0F, 0x66454545, 0x66454545);
             title.draw(context, module.moduleList.animatedX.current + 3F,
                     module.moduleList.animatedY.current + (elementHeight - title.lineHeight / scale) / 2,
                     5F, scale, ChromaColor.pale(3L, ((long) (y - animatedStartingY.current)) << 9, 0xFF));

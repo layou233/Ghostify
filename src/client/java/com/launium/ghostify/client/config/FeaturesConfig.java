@@ -1,0 +1,15 @@
+package com.launium.ghostify.client.config;
+
+import com.google.gson.annotations.SerializedName;
+
+public class FeaturesConfig extends AbstractConfig {
+    static String CONFIG_NAME = "features.json";
+
+    @Override
+    protected String getConfigName() {
+        return CONFIG_NAME;
+    }
+
+    @SerializedName("enable_day_viewer")
+    public boolean ENABLE_DAY_VIEWER = false;
+}

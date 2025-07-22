@@ -1,6 +1,7 @@
 package com.launium.ghostify.client.feature;
 
 import com.launium.ghostify.client.GhostifyClient;
+import com.launium.ghostify.client.config.ConfigManager;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -15,15 +16,21 @@ public class DayViewer extends AbstractModule implements ClientTickEvents.StartT
             new KeyMapping("key.ghostify.switch_day_viewer", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_F8, GhostifyClient.KEY_CATEGORY)
     );
 
-    public boolean isEnabled = false;
     private long day = -1;
     private String formattedDay = null;
+
+    static {
+        if (ConfigManager.FEATURES.ENABLE_DAY_VIEWER) {
+            GhostifyClient.moduleList.showModule(INSTANCE);
+        }
+    }
 
     @Override
     public void onStartTick(Minecraft client) {
         while (DAY_VIEWER_KEY.consumeClick()) {
-            isEnabled = !isEnabled;
-            if (isEnabled) GhostifyClient.moduleList.showModule(this);
+            ConfigManager.FEATURES.ENABLE_DAY_VIEWER = !ConfigManager.FEATURES.ENABLE_DAY_VIEWER;
+            if (ConfigManager.FEATURES.ENABLE_DAY_VIEWER) GhostifyClient.moduleList.showModule(this);
+            ConfigManager.FEATURES.markAsChanged();
         }
     }
 
@@ -54,6 +61,6 @@ public class DayViewer extends AbstractModule implements ClientTickEvents.StartT
 
     @Override
     public boolean isActive() {
-        return isEnabled;
+        return ConfigManager.FEATURES.ENABLE_DAY_VIEWER;
     }
 }

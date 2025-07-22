@@ -20,6 +20,13 @@ public class Space {
         this.bottom = height;
     }
 
+    public void translate(float x, float y) {
+        this.left += x;
+        this.right += x;
+        this.top += y;
+        this.bottom += y;
+    }
+
     public float borrowVertical(Alignment alignment, float expectedSize, float padding) {
         float pos = alignment.calculate(top, bottom, expectedSize, padding);
         return Mth.clamp(pos, top, bottom);
@@ -34,6 +41,11 @@ public class Space {
         return pos;
     }
 
+    public void marginVertical(float margin) {
+        this.top += margin;
+        this.bottom -= margin;
+    }
+
     public float borrowHorizontal(Alignment alignment, float expectedSize, float padding) {
         float pos = alignment.calculate(left, right, expectedSize, padding);
         return Mth.clamp(pos, left, right);
@@ -46,5 +58,10 @@ public class Space {
             case END -> right = pos;
         }
         return pos;
+    }
+
+    public void marginHorizontal(float margin) {
+        this.left += margin;
+        this.right -= margin;
     }
 }

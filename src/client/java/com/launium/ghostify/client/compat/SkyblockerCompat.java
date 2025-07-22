@@ -1,6 +1,7 @@
 package com.launium.ghostify.client.compat;
 
 import de.hysky.skyblocker.config.SkyblockerConfigManager;
+import de.hysky.skyblocker.utils.Utils;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class SkyblockerCompat {
@@ -14,7 +15,7 @@ public class SkyblockerCompat {
 
     public static boolean isEffectOverlayHidden() {
         if (IS_EXISTS) {
-            return SkyblockerConfigManager.get().uiAndVisuals.hideStatusEffectOverlay;
+            return Utils.isOnSkyblock() && SkyblockerConfigManager.get().uiAndVisuals.hideStatusEffectOverlay;
         }
         return false;
     }

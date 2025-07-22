@@ -2,7 +2,7 @@ package com.launium.ghostify.client.ui.container;
 
 import com.launium.ghostify.client.mixin.AccessFont;
 import com.launium.ghostify.client.ui.Easy2D;
-import com.launium.ghostify.client.ui.TextElement;
+import com.launium.ghostify.client.ui.VanillaText;
 import com.launium.ghostify.client.ui.island.ContainerLevel;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiGraphics;
 
 public class SpiritPetWarningContainer implements IContainer {
     public static final SpiritPetWarningContainer instance = new SpiritPetWarningContainer();
-    private static final TextElement WARNING_TEXT = new TextElement("⚠ WARNING: Spirit Pet is equipped").color(0xFFFF0000);
+    private static final VanillaText WARNING_TEXT = new VanillaText("⚠ WARNING: Spirit Pet is equipped").color(0xFFFF0000);
 
     public long lastTriggeredTimestamp = 0;
 

@@ -27,7 +27,7 @@ public class Easy2D {
     }
 
     public static void drawRoundRect(float left, float top, float right, float bottom,
-                                     float depth, float radius, float shadow, int color) {
+                                     float depth, float radius, float shadow, int color, int shadowColor) {
         if (!(left < right && top < bottom)) { // also capture NaN
             return;
         }
@@ -78,10 +78,10 @@ public class Easy2D {
                     renderPass.setUniform("ModelViewMat", RenderSystem.getModelViewMatrix());
                     renderPass.setUniform("ProjMat", RenderSystem.getProjectionMatrix());
                     renderPass.setUniform("u_Radii", radius, radius, radius, radius);
-                    float[] colorVector = new float[]{(float) ARGB.red(color) / 255F, (float) ARGB.green(color) / 255F, (float) ARGB.blue(color) / 255F, ARGB.alpha(color) / 255F};
+                    float[] colorVector = new float[]{ARGB.red(color) / 255F, ARGB.green(color) / 255F, ARGB.blue(color) / 255F, ARGB.alpha(color) / 255F};
                     renderPass.setUniform("u_colorRect", colorVector);
                     renderPass.setUniform("u_colorRect2", colorVector);
-                    renderPass.setUniform("u_colorShadow", 0F, 0F, 0F, ARGB.alpha(color) / 255F);
+                    renderPass.setUniform("u_colorShadow", ARGB.red(shadowColor) / 255F, ARGB.green(shadowColor) / 255F, ARGB.blue(shadowColor) / 255F, ARGB.alpha(shadowColor) / 255F);
                     renderPass.setUniform("u_edgeSoftness", 1F);
                     renderPass.setUniform("u_shadowSoftness", shadow);
                     renderPass.drawIndexed(0, mesh.drawState().indexCount());
@@ -94,6 +94,22 @@ public class Easy2D {
         // we modify uniform for each draw, so cannot do batch rendering
         context.flush();
     }
+
+//    public static void drawArc(float xCenter, float yCenter, float radius, float thickness, int color, double startAngle, double endAngle) {
+//        context.drawSpecial(bufferSource -> {
+//            VertexConsumer buffer = bufferSource.getBuffer(GhostifyRenderTypes.ARC_LINE_NO_CULL);
+//            Matrix4f pose = context.pose().last().pose();
+//            for (double i = startAngle; i <= endAngle; i += 1) {
+//                double innerX = xCenter + Math.sin(Math.toRadians(i)) * (radius - thickness);
+//                double innerY = yCenter + Math.cos(Math.toRadians(i)) * (radius - thickness);
+//                double outerX = xCenter + Math.sin(Math.toRadians(i)) * radius;
+//                double outerY = yCenter + Math.cos(Math.toRadians(i)) * radius;
+//
+//                buffer.addVertex(pose, (float) innerX, (float) innerY, 0).setColor(color);
+//                buffer.addVertex(pose, (float) outerX, (float) outerY, 0).setColor(color);
+//            }
+//        });
+//    }
 
     public static final int TEXT_DEFAULT_COLOR = -1;
 
@@ -114,12 +130,12 @@ public class Easy2D {
         }
     }
 
-    public static void drawScreenTextElements(Font font, float startX, float endX, float centerY, boolean shadow, TextElement... elements) {
+    public static void drawScreenTextElements(Font font, float startX, float endX, float centerY, boolean shadow, VanillaText... elements) {
         if (elements.length == 0) return;
         StringSplitter splitter = ((AccessFont) font).getSplitter();
         float startY = centerY - font.lineHeight * elements.length * 0.5F;
         for (int i = 0; i < elements.length; i++) {
-            TextElement element = elements[i];
+            VanillaText element = elements[i];
             drawScreenText(font, element.text,
                     element.align.calculate(startX, endX, splitter.stringWidth(element.text)),
                     startY + font.lineHeight * i,

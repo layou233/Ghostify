@@ -13,7 +13,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 public class HudDynamicIsland implements LayeredDraw.Layer {
@@ -60,7 +59,7 @@ public class HudDynamicIsland implements LayeredDraw.Layer {
         }
         float right = (float) windowWidth / 2 + halfWidth.current;
         float bottom = top + 2 * halfHeight.current;
-        Easy2D.drawRoundRect(left, top, right, bottom, 5, 12, 16F, 0xDB000000);
+        Easy2D.drawRoundRect(left, top, right, bottom, 5, 12, 16F, 0xDB000000, 0xDB000000);
         if (container != null && halfWidth.ratio() > 0.8F)
             container.render(drawContext, left, top, right, bottom, scale);
         Easy2D.cleanup();

@@ -3,7 +3,7 @@ package com.launium.ghostify.client.ui.container;
 import com.launium.ghostify.client.feature.LifeSaverTimer;
 import com.launium.ghostify.client.mixin.AccessFont;
 import com.launium.ghostify.client.ui.Easy2D;
-import com.launium.ghostify.client.ui.TextElement;
+import com.launium.ghostify.client.ui.VanillaText;
 import com.launium.ghostify.client.ui.island.ContainerLevel;
 import it.unimi.dsi.fastutil.objects.ObjectLongImmutablePair;
 import net.minecraft.Util;
@@ -32,14 +32,14 @@ public class LifeSaverTimerContainer implements IContainer {
         return LifeSaverTimer.INSTANCE.invincibleTicks > 0 ? ContainerLevel.EMERGENCY : ContainerLevel.BACKGROUND;
     }
 
-    private ArrayList<TextElement> textElements;
+    private ArrayList<VanillaText> vanillaTexts;
 
     @Override
     public void prepareRender(float scale) {
-        ArrayList<TextElement> elements = new ArrayList<>(1 + LifeSaverTimer.LifeSavers.values().length);
+        ArrayList<VanillaText> elements = new ArrayList<>(1 + LifeSaverTimer.LifeSavers.values().length);
         int invincibleTicks = LifeSaverTimer.INSTANCE.invincibleTicks;
         if (invincibleTicks > 0) {
-            elements.add(new TextElement(LifeSaverTimer.INSTANCE.lastTriggered.name + " lasts for " + invincibleTicks + " ticks").color(0xFFFFB4AB));
+            elements.add(new VanillaText(LifeSaverTimer.INSTANCE.lastTriggered.name + " lasts for " + invincibleTicks + " ticks").color(0xFFFFB4AB));
         }
         long now = Util.getMillis();
         long[] availableTimestamp = LifeSaverTimer.INSTANCE.availableTimestamp;
@@ -58,23 +58,23 @@ public class LifeSaverTimerContainer implements IContainer {
                         builder.append(lifeSaver.rightLong() / 1000L);
                         builder.append("s");
                     }
-                    elements.add(new TextElement(builder.toString()));
+                    elements.add(new VanillaText(builder.toString()));
                 });
-        this.textElements = elements;
+        this.vanillaTexts = elements;
     }
 
     @Override
     public float estimateHeight() {
-        if (textElements.size() > 4) {
-            System.out.println(textElements.stream().map(it -> it.text).collect(Collectors.toSet()));
+        if (vanillaTexts.size() > 4) {
+            System.out.println(vanillaTexts.stream().map(it -> it.text).collect(Collectors.toSet()));
         }
-        return 12F + Minecraft.getInstance().font.lineHeight * textElements.size();
+        return 12F + Minecraft.getInstance().font.lineHeight * vanillaTexts.size();
     }
 
     @Override
     public float estimateWidth() {
         return 18F + ((AccessFont) Minecraft.getInstance().font).getSplitter().stringWidth(
-                textElements.stream().map(it -> it.text).
+                vanillaTexts.stream().map(it -> it.text).
                         reduce((a, b) -> a.length() > b.length() ? a : b).orElseThrow()
         );
     }
@@ -82,8 +82,8 @@ public class LifeSaverTimerContainer implements IContainer {
     @Override
     public void render(GuiGraphics context, float left, float top, float right, float bottom, float scale) {
         Easy2D.drawScreenTextElements(Minecraft.getInstance().font, left, right, (top + bottom) * 0.5F,
-                false, textElements.toArray(new TextElement[0]));
-        textElements.clear();
-        textElements = null;
+                false, vanillaTexts.toArray(new VanillaText[0]));
+        vanillaTexts.clear();
+        vanillaTexts = null;
     }
 }

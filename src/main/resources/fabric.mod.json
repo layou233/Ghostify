@@ -15,6 +15,9 @@
   "entrypoints": {
     "client": [
       "com.launium.ghostify.client.GhostifyClient"
+    ],
+    "modmenu": [
+      "com.launium.ghostify.client.GhostifyModMenuIntegration"
     ]
   },
   "mixins": [
@@ -29,7 +32,7 @@
     "modmenu": {
       "links": {
         "ghostify.bilibili": "https://space.bilibili.com/404017926",
-        "modmenu.donate": "https://www.afdian.com/a/launium"
+        "modmenu.donate": "https://afdian.com/a/launium"
       }
     }
   }
