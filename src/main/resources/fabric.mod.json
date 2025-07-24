@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "ghostify",
+  "id": "ghostify-lite",
   "version": "${version}",
-  "name": "Ghostify",
+  "name": "Ghostify Lite",
   "description": "Modern SkyBlock experience redefined.",
   "authors": [
     "Launium"
