@@ -38,8 +38,8 @@ public class FragmentView implements Element {
 
         if (previousFrag != null) {
             float width = endX - startX;
-            previousFrag.updateStartPosition(startX + (width - offset), startY);
-            previousFrag.updateEndPosition(endX + (width - offset), endY);
+            previousFrag.updateStartPosition(startX - 1.5F * (width - offset), startY);
+            previousFrag.updateEndPosition(endX - 1.5F * (width - offset), endY);
             previousFrag.render(context, mouseX, mouseY, timeDiff);
             if (transitionProgress.current < 0.0005F) {
                 previousFrag.remove();
@@ -47,8 +47,8 @@ public class FragmentView implements Element {
             }
         }
 
-        currentFrag.updateStartPosition(startX - offset, startY);
-        currentFrag.updateEndPosition(endX - offset, endY);
+        currentFrag.updateStartPosition(startX + offset, startY);
+        currentFrag.updateEndPosition(endX + offset, endY);
         currentFrag.render(context, mouseX, mouseY, timeDiff);
 
         context.disableScissor();

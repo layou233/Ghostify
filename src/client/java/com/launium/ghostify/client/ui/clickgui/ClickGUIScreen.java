@@ -144,9 +144,9 @@ public class ClickGUIScreen extends Screen {
 
     @SkipObfuscation
     @Override
-    protected void renderBlurredBackground() {
+    protected void renderBlurredBackground(GuiGraphics context) {
         if (ConfigManager.GENERAL.CLICK_GUI_BLUR) {
-            super.renderBlurredBackground();
+            super.renderBlurredBackground(context);
         }
     }
 

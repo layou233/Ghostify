@@ -24,6 +24,7 @@ public class HudDynamicIsland implements HudElement {
 
     private final HashSet<IContainer> activeContainers = HashSet.newHashSet(8);
 
+    @SkipObfuscation
     @Override
     public void render(GuiGraphics drawContext, DeltaTracker deltaTracker) {
         activeContainers.removeIf(container -> !container.isActive());

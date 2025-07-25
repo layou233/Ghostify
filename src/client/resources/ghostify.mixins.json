@@ -11,6 +11,7 @@
     "MixinCamera",
     "MixinClientCommonPacketListenerImpl",
     "MixinClientPacketListener",
+    "MixinGuiRenderer",
     "MixinItemStack",
     "MixinLavaFogEnvironment",
     "MixinMinecraft",

@@ -1,5 +1,6 @@
 package com.launium.ghostify.client.mixin;
 
+import com.launium.ghostify.client.config.ConfigManager;
 import net.minecraft.client.renderer.fog.environment.LavaFogEnvironment;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;

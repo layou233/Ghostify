@@ -34,6 +34,8 @@ loom {
     mixin {
         useLegacyMixinAp = false
     }
+
+    accessWidenerPath = file('src/main/resources/ghostify.accesswidener')
 }
 
 repositories {
@@ -73,7 +75,7 @@ dependencies {
     }
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modApi "com.terraformersmc:modmenu:14.0.0-rc.2"
+    modApi "com.terraformersmc:modmenu:15.0.0-beta.3"
 
     // for compat
     modCompileOnly "maven.modrinth:skyblocker-liap:v5.3.0+1.21.5"

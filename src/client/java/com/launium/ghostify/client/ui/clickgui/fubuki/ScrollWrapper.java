@@ -77,7 +77,7 @@ public class ScrollWrapper implements Element, CullingProvider {
     @Override
     public boolean mouseScrolled(float mouseX, float mouseY, float scrollX, float scrollY) {
         if (!child.mouseScrolled(mouseX, mouseY, scrollX, scrollY)) {
-            verticalScroll.target += scrollY*3;
+            verticalScroll.target += scrollY * 3;
         }
         return true;
     }

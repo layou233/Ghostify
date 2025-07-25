@@ -95,7 +95,8 @@ public class NavigationCategories implements Element {
 
     @Override
     public boolean mouseClicked(float mouseX, float mouseY) {
-        if (startX <= mouseX && mouseX <= startX + width
+        if (categoryTextBounds != null
+                && startX <= mouseX && mouseX <= startX + width
                 && startY <= mouseY && mouseY <= startY + height) {
             List<FloatFloatImmutablePair> bounds = categoryTextBounds;
             for (int i = 0; i < bounds.size(); i++) {
@@ -120,8 +121,10 @@ public class NavigationCategories implements Element {
 
     @Override
     public void remove() {
-        this.categoryTextBounds.clear();
-        this.categoryTextBounds = null;
+        if (categoryTextBounds != null) {
+            this.categoryTextBounds.clear();
+            this.categoryTextBounds = null;
+        }
         Element.super.remove();
     }
 

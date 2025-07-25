@@ -17,7 +17,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemStack.class)
 public abstract class MixinItemStack implements AccessItemStack {
-    @Shadow public abstract Item getItem();
+    @Shadow
+    public abstract Item getItem();
 
     @Unique
     boolean ghostify$isShortbow = false;

@@ -23,10 +23,11 @@
   "mixins": [
     "ghostify.mixins.json"
   ],
+  "accessWidener": "ghostify.accesswidener",
   "depends": {
     "fabricloader": ">=0.16.14",
     "fabric": "*",
-    "minecraft": "${minecraft_version}"
+    "minecraft": ">=1.21.6- <1.21.9-"
   },
   "custom": {
     "modmenu": {
