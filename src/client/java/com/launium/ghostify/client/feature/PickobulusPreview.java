@@ -2,6 +2,7 @@ package com.launium.ghostify.client.feature;
 
 import com.launium.ghostify.client.GhostifyClient;
 import com.launium.ghostify.client.annotations.SkipObfuscation;
+import com.launium.ghostify.client.events.SimpleChatEventHandler;
 import com.launium.ghostify.client.ui.GhostifyRenderTypes;
 import com.launium.ghostify.client.ui.container.PickobulusPreviewContainer;
 import com.launium.ghostify.client.util.FadingColor;
@@ -11,7 +12,6 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.KeyMapping;
@@ -21,7 +21,6 @@ import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
@@ -35,7 +34,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
-public class PickobulusPreview extends AbstractModule implements WorldRenderEvents.AfterEntities, ClientTickEvents.EndTick, ClientReceiveMessageEvents.Game {
+public class PickobulusPreview extends AbstractModule implements WorldRenderEvents.AfterEntities, ClientTickEvents.EndTick, SimpleChatEventHandler.NonOverlay {
     public static final PickobulusPreview INSTANCE = new PickobulusPreview();
     private static final KeyMapping PICKOBULUS_PREVIEW_KEY = KeyBindingHelper.registerKeyBinding(
             new KeyMapping("key.ghostify.switch_pickobulus_preview", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_X, GhostifyClient.KEY_CATEGORY)
@@ -159,9 +158,8 @@ public class PickobulusPreview extends AbstractModule implements WorldRenderEven
     }
 
     @Override
-    public void onReceiveGameMessage(Component message, boolean isOverlay) {
-        if (isOverlay || !isEnabled) return;
-        String text = message.getString();
+    public void onReceiveChat(String text) {
+        if (!isEnabled) return;
         if ("You used your Pickobulus Pickaxe Ability!".equals(text) ||
                 text.startsWith("Your Pickaxe ability is on cooldown for ")) {
             onCooldown = true;

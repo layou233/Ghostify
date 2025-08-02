@@ -17,7 +17,7 @@ import static net.minecraft.client.renderer.RenderStateShard.*;
 
 public class GhostifyRenderTypes {
     static final RenderPipeline PIPELINE_ROUND_RECT = RenderPipelines.register(
-            RenderPipeline.builder()
+            RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
                     .withLocation(ResourceLocation.fromNamespaceAndPath("ghostify", "pipeline/round_rect"))
                     .withFragmentShader(ResourceLocation.fromNamespaceAndPath("ghostify", "core/round_rect"))
                     .withVertexShader(ResourceLocation.fromNamespaceAndPath("ghostify", "core/round_rect"))
@@ -27,7 +27,6 @@ public class GhostifyRenderTypes {
                     .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
                     .withColorLogic(LogicOp.NONE)
                     .withBlend(BlendFunction.TRANSLUCENT)
-                    .withUniform("DynamicTransforms", UniformType.UNIFORM_BUFFER)
                     .withUniform("u", UniformType.UNIFORM_BUFFER)
                     .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
                     .build()

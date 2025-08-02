@@ -15,6 +15,10 @@ public class FeaturesPage extends AbstractPage {
                     ConfigManager.FEATURES.ENABLE_DAY_VIEWER = newValue;
                     if (ConfigManager.FEATURES.ENABLE_DAY_VIEWER) GhostifyClient.moduleList.showModule(DayViewer.INSTANCE);
                     ConfigManager.FEATURES.markAsChanged();
+                }),
+                new ModuleItemView(client, "RNG drop summary", "Notify the RNG drop, and play the music at \"config/Ghostify/rng_music.ogg\". GG!", ConfigManager.FEATURES.ENABLE_RNG_DROP_SUMMARY, newValue -> {
+                    ConfigManager.FEATURES.ENABLE_RNG_DROP_SUMMARY = newValue;
+                    ConfigManager.FEATURES.markAsChanged();
                 })
         ), 2F, LAYER_DEPTH + 1));
     }

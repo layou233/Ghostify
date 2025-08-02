@@ -19,6 +19,9 @@ public class PatchesConfig extends AbstractConfig {
     @SerializedName("cancel_shortbow_pull")
     public boolean CANCEL_SHORTBOW_PULL = true;
 
+    @SerializedName("no_command_execution_confirmation")
+    public boolean NO_COMMAND_EXECUTION_CONFIRMATION = false;
+
     @SerializedName("overrule_skyblocker_glow_depth_test")
     public boolean OVERRULE_SKYBLOCKER_GLOW_DEPTH_TEST = true;
 }

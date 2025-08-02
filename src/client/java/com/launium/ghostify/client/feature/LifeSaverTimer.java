@@ -1,8 +1,8 @@
 package com.launium.ghostify.client.feature;
 
 import com.launium.ghostify.client.GhostifyClient;
+import com.launium.ghostify.client.events.SimpleChatEventHandler;
 import com.launium.ghostify.client.ui.container.LifeSaverTimerContainer;
-import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
@@ -14,7 +14,7 @@ import net.minecraft.world.item.component.ItemLore;
 
 import java.util.Arrays;
 
-public class LifeSaverTimer implements ClientReceiveMessageEvents.Game {
+public class LifeSaverTimer implements SimpleChatEventHandler.NonOverlay {
     public static final LifeSaverTimer INSTANCE = new LifeSaverTimer();
 
     public enum LifeSavers {
@@ -43,9 +43,7 @@ public class LifeSaverTimer implements ClientReceiveMessageEvents.Game {
     }
 
     @Override
-    public void onReceiveGameMessage(Component message, boolean isOverlay) {
-        if (isOverlay) return;
-        String plain = message.getString();
+    public void onReceiveChat(String plain) {
         LifeSavers triggered;
         if (plain.startsWith("Your ") && plain.endsWith("Bonzo's Mask saved your life!")) {
             triggered = LifeSavers.BONZO_MASK;
