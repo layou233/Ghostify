@@ -1,16 +1,15 @@
 package com.launium.ghostify.client.feature;
 
 import com.launium.ghostify.client.GhostifyClient;
+import com.launium.ghostify.client.events.SimpleChatEventHandler;
 import com.launium.ghostify.client.ui.container.SpiritPetWarningContainer;
-import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.Util;
-import net.minecraft.network.chat.Component;
 
-public class SpiritPetWarning implements ClientReceiveMessageEvents.Game {
+public class SpiritPetWarning implements SimpleChatEventHandler.NonOverlay {
+    public static final SpiritPetWarning INSTANCE = new SpiritPetWarning();
+
     @Override
-    public void onReceiveGameMessage(Component message, boolean isOverlay) {
-        if (isOverlay) return;
-        String text = message.getString();
+    public void onReceiveChat(String text) {
         if (text.startsWith("Your Spirit Pet hit ")) {
             SpiritPetWarningContainer.instance.lastTriggeredTimestamp = Util.getMillis();
             GhostifyClient.island.show(SpiritPetWarningContainer.instance);

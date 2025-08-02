@@ -12,4 +12,7 @@ public class FeaturesConfig extends AbstractConfig {
 
     @SerializedName("enable_day_viewer")
     public boolean ENABLE_DAY_VIEWER = false;
+
+    @SerializedName("enable_rng_drop_summary")
+    public boolean ENABLE_RNG_DROP_SUMMARY = true;
 }

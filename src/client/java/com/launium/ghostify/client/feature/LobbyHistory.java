@@ -3,20 +3,19 @@ package com.launium.ghostify.client.feature;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.launium.ghostify.client.GhostifyClient;
+import com.launium.ghostify.client.events.SimpleChatEventHandler;
 import com.launium.ghostify.client.ui.container.LobbyHistoryContainer;
-import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.network.chat.Component;
 
 import java.time.Duration;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
-public class LobbyHistory implements ClientReceiveMessageEvents.Game, ClientPlayConnectionEvents.Join {
+public class LobbyHistory implements SimpleChatEventHandler.NonOverlay, ClientPlayConnectionEvents.Join {
     public static final LobbyHistory INSTANCE = new LobbyHistory();
 
     private final Cache<Integer, LocalTime> LOBBY_HISTORY_CACHE = CacheBuilder.newBuilder()
@@ -27,9 +26,7 @@ public class LobbyHistory implements ClientReceiveMessageEvents.Game, ClientPlay
     private int lastLobbyHash = 0; // 0 equals to "".hashCode()
 
     @Override
-    public void onReceiveGameMessage(Component message, boolean isOverlay) {
-        if (isOverlay) return;
-        String text = message.getString();
+    public void onReceiveChat(String text) {
         if (text.startsWith("Sending to server ") && text.endsWith("...")) {
             // process lobby code to compact format
             String lobbyCode = text.substring("Sending to server ".length(), text.indexOf('.'));
