@@ -1,6 +1,7 @@
 package com.launium.ghostify.client.feature;
 
 import com.launium.ghostify.client.GhostifyClient;
+import com.launium.ghostify.client.config.ConfigManager;
 import com.launium.ghostify.client.mixin.AccessAbstractContainerScreen;
 import com.launium.ghostify.client.util.ClientTaskScheduler;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -32,12 +33,11 @@ public class HarpBot extends AbstractModule implements ClientTickEvents.StartTic
     private final RandomSource random = RandomSource.create();
     private final String[] currentChart = new String[35];
     private long lastChangeTimestamp = 0;
-    private boolean isEnabled = false;
     private boolean isActive = false;
 
     public void init() {
         ScreenEvents.BEFORE_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
-            if (isEnabled && screen instanceof ContainerScreen) {
+            if (ConfigManager.FEATURES.ENABLE_HARP_BOT && screen instanceof ContainerScreen) {
                 if (!screen.getTitle().getString().startsWith("Harp - ")) return;
                 Arrays.fill(currentChart, null);
                 isActive = true;
@@ -46,13 +46,16 @@ public class HarpBot extends AbstractModule implements ClientTickEvents.StartTic
                 GhostifyClient.LOGGER.info("Harp started.");
             }
         });
+        if (ConfigManager.FEATURES.ENABLE_HARP_BOT) {
+            GhostifyClient.moduleList.showModule(this);
+        }
     }
 
     @Override
     public void onStartTick(Minecraft client) {
         while (HARP_BOT_KEY.consumeClick()) {
-            isEnabled = !isEnabled;
-            if (isEnabled) GhostifyClient.moduleList.showModule(this);
+            ConfigManager.FEATURES.ENABLE_HARP_BOT = !ConfigManager.FEATURES.ENABLE_HARP_BOT;
+            if (ConfigManager.FEATURES.ENABLE_HARP_BOT) GhostifyClient.moduleList.showModule(this);
         }
     }
 
@@ -118,6 +121,6 @@ public class HarpBot extends AbstractModule implements ClientTickEvents.StartTic
 
     @Override
     public boolean isActive() {
-        return isEnabled;
+        return ConfigManager.FEATURES.ENABLE_HARP_BOT;
     }
 }
