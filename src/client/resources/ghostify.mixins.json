@@ -4,7 +4,6 @@
   "package": "com.launium.ghostify.client.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "AccessAbstractContainerScreen",
     "AccessFont",
     "AccessGuiGraphics",
     "AccessKeyMapping",
