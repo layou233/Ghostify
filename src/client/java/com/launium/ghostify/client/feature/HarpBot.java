@@ -2,7 +2,6 @@ package com.launium.ghostify.client.feature;
 
 import com.launium.ghostify.client.GhostifyClient;
 import com.launium.ghostify.client.config.ConfigManager;
-import com.launium.ghostify.client.mixin.AccessAbstractContainerScreen;
 import com.launium.ghostify.client.util.ClientTaskScheduler;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -88,10 +87,9 @@ public class HarpBot extends AbstractModule implements ClientTickEvents.StartTic
                             public void execute(Minecraft client) {
                                 if (INSTANCE.isActive) {
                                     //GhostifyClient.LOGGER.info("Clicking on {}", slotToClick);
-                                    ((AccessAbstractContainerScreen) containerScreen).slotClicked(
-                                            containerScreen.getMenu().getSlot(slotToClick), slotToClick,
-                                            GLFW.GLFW_MOUSE_BUTTON_3, ClickType.CLONE // use middle-click
-                                    );
+                                    client.gameMode.handleInventoryMouseClick(containerScreen.getMenu().containerId,
+                                            slotToClick, GLFW.GLFW_MOUSE_BUTTON_3, ClickType.CLONE, // use middle-click
+                                            client.player);
                                 }
                             }
                         });
