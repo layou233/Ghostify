@@ -37,7 +37,6 @@ public class RNGDrop implements SimpleChatEventHandler.NonOverlay {
             }
 
             lastDropTimestamp = Util.getMillis();
-            RNGDropContainer.INSTANCE.resetAnimation();
             GhostifyClient.island.show(RNGDropContainer.INSTANCE);
             Minecraft.getInstance().getSoundManager().play(new MusicInstance("music_of_rng_drop",
                     "config/Ghostify/rng_music.ogg", false, lastDropTimestamp + 9000L));
