@@ -6,6 +6,7 @@ import com.launium.ghostify.client.ui.animation.Smooth;
 import com.launium.ghostify.client.ui.clickgui.fubuki.list.MeasurableElement;
 import com.launium.ghostify.client.util.HSV;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
+import lombok.Getter;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
@@ -21,19 +22,27 @@ public class Switch implements MeasurableElement {
     private float startX, startY;
     private final int layerDepth;
     private final int colorAlpha; // do we actually need this? Anyway, :)
-    private boolean state;
+    private @Getter boolean enabled;
     private final HSV colorHSV;
     private final Animation percent = new Smooth(0F, 1F);
     private final @Nullable BooleanConsumer callback;
 
-    public Switch(int color, boolean state, int layerDepth, @Nullable BooleanConsumer callback) {
+    public Switch(int color, boolean enabled, int layerDepth, @Nullable BooleanConsumer callback) {
         this.colorAlpha = ARGB.alpha(color);
         this.colorHSV = HSV.fromRGB(color);
-        this.state = state;
-        this.percent.target = state ? 1F : 0F;
+        this.enabled = enabled;
+        this.percent.target = enabled ? 1F : 0F;
         this.percent.current = this.percent.target;
         this.layerDepth = layerDepth;
         this.callback = callback;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        this.percent.target = enabled ? 1F : 0F;
+        if (callback != null) {
+            callback.accept(enabled);
+        }
     }
 
     @Override
@@ -70,11 +79,7 @@ public class Switch implements MeasurableElement {
     @Override
     public boolean mouseClicked(float mouseX, float mouseY) {
         if (startX < mouseX && mouseX < startX + WIDTH && startY < mouseY && mouseY < startY + HEIGHT) {
-            state = !state;
-            this.percent.target = state ? 1F : 0F;
-            if (callback != null) {
-                callback.accept(state);
-            }
+            this.setEnabled(!this.enabled);
         }
         return false;
     }

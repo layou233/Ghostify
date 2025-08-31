@@ -10,7 +10,7 @@ buildscript {
 }
 
 plugins {
-    id 'fabric-loom' version '1.10-SNAPSHOT'
+    id 'fabric-loom' version '1.11-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -71,14 +71,14 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.layered() {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.21.6:2025.06.29@zip")
+        parchment("org.parchmentmc.data:parchment-1.21.8:2025.07.20@zip")
     }
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     modApi "com.terraformersmc:modmenu:15.0.0-beta.3"
 
     // for compat
-    modCompileOnly "maven.modrinth:skyblocker-liap:v5.3.0+1.21.5"
+    modCompileOnly "maven.modrinth:skyblocker-liap:v5.7.0+1.21.8"
 
     compileOnly("org.projectlombok:lombok:1.18.+")
     annotationProcessor("org.projectlombok:lombok:1.18.+")
