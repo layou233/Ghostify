@@ -84,11 +84,13 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.+")
 }
 
-static def cleanupShaderFile(String line) {
-    // remove comments to make GLSL shaders compatible with VulkanMod
-    line = line.replaceAll(/\/\/.*$/, "")
-    line = line.trim()
-    return line.isEmpty() ? null : line
+def cleanupJsonFile = { File f ->
+    String text = f.getText('UTF-8')
+            .replaceAll('(?m)^[ \\t]+', '') // remove leading non-spaces
+            .replaceAll('(?m)[ \\t]+$', '') // remove trailing non-spaces
+            .replaceAll('(?m)^[ \\t]*\\r?\\n', '') // remove empty lines
+            .replaceAll('(?m)^[ \\t]*([{\\[}\\]]\\s*,?)\\s*(?:\\r?\\n|\\z)', '$1') // remove orphan [ { ] } characters
+    f.write(text, 'UTF-8')
 }
 
 processResources {
@@ -103,11 +105,23 @@ processResources {
                 "loader_version": project.loader_version
     }
 
-    filesMatching("**/*.fsh") {
-        filter { String line -> cleanupShaderFile(line) }
+    doLast {
+        fileTree(dir: file(destinationDir), include: ['**/*.json']).each(cleanupJsonFile)
     }
-    filesMatching("**/*.vsh") {
-        filter { String line -> cleanupShaderFile(line) }
+}
+
+processClientResources {
+    doLast {
+        fileTree(dir: file(destinationDir), include: ['**/*.vsh', '**/*.fsh']).each { File f ->
+            String text = f.getText('UTF-8')
+                    .replaceAll('(?s)/\\*.*?\\*/', '') // remove comment blocks
+                    .replaceAll('(?m)//.*$', '') // remove comments
+                    .replaceAll('(?m)^[ \\t]+', '') // remove leading non-spaces
+                    .replaceAll('(?m)[ \\t]+$', '') // remove trailing non-spaces
+                    .replaceAll('(?m)^[ \\t]*\\r?\\n', '') // remove empty lines
+            f.write(text, 'UTF-8')
+        }
+        fileTree(dir: file(destinationDir), include: ['**/*.json']).each(cleanupJsonFile)
     }
 }
 

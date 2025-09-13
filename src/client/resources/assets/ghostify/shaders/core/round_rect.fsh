@@ -18,12 +18,12 @@ in vec2 f_Position;
 
 out vec4 fragColor;
 
-///**
-//  * Signed Distance Function for a rounded rectangle
-//  * @param CenterPosition Vec2 for the center of the rounded rectangle
-//  * @param Size Vec2 containing the width and height of a rounded rectangle
-//  * @param Radius Vec4 of all the radii in the rounded rectangle
-//*/
+/**
+  * Signed Distance Function for a rounded rectangle
+  * @param CenterPosition Vec2 for the center of the rounded rectangle
+  * @param Size Vec2 containing the width and height of a rounded rectangle
+  * @param Radius Vec4 of all the radii in the rounded rectangle
+*/
 float roundedBoxSDF(vec2 CenterPosition, vec2 Size, vec4 Radius) {
     Radius.xy = (CenterPosition.x > 0.) ? Radius.xy : Radius.zw;
     Radius.x  = (CenterPosition.y > 0.) ? Radius.x  : Radius.y;
@@ -49,12 +49,11 @@ void main() {
     float shadowAlpha = 1. - smoothstep(-u_shadowSoftness, u_shadowSoftness, distance);
 
     // Blend background with shadow
-    vec4 resShadowColor =
-        mix(
-            u_colorBg,
-            vec4(u_colorShadow.rgb, shadowAlpha),
-            shadowAlpha
-        );
+    vec4 resShadowColor = mix(
+        u_colorBg,
+        vec4(u_colorShadow.rgb, shadowAlpha),
+        shadowAlpha
+    );
 
     fragColor = mix(resShadowColor, gradientColor, smoothedAlpha);
 }

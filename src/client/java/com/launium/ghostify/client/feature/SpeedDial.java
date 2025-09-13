@@ -46,8 +46,8 @@ public class SpeedDial implements ClientTickEvents.StartTick, ScreenEvents.Befor
     private static final KeyMapping SPEED_DIAL_RIGHT_KEY = KeyBindingHelper.registerKeyBinding(
             new KeyMapping("key.ghostify.speed_dial_right", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT, GhostifyClient.KEY_CATEGORY)
     );
-    private static final KeyMapping SPEED_DIAL_ADD_STAR = KeyBindingHelper.registerKeyBinding(
-            new KeyMapping("key.ghostify.speed_dial_add_star", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_ENTER, GhostifyClient.KEY_CATEGORY)
+    private static final KeyMapping SPEED_DIAL_STAR = KeyBindingHelper.registerKeyBinding(
+            new KeyMapping("key.ghostify.speed_dial_star", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_ENTER, GhostifyClient.KEY_CATEGORY)
     );
 
     private NavigationSpinner focusedNav;
@@ -181,7 +181,7 @@ public class SpeedDial implements ClientTickEvents.StartTick, ScreenEvents.Befor
             if (focusedNav != null) focusedNav.spinPageDown();
             action = true;
         }
-        while (SPEED_DIAL_ADD_STAR.consumeClick()) {
+        while (SPEED_DIAL_STAR.consumeClick()) {
             if (focusedNav != null && focusedNav == GhostifyClient.speedDial.navContact) {
                 ContactDestinationView contactDestinationView = (ContactDestinationView) focusedNav.getSelected();
                 if (contactDestinationView != null) {
