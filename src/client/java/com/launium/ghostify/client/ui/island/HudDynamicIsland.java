@@ -17,7 +17,7 @@ import java.util.HashSet;
 
 public class HudDynamicIsland implements HudElement {
 
-    private long lastEventTime;
+    private long lastRenderTime;
     private boolean lastVisibility;
 
     Animation halfWidth = new Smooth(0, 40), halfHeight = new Smooth(0, 30);
@@ -35,14 +35,14 @@ public class HudDynamicIsland implements HudElement {
         if (!lastVisibility) { // reset size
             halfWidth.current = 0;
             halfHeight.current = 0;
-            lastEventTime = 0;
+            lastRenderTime = 0;
         }
         Easy2D.configure(drawContext);
         Window window = Minecraft.getInstance().getWindow();
         float scale = (float) window.getGuiScale();
         int windowWidth = window.getGuiScaledWidth();
         long now = Util.getMillis();
-        long timeDiff = now - lastEventTime;
+        long timeDiff = now - lastRenderTime;
         if (timeDiff > 40) timeDiff = 40;
         IContainer container = activeContainers.stream()
                 .reduce(((a, b) -> a.getLevel() > b.getLevel() ? a : b))
@@ -63,7 +63,7 @@ public class HudDynamicIsland implements HudElement {
         if (container != null && halfWidth.ratio() > 0.8F)
             container.render(drawContext, left, top, right, bottom, scale);
         Easy2D.cleanup();
-        lastEventTime = now;
+        lastRenderTime = now;
         lastVisibility = true;
     }
 

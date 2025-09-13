@@ -12,6 +12,7 @@ import com.launium.ghostify.client.ui.container.ServerTPSContainer;
 import com.launium.ghostify.client.ui.font.FontManager;
 import com.launium.ghostify.client.ui.island.HudDynamicIsland;
 import com.launium.ghostify.client.ui.modulelist.HudModuleList;
+import com.launium.ghostify.client.ui.speeddial.HudSpeedDial;
 import com.launium.ghostify.client.util.ClientTaskScheduler;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.logging.LogUtils;
@@ -25,6 +26,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
@@ -41,6 +43,7 @@ public class GhostifyClient implements ClientModInitializer {
 
     public static final HudDynamicIsland island = new HudDynamicIsland();
     public static final HudModuleList moduleList = new HudModuleList();
+    public static final HudSpeedDial speedDial = new HudSpeedDial();
 
     @Override
     public void onInitializeClient() {
@@ -53,6 +56,9 @@ public class GhostifyClient implements ClientModInitializer {
         HudElementRegistry.attachElementAfter(VanillaHudElements.MISC_OVERLAYS,
                 ResourceLocation.fromNamespaceAndPath("ghostify", "module_list"),
                 moduleList);
+        HudElementRegistry.attachElementAfter(VanillaHudElements.MISC_OVERLAYS,
+                ResourceLocation.fromNamespaceAndPath("ghostify", "speed_dial"),
+                speedDial);
         ClientTickEvents.START_CLIENT_TICK.register(GhostPickaxe.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(ServerTPSContainer.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(ClientTaskScheduler::whenClientStartTick);
@@ -62,11 +68,13 @@ public class GhostifyClient implements ClientModInitializer {
         ClientTickEvents.START_CLIENT_TICK.register(HarpBot.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(DayViewer.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(ClickGUI.INSTANCE);
+        ClientTickEvents.START_CLIENT_TICK.register(SpeedDial.INSTANCE);
         ClientTickEvents.END_CLIENT_TICK.register(PickobulusPreview.INSTANCE);
         ClientReceiveMessageEvents.GAME.register(SimpleChatEventHandler.INSTANCE);
         ClientPlayConnectionEvents.JOIN.register(LobbyHistory.INSTANCE);
         ClientLifecycleEvents.CLIENT_STOPPING.register(client -> ConfigManager.processChanges());
         WorldRenderEvents.AFTER_ENTITIES.register(PickobulusPreview.INSTANCE);
+        ScreenEvents.BEFORE_INIT.register(SpeedDial.INSTANCE);
         AbstractExperimentSolver.init();
         HarpBot.INSTANCE.init();
         ClientCommandRegistrationCallback.EVENT.register(((dispatcher, buildContext) -> {

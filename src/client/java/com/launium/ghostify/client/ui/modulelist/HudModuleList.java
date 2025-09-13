@@ -29,7 +29,7 @@ import java.util.TreeSet;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
 public class HudModuleList implements HudElement {
-    private long lastEventTime = 0;
+    private long lastRenderTime = 0;
     private final TreeSet<AbstractModule> moduleSet = new TreeSet<>();
     private final Smooth animatedStartingY = new Smooth(52, 52);
     private Alignment verticalAlignment = Alignment.START;
@@ -51,7 +51,7 @@ public class HudModuleList implements HudElement {
         long now = Util.getMillis();
         final long timeDiff; // final for lambda
         {
-            long _timeDiff = now - lastEventTime;
+            long _timeDiff = now - lastRenderTime;
             if (_timeDiff > 40) timeDiff = 40;
             else timeDiff = _timeDiff;
         }
@@ -120,7 +120,7 @@ public class HudModuleList implements HudElement {
             return false;
         });
         Easy2D.cleanup();
-        lastEventTime = now;
+        lastRenderTime = now;
     }
 
     private static float calculateStartingY(Player player) {

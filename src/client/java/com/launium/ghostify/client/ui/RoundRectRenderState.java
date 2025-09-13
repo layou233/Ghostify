@@ -23,9 +23,12 @@ public class RoundRectRenderState implements GuiElementRenderState {
 
     public final float left, top, right, bottom;
     public final float depth;
-    public final float radius;
     public final float shadow;
     public final Vector4f color, shadowColor; // normalized RGBA
+    public float radiusRB, radiusRT, radiusLB, radiusLT; // left-right; top-bottom
+    public @Nullable Vector4f color2;
+    public float gradiantDirectionX = 0F, gradiantDirectionY = 0F;
+    public float edgeSoftness = 1F;
     public GpuBufferSlice uniformBuffer;
 
     private final float centerX, centerY, extentX, extentY;
@@ -52,12 +55,28 @@ public class RoundRectRenderState implements GuiElementRenderState {
         this.centerY = (top + bottom) * 0.5f;
         this.extentX = right - left;
         this.extentY = bottom - top;
-        this.radius = Math.min(radius, Math.min(extentX, extentY) * 0.5F);
+        this.radiusLT = this.radiusRT = this.radiusLB = this.radiusRB = Math.min(radius, Math.min(extentX, extentY) * 0.5F);
         this.context = context;
         this.bounds = new ScreenRectangle((int) Math.floor(left), (int) Math.floor(top), (int) Math.ceil(extentX), (int) Math.ceil(extentY));
 
         this.textureSetup = TextureSetup.singleTexture(null);
         RESTORE.put(System.identityHashCode(this.textureSetup), this);
+    }
+
+    public RoundRectRenderState setGradiantColor(int color) {
+        this.color2 = new Vector4f(ARGB.red(color) / 255F, ARGB.green(color) / 255F, ARGB.blue(color) / 255F, ARGB.alpha(color) / 255F);
+        return this;
+    }
+
+    public RoundRectRenderState setGradiantDirection(float x, float y) {
+        this.gradiantDirectionX = x;
+        this.gradiantDirectionY = y;
+        return this;
+    }
+
+    public RoundRectRenderState setEdgeSoftness(float edgeSoftness) {
+        this.edgeSoftness = edgeSoftness;
+        return this;
     }
 
     @Override
@@ -70,12 +89,12 @@ public class RoundRectRenderState implements GuiElementRenderState {
         this.uniformBuffer = Uniforms.storage.writeUniform(buffer -> {
             Std140Builder.intoBuffer(buffer)
                     .putVec4(this.centerX, this.centerY, this.extentX, this.extentY) // u_Rect
-                    .putVec4(this.radius, this.radius, this.radius, this.radius) // u_Radii
+                    .putVec4(this.radiusRB, this.radiusRT, this.radiusLB, this.radiusLT) // u_Radii
                     .putVec4(this.color) // u_colorRect
-                    .putVec4(this.color) // u_colorRect2
+                    .putVec4(this.color2 == null ? this.color : this.color2) // u_colorRect2
                     .putVec4(this.shadowColor) // u_colorShadow
-                    .putVec2(0F, 0F) // u_gradientDirectionVector
-                    .putFloat(1F) // u_edgeSoftness
+                    .putVec2(this.gradiantDirectionX, this.gradiantDirectionY) // u_gradientDirectionVector
+                    .putFloat(this.edgeSoftness) // u_edgeSoftness
                     .putFloat(this.shadow); // u_shadowSoftness
         });
     }

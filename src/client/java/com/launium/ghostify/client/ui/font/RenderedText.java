@@ -17,6 +17,15 @@ import java.awt.image.BufferedImage;
 @AllArgsConstructor
 public class RenderedText implements AutoCloseable {
     public DynamicTexture texture;
+    /**
+     * Explain some of its members (for this class):
+     * <ul>
+     *     <li>width: width of the texture in pixels</li>
+     *     <li>height: height of the texture in pixels</li>
+     *     <li>x: useless, used internally</li>
+     *     <li>y: the y coordinate of text baseline</li>
+     * </ul>
+     */
     public Rectangle bounds;
     public int lineHeight;
     public TextureSetup textureSetup;

@@ -129,11 +129,6 @@ public class NavigationCategories implements Element {
     }
 
     @Override
-    public boolean shouldCloseOnEsc() {
-        return Element.super.shouldCloseOnEsc();
-    }
-
-    @Override
     public int getLayerDepth() {
         return layerDepth;
     }

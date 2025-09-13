@@ -10,9 +10,9 @@ import java.util.SequencedCollection;
 
 public class ListView<T extends MeasurableElement> implements Element, CullingReceiver {
     public SequencedCollection<T> elementList;
+    public float gap;
     public int layerDepth;
     private float startX, startY, endX, endY;
-    private float gap;
     private CullingProvider cullingProvider;
 
     public ListView(SequencedCollection<T> elementList, float gap, int layerDepth) {

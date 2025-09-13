@@ -4,12 +4,11 @@ import com.launium.ghostify.client.mixin.AccessFont;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.CachedOrthoProjectionMatrixBuffer;
+import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix3x2fStack;
 
 public class Easy2D {
     private static GuiGraphics context;
-    private static final CachedOrthoProjectionMatrixBuffer guiProjectionMatrixBuffer = new CachedOrthoProjectionMatrixBuffer("gui", 1000.0F, 11000.0F, true);
 
     public static void configure(GuiGraphics newContext) {
         context = newContext;
@@ -64,6 +63,13 @@ public class Easy2D {
                     startY + font.lineHeight * i);
             context.drawString(font, element.text, 0, 0, element.color, shadow);
         }
+        pose.popMatrix();
+    }
+
+    public static void drawItem(ItemStack itemStack, float x, float y) {
+        Matrix3x2fStack pose = context.pose().pushMatrix();
+        pose.translate(x, y);
+        context.renderFakeItem(itemStack, 0, 0);
         pose.popMatrix();
     }
 }

@@ -25,37 +25,36 @@ out vec4 fragColor;
 //  * @param Radius Vec4 of all the radii in the rounded rectangle
 //*/
 float roundedBoxSDF(vec2 CenterPosition, vec2 Size, vec4 Radius) {
-    Radius.xy = (CenterPosition.x > 0.0) ? Radius.xy : Radius.zw;
-    Radius.x  = (CenterPosition.y > 0.0) ? Radius.x  : Radius.y;
+    Radius.xy = (CenterPosition.x > 0.) ? Radius.xy : Radius.zw;
+    Radius.x  = (CenterPosition.y > 0.) ? Radius.x  : Radius.y;
 
     vec2 q = abs(CenterPosition)-Size+Radius.x;
-    return min(max(q.x,q.y),0.0) + length(max(q,0.0)) - Radius.x;
+    return min(max(q.x,q.y), 0.) + length(max(q, 0.)) - Radius.x;
 }
 
 void main() {
     vec2 uv = (f_Position - u_rectCenter) / u_rectSize;
-    vec2 strength = vec2(uv.x * u_gradientDirectionVector.x, uv.y * u_gradientDirectionVector.y);
-    // Interpolate colors based on the distance
-    vec4 gradientColor = mix(u_colorRect, u_colorRect2, (strength.x == 0.0) ? strength.y + 0.5 : strength.x + 0.5);
+    float gradientStrength = clamp(dot(uv, u_gradientDirectionVector) + .5, 0., 1.);
+    vec4 gradientColor = mix(u_colorRect, u_colorRect2, gradientStrength);
 
-    vec4 u_colorBg = vec4(0.0); // The color of background
-    vec2 halfSize = (u_rectSize / 2.0); // Rectangle extents (half of the size)
+    vec4 u_colorBg = vec4(0.); // The color of background
+    vec2 halfSize = (u_rectSize / 2.); // Rectangle extents (half of the size)
 
     // Calculate distance to edge.
     float distance = roundedBoxSDF(f_Position.xy - u_rectCenter, halfSize, u_Radii);
     // Smooth the result (free antialiasing).
-    float smoothedAlpha = 1.0 - smoothstep(0.0, u_edgeSoftness, distance);
+    float smoothedAlpha = 1. - smoothstep(0., u_edgeSoftness, distance);
 
     // Apply a drop shadow effect.
-    float shadowAlpha = 1.0 - smoothstep(-u_shadowSoftness, u_shadowSoftness, distance);
+    float shadowAlpha = 1. - smoothstep(-u_shadowSoftness, u_shadowSoftness, distance);
 
     // Blend background with shadow
-    vec4 res_shadow_color =
+    vec4 resShadowColor =
         mix(
             u_colorBg,
             vec4(u_colorShadow.rgb, shadowAlpha),
             shadowAlpha
         );
 
-    fragColor = mix(res_shadow_color, gradientColor, smoothedAlpha);
+    fragColor = mix(resShadowColor, gradientColor, smoothedAlpha);
 }

@@ -17,6 +17,10 @@ public class ScrollWrapper implements Element, CullingProvider {
         }
     }
 
+    public void setVerticalOffset(float offset) {
+        verticalScroll.target = offset;
+    }
+
     @Override
     public void render(GuiGraphics context, int mouseX, int mouseY, long timeDiff) {
         // tick animations

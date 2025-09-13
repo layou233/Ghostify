@@ -14,6 +14,7 @@ public class ConfigManager {
     public static FeaturesConfig FEATURES = loadFile(FeaturesConfig.class, FeaturesConfig.CONFIG_NAME, FeaturesConfig::new);
     public static PatchesConfig PATCHES = loadFile(PatchesConfig.class, PatchesConfig.CONFIG_NAME, PatchesConfig::new);
     public static CommandsConfig COMMANDS = loadFile(CommandsConfig.class, CommandsConfig.CONFIG_NAME, CommandsConfig::new);
+    public static ContactsBook CONTACTS = loadFile(ContactsBook.class, ContactsBook.CONFIG_NAME, ContactsBook::new);
 
     private static <T extends AbstractConfig> T loadFile(Class<T> clazz, String configName, Supplier<T> factory) {
         try {
@@ -41,6 +42,7 @@ public class ConfigManager {
         FEATURES.processChanges();
         PATCHES.processChanges();
         COMMANDS.processChanges();
+        CONTACTS.processChanges();
     }
 
     public static void init() {
