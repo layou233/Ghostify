@@ -18,14 +18,31 @@ public class ContactDestinationView implements NavigationView {
 
     public final ItemStack contactIcon;
     public final String contactName;
+    private final String contactShortName;
 
     private float startX, startY;
     private final Window window;
     private final int layerDepth;
 
+    private static String processShortName(final String originName) {
+        int indexOfLastWhitespace = originName.lastIndexOf(' ');
+        if (indexOfLastWhitespace < 0) return originName;
+        // Fix for multi-word names
+        // https://wiki.hypixel.net/Abiphone#All_Contacts
+        return switch (originName) {
+            case "Fear Mongerer" -> "Fear";
+            case "Jotraeline Greatforge" -> "Jotraeline";
+            //case "Kuudra Gatekeeper" -> "Kuudra";
+            case "Lumber Merchant" -> "Lumber";
+            case "St. Jerry" -> "StJerry";
+            default -> originName.substring(1 + indexOfLastWhitespace); // only show the last word
+        };
+    }
+
     public ContactDestinationView(ItemStack contactIcon, String contactName, Window window, int layerDepth) {
         this.contactIcon = contactIcon;
         this.contactName = contactName;
+        this.contactShortName = processShortName(contactName);
         this.window = window;
         this.layerDepth = layerDepth;
     }
@@ -40,7 +57,7 @@ public class ContactDestinationView implements NavigationView {
     public void sendCallCommand() {
         ClientPacketListener connection = Minecraft.getInstance().getConnection();
         if (connection != null) {
-            connection.sendCommand("call " + contactName);
+            connection.sendCommand("call " + contactShortName);
         }
     }
 
@@ -62,7 +79,7 @@ public class ContactDestinationView implements NavigationView {
 
         // render text
         float scale = window.getGuiScale();
-        RenderedText renderedText = FontManager.requestRenderedText(new RenderInfo(FontManager.DEFAULT_FONT, contactName, 9F), scale);
+        RenderedText renderedText = FontManager.requestRenderedText(new RenderInfo(FontManager.DEFAULT_FONT, contactShortName, 9F), scale);
         renderedText.draw(context, startX + 18F, startY + (MEASURED_HEIGHT - (float) Math.floor(renderedText.lineHeight / scale)) * 0.5F, layerDepth, scale, 0xFFFFFFFF);
     }
 

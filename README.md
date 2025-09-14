@@ -1,5 +1,7 @@
 # Ghostify
 
+Lite version: [![Lite on Modrinth](https://img.shields.io/modrinth/dt/ghostify-lite?style=for-the-badge&label=Modrinth&color=darkgreen&labelColor=black&logo=modrinth)](https://modrinth.com/mod/ghostify-lite)
+
 ## License
 
 This project is currently licensed under PolyForm Shield License 1.0.0.

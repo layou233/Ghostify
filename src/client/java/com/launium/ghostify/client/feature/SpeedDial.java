@@ -74,11 +74,12 @@ public class SpeedDial implements ClientTickEvents.StartTick, ScreenEvents.Befor
                 for (int column = 1; column < 8; column++) {
                     ItemStack itemStack = container.getItem(row * 9 + column);
                     if (!itemStack.is(Items.PLAYER_HEAD)) {
-                        if (!itemStack.is(Items.AIR))
-                            System.out.println("why? R" + row + "C" + column + " is not player head! " + itemStack);
                         continue;
                     }
                     String itemName = itemStack.getHoverName().getString();
+                    if (itemName.startsWith("Abiphone ")) { // probably the shop page
+                        return;
+                    }
                     String skinB64 = PlayerHead.getSkinFromHead(itemStack).orElse(null);
                     ContactsBook.Contact contact = ConfigManager.CONTACTS.CONTACTS.get(itemName);
                     if (contact == null) { // not found
