@@ -3,10 +3,10 @@ package com.launium.ghostify.client.util;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 
-import java.util.concurrent.PriorityBlockingQueue;
+import java.util.PriorityQueue;
 
 public class ClientTaskScheduler {
-    public static final PriorityBlockingQueue<AbstractTask> CLIENT_TASKS = new PriorityBlockingQueue<>();
+    public static final PriorityQueue<AbstractTask> CLIENT_TASKS = new PriorityQueue<>();
 
     public abstract static class AbstractTask implements Comparable<AbstractTask> {
 
@@ -20,9 +20,8 @@ public class ClientTaskScheduler {
 
         @Override
         public int compareTo(ClientTaskScheduler.AbstractTask another) {
-            // reversed order to prioritize tasks with earlier scheduled time
-            // the higher the time value, the lower the priority
-            return Long.compare(another.scheduledTimeMs, scheduledTimeMs);
+            // prioritize tasks with earlier scheduled time
+            return Long.compare(scheduledTimeMs, another.scheduledTimeMs);
         }
 
     }

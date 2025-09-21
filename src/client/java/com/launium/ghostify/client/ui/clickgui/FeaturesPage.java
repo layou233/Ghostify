@@ -2,6 +2,7 @@ package com.launium.ghostify.client.ui.clickgui;
 
 import com.launium.ghostify.client.GhostifyClient;
 import com.launium.ghostify.client.config.ConfigManager;
+import com.launium.ghostify.client.feature.AutoTip;
 import com.launium.ghostify.client.feature.DayViewer;
 import com.launium.ghostify.client.feature.HarpBot;
 import com.launium.ghostify.client.ui.clickgui.fubuki.list.ListView;
@@ -20,6 +21,14 @@ public class FeaturesPage extends AbstractPage {
                 new ModuleItemView(client, "Harp bot", "Rhythm games should have autoplay.", ConfigManager.FEATURES.ENABLE_HARP_BOT, newValue -> {
                     ConfigManager.FEATURES.ENABLE_HARP_BOT = newValue;
                     if (ConfigManager.FEATURES.ENABLE_HARP_BOT) GhostifyClient.moduleList.showModule(HarpBot.INSTANCE);
+                    ConfigManager.FEATURES.markAsChanged();
+                }),
+                new ModuleItemView(client, "Auto tip", "Send /tipall regularly when in Hypixel.", ConfigManager.FEATURES.ENABLE_AUTO_TIP, newValue -> {
+                    ConfigManager.FEATURES.ENABLE_AUTO_TIP = newValue;
+                    if (ConfigManager.FEATURES.ENABLE_AUTO_TIP) {
+                        AutoTip.INSTANCE.setupTask();
+                        GhostifyClient.moduleList.showModule(AutoTip.INSTANCE);
+                    }
                     ConfigManager.FEATURES.markAsChanged();
                 }),
                 new ModuleItemView(client, "RNG drop summary", "Notify the RNG drop, and play the music at \"config/Ghostify/rng_music.ogg\". GG!", ConfigManager.FEATURES.ENABLE_RNG_DROP_SUMMARY, newValue -> {

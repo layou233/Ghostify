@@ -66,14 +66,12 @@ public class HudModuleList implements HudElement {
         float scale = (float) window.getGuiScale();
         Space space = new Space(window.getGuiScaledWidth(), window.getGuiScaledHeight());
         space.allocateVertical(verticalAlignment, animatedStartingY.current, 0);
-        RenderedText sampleText = FontManager.requestRenderedText(
-                new RenderInfo(FontManager.BOLD_FONT, "dp", 8F), scale);
-        float elementHeight = 6F + sampleText.bounds.height / scale;
         Easy2D.configure(context);
         moduleSet.removeIf(module -> {
             RenderedText title = FontManager.requestRenderedText(
                     new RenderInfo(FontManager.BOLD_FONT, module.title(), 8F), scale);
             RenderedText subtitle = null;
+            float elementHeight = 8F + title.lineHeight / scale;
             {
                 String subtitleText = module.subtitle();
                 if (subtitleText != null) {

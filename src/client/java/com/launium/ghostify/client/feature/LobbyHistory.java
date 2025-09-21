@@ -5,20 +5,16 @@ import com.google.common.cache.CacheBuilder;
 import com.launium.ghostify.client.GhostifyClient;
 import com.launium.ghostify.client.events.SimpleChatEventHandler;
 import com.launium.ghostify.client.ui.container.LobbyHistoryContainer;
+import com.launium.ghostify.client.util.SimpleDuration;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 
-import java.time.Duration;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
-
-public class LobbyHistory implements SimpleChatEventHandler.NonOverlay, ClientPlayConnectionEvents.Join {
+public class LobbyHistory implements SimpleChatEventHandler.NonOverlay, ClientPlayConnectionEvents.Init {
     public static final LobbyHistory INSTANCE = new LobbyHistory();
 
-    private final Cache<Integer, LocalTime> LOBBY_HISTORY_CACHE = CacheBuilder.newBuilder()
+    private final Cache<Integer, Long> LOBBY_HISTORY_CACHE = CacheBuilder.newBuilder()
             .concurrencyLevel(2)
             .initialCapacity(16)
             .maximumSize(64)
@@ -33,28 +29,27 @@ public class LobbyHistory implements SimpleChatEventHandler.NonOverlay, ClientPl
             if (lobbyCode.startsWith("mini")) lobbyCode = 'm' + lobbyCode.substring(4);
             else if (lobbyCode.startsWith("mega")) lobbyCode = 'M' + lobbyCode.substring(4);
 
-            LocalTime nowLocal = LocalTime.now();
+            long now = Util.getMillis();
             int lobbyHash = lobbyCode.hashCode();
 
             // search for history
-            LocalTime historyTime = LOBBY_HISTORY_CACHE.getIfPresent(lobbyHash);
+            Long historyTime = LOBBY_HISTORY_CACHE.getIfPresent(lobbyHash);
             if (historyTime != null) {
                 LobbyHistoryContainer.INSTANCE.text = "Lobby " + lobbyCode + " ⚠ Last visit " +
-                        Duration.between(historyTime, nowLocal).truncatedTo(ChronoUnit.SECONDS).toString().substring(2).toLowerCase() +
-                        " ago";
-                LobbyHistoryContainer.INSTANCE.lastTriggeredTimestamp = Util.getMillis();
+                        new SimpleDuration(now - historyTime) + " ago";
+                LobbyHistoryContainer.INSTANCE.lastTriggeredTimestamp = now;
                 GhostifyClient.island.show(LobbyHistoryContainer.INSTANCE);
             }
 
             if (lastLobbyHash != 0) {
-                LOBBY_HISTORY_CACHE.put(lastLobbyHash, nowLocal);
+                LOBBY_HISTORY_CACHE.put(lastLobbyHash, now);
             }
             lastLobbyHash = lobbyHash;
         }
     }
 
     @Override
-    public void onPlayReady(ClientPacketListener handler, PacketSender sender, Minecraft client) {
+    public void onPlayInit(ClientPacketListener handler, Minecraft client) {
         lastLobbyHash = 0;
     }
 }

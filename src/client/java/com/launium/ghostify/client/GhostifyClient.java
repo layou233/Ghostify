@@ -71,7 +71,7 @@ public class GhostifyClient implements ClientModInitializer {
         ClientTickEvents.START_CLIENT_TICK.register(SpeedDial.INSTANCE);
         ClientTickEvents.END_CLIENT_TICK.register(PickobulusPreview.INSTANCE);
         ClientReceiveMessageEvents.GAME.register(SimpleChatEventHandler.INSTANCE);
-        ClientPlayConnectionEvents.JOIN.register(LobbyHistory.INSTANCE);
+        ClientPlayConnectionEvents.INIT.register(LobbyHistory.INSTANCE);
         ClientLifecycleEvents.CLIENT_STOPPING.register(client -> ConfigManager.processChanges());
         WorldRenderEvents.AFTER_ENTITIES.register(PickobulusPreview.INSTANCE);
         ScreenEvents.BEFORE_INIT.register(SpeedDial.INSTANCE);
@@ -94,6 +94,11 @@ public class GhostifyClient implements ClientModInitializer {
                     .then(literal("resetLifeTimer")
                             .executes(context -> {
                                 LifeSaverTimer.INSTANCE.reset();
+                                return 0;
+                            }))
+                    .then(literal("resetAutoTip")
+                            .executes(context -> {
+                                AutoTip.INSTANCE.reset();
                                 return 0;
                             }))
                     .then(literal("tps")

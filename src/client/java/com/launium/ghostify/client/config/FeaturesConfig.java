@@ -16,6 +16,9 @@ public class FeaturesConfig extends AbstractConfig {
     @SerializedName("enable_harp_bot")
     public boolean ENABLE_HARP_BOT = false;
 
+    @SerializedName("enable_auto_tip")
+    public boolean ENABLE_AUTO_TIP = false;
+
     @SerializedName("enable_rng_drop_summary")
     public boolean ENABLE_RNG_DROP_SUMMARY = true;
 
