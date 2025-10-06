@@ -8,6 +8,7 @@ import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.gui.render.state.GuiElementRenderState;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2f;
@@ -32,7 +33,7 @@ public class CheckMarkRenderState implements GuiElementRenderState {
         this.context = context;
         this.progress = progress;
 
-        this.bounds = new ScreenRectangle((int) Math.floor(x), (int) Math.floor(y), (int) Math.ceil(LENGTH * scale), (int) Math.ceil(LENGTH * scale));
+        this.bounds = new ScreenRectangle(Mth.floor(x), Mth.floor(y), Mth.ceil(LENGTH * scale), Mth.ceil(LENGTH * scale));
     }
 
     @Override

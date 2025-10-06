@@ -19,6 +19,7 @@ public class SimpleChatEventHandler implements ClientReceiveMessageEvents.Game {
             PickobulusPreview.INSTANCE.onReceiveChat(text);
             LobbyHistory.INSTANCE.onReceiveChat(text);
             RNGDrop.INSTANCE.onReceiveChat(text);
+            EntranceNotifier.INSTANCE.onReceiveChat(text);
         }
     }
 

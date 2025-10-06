@@ -32,19 +32,6 @@ public class GhostifyRenderTypes {
                     .build()
     );
 
-    static final RenderType.CompositeRenderType
-            ROUND_RECT = RenderType.create("ghostify_round_rect", RenderType.TRANSIENT_BUFFER_SIZE,
-            false, false, PIPELINE_ROUND_RECT,
-            RenderType.CompositeState.builder()
-                    .setTextureState(NO_TEXTURE)
-                    .setLayeringState(NO_LAYERING)
-                    .setLightmapState(LIGHTMAP)
-                    .setOutputState(MAIN_TARGET)
-                    .setOverlayState(NO_OVERLAY)
-                    .setTexturingState(DEFAULT_TEXTURING)
-                    .setLineState(DEFAULT_LINE)
-                    .createCompositeState(false));
-
     static final RenderPipeline PIPELINE_BOX_FILLED_NO_CULL = RenderPipelines.register(
             RenderPipeline.builder(RenderPipelines.DEBUG_FILLED_SNIPPET)
                     .withLocation(ResourceLocation.fromNamespaceAndPath("ghostify", "pipeline/box_filled_no_cull"))

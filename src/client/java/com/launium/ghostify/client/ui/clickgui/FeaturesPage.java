@@ -38,6 +38,10 @@ public class FeaturesPage extends AbstractPage {
                 new ModuleItemView(client, "Foraging style warning", "Warn when you chop trees in the wrong order to prevent the loss of foraging efficiency.", ConfigManager.FEATURES.ENABLE_FORAGING_STYLE_WARNING, newValue -> {
                     ConfigManager.FEATURES.ENABLE_FORAGING_STYLE_WARNING = newValue;
                     ConfigManager.FEATURES.markAsChanged();
+                }),
+                new ModuleItemView(client, "Entrance notifier", "Pop up a system notification when entering Dungeon/Kuudra if the game window is not focused.", ConfigManager.FEATURES.ENABLE_ENTRANCE_NOTIFIER, newValue -> {
+                    ConfigManager.FEATURES.ENABLE_ENTRANCE_NOTIFIER = newValue;
+                    ConfigManager.FEATURES.markAsChanged();
                 })
         ), 2F, LAYER_DEPTH + 1));
     }

@@ -8,6 +8,7 @@ import com.launium.ghostify.client.config.ConfigManager;
 import com.launium.ghostify.client.events.SimpleChatEventHandler;
 import com.launium.ghostify.client.feature.*;
 import com.launium.ghostify.client.feature.experimentation.AbstractExperimentSolver;
+import com.launium.ghostify.client.ui.RoundRectRenderer;
 import com.launium.ghostify.client.ui.container.ServerTPSContainer;
 import com.launium.ghostify.client.ui.font.FontManager;
 import com.launium.ghostify.client.ui.island.HudDynamicIsland;
@@ -50,6 +51,7 @@ public class GhostifyClient implements ClientModInitializer {
         ConfigManager.init();
         Compat.init();
         FontManager.init();
+        RoundRectRenderer.init();
         HudElementRegistry.attachElementAfter(VanillaHudElements.MISC_OVERLAYS,
                 ResourceLocation.fromNamespaceAndPath("ghostify", "dynamic_island"),
                 island);

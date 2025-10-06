@@ -4,6 +4,7 @@ import com.launium.ghostify.client.ui.animation.Animation;
 import com.launium.ghostify.client.ui.animation.Smooth;
 import com.launium.ghostify.client.ui.clickgui.Element;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.util.Mth;
 
 public class FragmentView implements Element {
     public Element currentFrag;
@@ -33,8 +34,8 @@ public class FragmentView implements Element {
         float offset = 0F;
         if (previousFrag != null) offset = (endX - startX) * transitionProgress.current;
 
-        context.enableScissor((int) Math.floor(startX), (int) Math.floor(startY),
-                (int) Math.ceil(endX), (int) Math.ceil(endY));
+        context.enableScissor(Mth.floor(startX), Mth.floor(startY),
+                Mth.ceil(endX), Mth.ceil(endY));
 
         if (previousFrag != null) {
             float width = endX - startX;

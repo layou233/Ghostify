@@ -1,6 +1,6 @@
 package com.launium.ghostify.client.ui.clickgui.fubuki.list;
 
-import com.launium.ghostify.client.ui.RoundRectRenderState;
+import com.launium.ghostify.client.ui.RoundRectRenderer;
 import com.launium.ghostify.client.ui.animation.Animation;
 import com.launium.ghostify.client.ui.animation.Smooth;
 import com.launium.ghostify.client.ui.clickgui.Element;
@@ -116,13 +116,13 @@ public class Spinner<T extends MeasurableElement> implements Element {
             // draw highlight background
             float centerY = (endY + startY) * 0.5F;
             int color = Mth.hsvToArgb(colorHSV.h, colorHSV.s * colorPercent.current, colorHSV.v, 0xFF);
-            RoundRectRenderState highlightState = new RoundRectRenderState(context,
+            RoundRectRenderer.State highlightState = new RoundRectRenderer.State(context,
                     startX + highlightStartX.current, centerY - selectedElementHalfHeight, startX + highlightEndX.current, centerY + selectedElementHalfHeight,
                     layerDepth, 4F, 16F, color, color);
             if (!isFocused) {
                 highlightState.radiusLT = highlightState.radiusLB = 0F;
             }
-            context.guiRenderState.submitGuiElement(highlightState);
+            context.guiRenderState.submitPicturesInPictureState(highlightState);
         }
 
         // draw scroll wrapper with the list view

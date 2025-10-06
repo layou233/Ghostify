@@ -10,12 +10,12 @@
     "MixinCamera",
     "MixinClientCommonPacketListenerImpl",
     "MixinClientPacketListener",
-    "MixinGuiRenderer",
     "MixinItemStack",
     "MixinLavaFogEnvironment",
     "MixinMinecraft",
     "MixinPlayer",
     "MixinPlayerGameMode",
+    "MixinRenderSystem",
     "MixinScreenEffectRenderer",
     "skyblocker.MixinMobGlow"
   ],

@@ -23,7 +23,7 @@ public class Easy2D {
         if (!(left < right && top < bottom)) { // also capture NaN
             return;
         }
-        context.guiRenderState.submitGuiElement(new RoundRectRenderState(context,
+        context.guiRenderState.submitPicturesInPictureState(new RoundRectRenderer.State(context,
                 left, top, right, bottom, depth, radius, shadow, color, shadowColor
         ));
     }

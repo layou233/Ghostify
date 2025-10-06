@@ -24,4 +24,7 @@ public class FeaturesConfig extends AbstractConfig {
 
     @SerializedName("enable_foraging_style_warning")
     public boolean ENABLE_FORAGING_STYLE_WARNING = true;
+
+    @SerializedName("enable_entrance_notifier")
+    public boolean ENABLE_ENTRANCE_NOTIFIER = true;
 }

@@ -1,6 +1,6 @@
 package com.launium.ghostify.client.ui.clickgui.fubuki.nav;
 
-import com.launium.ghostify.client.ui.RoundRectRenderState;
+import com.launium.ghostify.client.ui.RoundRectRenderer;
 import com.launium.ghostify.client.ui.animation.Animation;
 import com.launium.ghostify.client.ui.animation.Smooth;
 import com.launium.ghostify.client.ui.clickgui.Element;
@@ -83,11 +83,11 @@ public class NavigationSpinner implements Element {
 
         // render background
         float halfHeight = this.height * 0.5F;
-        RoundRectRenderState backgroundState = new RoundRectRenderState(context,
+        RoundRectRenderer.State backgroundState = new RoundRectRenderer.State(context,
                 this.startX, this.startY - halfHeight, this.startX + this.width, this.startY + halfHeight,
                 layerDepth, 0F, 1F, color, 0);
         backgroundState.radiusRT = backgroundState.radiusRB = radius.current;
-        context.guiRenderState.submitGuiElement(backgroundState);
+        context.guiRenderState.submitPicturesInPictureState(backgroundState);
 
         // render spinner
         spinner.updateStartPosition(startX, startY - halfHeight);
