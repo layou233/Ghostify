@@ -64,6 +64,13 @@ public class CheckMarkRenderState implements GuiElementRenderState {
 
     @Override
     public @NotNull RenderPipeline pipeline() {
+        // The vanilla game forces the use of QUADS index buffer for rendering GUI elements
+        // so pipelines other than those that use QUADS as vertex format won't work.
+        // See https://github.com/FabricMC/fabric/pull/4824
+        // I'm not doing mixin to fix that since it's not a big deal and I believe there'll
+        // be a upstream fix for that, which has already been done by Fabric API in 1.21.9 but
+        // has not been backported to 1.21.8 yet. I'll just wait for that.
+        // TODO: Migrate to TRIANGLE_STRIP-based pipelines after upstream fix
         return RenderPipelines.DEBUG_QUADS;
     }
 
