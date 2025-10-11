@@ -10,7 +10,7 @@ import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.systems.ScissorState;
 import com.mojang.blaze3d.vertex.*;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
 import net.fabricmc.fabric.api.client.rendering.v1.SpecialGuiElementRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -31,7 +31,7 @@ import java.util.OptionalDouble;
 import java.util.OptionalInt;
 
 public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRenderer.State> {
-    private static State lastState;
+    private State lastState;
 
     public static void init() {
         SpecialGuiElementRegistry.register(context -> new RoundRectRenderer(context.vertexConsumers()));
@@ -124,11 +124,11 @@ public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRendere
         return "Ghostify Rounded Rectangle PIP";
     }
 
-    @Data
+    @EqualsAndHashCode
     public static class State implements PictureInPictureRenderState {
-        private final static float OUTSET = 14F; // conservative
+        public final static float OUTSET = 14F; // conservative
 
-        public final float left, top, right, bottom;
+        public transient final float left, top, right, bottom;
         public final float depth, scale;
         public final float shadow;
         public final Vector4f color, shadowColor; // normalized RGBA
@@ -137,8 +137,8 @@ public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRendere
         public float gradiantDirectionX = 0F, gradiantDirectionY = 0F;
         public float edgeSoftness = 1F;
 
-        public transient final float subpixelX, subpixelY; // pad texture for subpixel rendering
-        private transient final float extentX, extentY;
+        private final float subpixelX, subpixelY; // pad texture for subpixel rendering
+        private final float extentX, extentY;
         private transient final GuiGraphics context;
         private transient final ScreenRectangle bounds;
 

@@ -3,6 +3,7 @@ package com.launium.ghostify.client.feature;
 import com.launium.ghostify.client.GhostifyClient;
 import com.launium.ghostify.client.mixin.AccessKeyMapping;
 import com.launium.ghostify.client.util.Remember;
+import com.launium.ghostify.client.util.SkyblockLocation;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -74,8 +75,7 @@ public class AutoClicker extends AbstractModule implements ClientTickEvents.Star
         while (SWITCH_AUTO_CLICKER_KEY.consumeClick()) {
             this.isEnabled = !this.isEnabled;
         }
-        if (GhostPickaxe.INSTANCE.isActive()) return;
-        if (this.isEnabled) {
+        if (this.isActive()) {
             //GhostifyClient.island.show(autoClickerContainer);
             GhostifyClient.moduleList.showModule(this);
             if (client.player != null && client.screen == null) {
@@ -143,6 +143,8 @@ public class AutoClicker extends AbstractModule implements ClientTickEvents.Star
 
     @Override
     public boolean isActive() {
-        return isEnabled && !GhostPickaxe.INSTANCE.isActive();
+        return isEnabled &&
+                !GhostPickaxe.INSTANCE.isActive() &&
+                !(BetterDungeonbreaker.isHolding && SkyblockLocation.isInDungeons());
     }
 }

@@ -1,7 +1,6 @@
 package com.launium.ghostify.client.ui.font;
 
 import com.launium.ghostify.client.GhostifyClient;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.Util;
 
 import java.awt.*;
@@ -28,7 +27,6 @@ public class FontManager {
             DEFAULT_FONT = new Font("Arial", Font.PLAIN, 24);
         }
         BOLD_FONT = DEFAULT_FONT.deriveFont(Font.BOLD);
-        WorldRenderEvents.END.register(RenderedTextCache::whenRenderEnd);
     }
 
     public static RenderedText requestRenderedText(RenderInfo info, float scale) {

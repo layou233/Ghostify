@@ -5,11 +5,10 @@ import com.launium.ghostify.client.feature.DayViewer;
 import com.launium.ghostify.client.feature.ForagingStyleWarning;
 import com.launium.ghostify.client.feature.PickobulusPreview;
 import com.launium.ghostify.client.ui.container.ServerTPSContainer;
+import com.launium.ghostify.client.util.SkyblockLocation;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
-import net.minecraft.network.protocol.game.ClientboundSetTimePacket;
-import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.network.protocol.game.*;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,6 +32,7 @@ public abstract class MixinClientPacketListener {
     private void ghostify$handleRespawn(ClientboundRespawnPacket packet, CallbackInfo ci) {
         ServerTPSContainer.INSTANCE.whenRespawn();
         PickobulusPreview.INSTANCE.resetCooldown();
+        SkyblockLocation.whenRespawn();
     }
 
     @Inject(method = "handleSoundEvent", at = @At("TAIL"))
@@ -41,6 +41,11 @@ public abstract class MixinClientPacketListener {
         if (SoundEvents.LADDER_BREAK.equals(soundEvent)) {
             ForagingStyleWarning.whenWoodBreakSound(packet);
         }
+    }
+
+    @Inject(method = "handlePlayerInfoUpdate", at =@At("TAIL"))
+    private void ghostify$handleScoreboardUpdate(ClientboundPlayerInfoUpdatePacket packet, CallbackInfo ci) {
+        SkyblockLocation.whenScoreboardUpdate(packet.entries());
     }
 
     @Inject(method = "openCommandSendConfirmationWindow", at = @At("HEAD"), cancellable = true)

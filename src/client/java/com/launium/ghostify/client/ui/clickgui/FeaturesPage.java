@@ -43,6 +43,6 @@ public class FeaturesPage extends AbstractPage {
                     ConfigManager.FEATURES.ENABLE_ENTRANCE_NOTIFIER = newValue;
                     ConfigManager.FEATURES.markAsChanged();
                 })
-        ), 2F, LAYER_DEPTH + 1));
+        ), 4F, LAYER_DEPTH + 1));
     }
 }

@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class ModuleItemView implements MeasurableElement {
     public static final int LAYER_DEPTH = ClickGUIScreen.LAYER_DEPTH + 3;
-    public static final float HEIGHT = 16F;
+    public static final float HEIGHT = 14F;
 
     public @NotNull String title;
     public @Nullable String subtitle;

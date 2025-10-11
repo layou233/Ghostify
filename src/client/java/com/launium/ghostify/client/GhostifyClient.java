@@ -15,6 +15,7 @@ import com.launium.ghostify.client.ui.island.HudDynamicIsland;
 import com.launium.ghostify.client.ui.modulelist.HudModuleList;
 import com.launium.ghostify.client.ui.speeddial.HudSpeedDial;
 import com.launium.ghostify.client.util.ClientTaskScheduler;
+import com.launium.ghostify.client.util.SkyblockLocation;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ClientModInitializer;
@@ -71,6 +72,7 @@ public class GhostifyClient implements ClientModInitializer {
         ClientTickEvents.START_CLIENT_TICK.register(DayViewer.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(ClickGUI.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(SpeedDial.INSTANCE);
+        ClientTickEvents.START_CLIENT_TICK.register(BetterDungeonbreaker.INSTANCE);
         ClientTickEvents.END_CLIENT_TICK.register(PickobulusPreview.INSTANCE);
         ClientReceiveMessageEvents.GAME.register(SimpleChatEventHandler.INSTANCE);
         ClientPlayConnectionEvents.INIT.register(LobbyHistory.INSTANCE);
@@ -112,6 +114,12 @@ public class GhostifyClient implements ClientModInitializer {
                             .executes(context -> {
                                 ConfigManager.processChanges();
                                 context.getSource().sendFeedback(Component.literal("[Ghostify] Processed config changes."));
+                                return 0;
+                            }))
+                    .then(literal("whereAmI")
+                            .executes(context -> {
+                                context.getSource().sendFeedback(Component.literal("[Ghostify] Location=\"" + SkyblockLocation.LOCATION_STRING +
+                                        "\", isInDungeons=" + SkyblockLocation.isInDungeons()));
                                 return 0;
                             }));
             AutoClicker.registerCommand(builder);

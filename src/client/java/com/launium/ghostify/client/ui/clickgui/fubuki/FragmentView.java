@@ -99,7 +99,7 @@ public class FragmentView implements Element {
 
     @Override
     public boolean mouseDragged(float mouseX, float mouseY, float dragX, float dragY) {
-        return isInBounds(mouseX, mouseY) && currentFrag != null && currentFrag.mouseClicked(mouseX, mouseY);
+        return isInBounds(mouseX, mouseY) && currentFrag != null && currentFrag.mouseDragged(mouseX, mouseY, dragX, dragY);
     }
 
     @Override

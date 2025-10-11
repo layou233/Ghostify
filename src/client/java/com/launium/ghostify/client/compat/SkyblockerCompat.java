@@ -19,4 +19,8 @@ public class SkyblockerCompat {
         }
         return false;
     }
+
+    public static boolean isInDungeons() {
+        return Utils.isInDungeons();
+    }
 }

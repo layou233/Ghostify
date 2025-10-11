@@ -20,6 +20,6 @@ public class GeneralPage extends AbstractPage {
                         () -> {}),
                 new ModuleItemView(client, "Click to buy us a cup of tea (Afdian)", "Cute cutie, give me money. >-<",
                         () -> ConfirmLinkScreen.confirmLinkNow(client.screen, "https://afdian.com/a/launium", true))
-        ), 2F, LAYER_DEPTH + 1));
+        ), 4F, LAYER_DEPTH + 1));
     }
 }

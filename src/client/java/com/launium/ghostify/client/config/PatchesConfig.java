@@ -10,6 +10,9 @@ public class PatchesConfig extends AbstractConfig {
         return CONFIG_NAME;
     }
 
+    @SerializedName("0_ping_dungeonbreaker")
+    public boolean ZERO_PING_DUNGEONBREAKER = false;
+
     @SerializedName("use_spectator_fog")
     public boolean USE_SPECTATOR_FOG = true;
 

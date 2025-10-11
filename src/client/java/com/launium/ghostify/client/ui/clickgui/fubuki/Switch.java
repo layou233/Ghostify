@@ -80,6 +80,7 @@ public class Switch implements MeasurableElement {
     public boolean mouseClicked(float mouseX, float mouseY) {
         if (startX < mouseX && mouseX < startX + WIDTH && startY < mouseY && mouseY < startY + HEIGHT) {
             this.setEnabled(!this.enabled);
+            return true;
         }
         return false;
     }

@@ -9,6 +9,10 @@ import java.util.List;
 public class PatchesPage extends AbstractPage {
     public PatchesPage(Minecraft client) {
         super(client, new ListView<>(List.of(
+                new ModuleItemView(client, "0 Ping Dungeonbreaker", "Ignore mining fatigue when holding Dungeonbreaker in Dungeons.", ConfigManager.PATCHES.ZERO_PING_DUNGEONBREAKER, (newValue) -> {
+                    ConfigManager.PATCHES.ZERO_PING_DUNGEONBREAKER = newValue;
+                    ConfigManager.PATCHES.markAsChanged();
+                }),
                 new ModuleItemView(client, "Always use spectator fog", "Clear in-lava/in-powder-snow camera.", ConfigManager.PATCHES.USE_SPECTATOR_FOG, newValue -> {
                     ConfigManager.PATCHES.USE_SPECTATOR_FOG = newValue;
                     ConfigManager.PATCHES.markAsChanged();
@@ -29,6 +33,6 @@ public class PatchesPage extends AbstractPage {
                     ConfigManager.PATCHES.OVERRULE_SKYBLOCKER_GLOW_DEPTH_TEST = newValue;
                     ConfigManager.PATCHES.markAsChanged();
                 })
-        ), 2F, LAYER_DEPTH + 1));
+        ), 4F, LAYER_DEPTH + 1));
     }
 }

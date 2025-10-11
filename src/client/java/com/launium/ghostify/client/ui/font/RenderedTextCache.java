@@ -1,15 +1,14 @@
 package com.launium.ghostify.client.ui.font;
 
 import it.unimi.dsi.fastutil.objects.ObjectBooleanMutablePair;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 
 import java.util.HashMap;
 
-class RenderedTextCache {
+public class RenderedTextCache {
     // <text, size> to <cache, isVisited>
-    public static HashMap<RenderInfo, ObjectBooleanMutablePair<RenderedText>> CACHE = new HashMap<>();
+    static HashMap<RenderInfo, ObjectBooleanMutablePair<RenderedText>> CACHE = new HashMap<>();
 
-    public static RenderedText get(RenderInfo info) {
+    static RenderedText get(RenderInfo info) {
         return CACHE
                 .computeIfAbsent(info,
                         key -> ObjectBooleanMutablePair.of(RenderedText.create(key), true))
@@ -17,7 +16,7 @@ class RenderedTextCache {
                 .left();
     }
 
-    public static void whenRenderEnd(WorldRenderContext worldRenderContext) {
+    public static void whenRenderEnd() {
         CACHE.entrySet().removeIf(entry -> {
             ObjectBooleanMutablePair<RenderedText> v = entry.getValue();
             if (v.rightBoolean()) { // is just visited?
