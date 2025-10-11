@@ -27,4 +27,7 @@ public class FeaturesConfig extends AbstractConfig {
 
     @SerializedName("enable_entrance_notifier")
     public boolean ENABLE_ENTRANCE_NOTIFIER = true;
+
+    @SerializedName("enable_legacy_ghost_pickaxe")
+    public boolean ENABLE_LEGACY_GHOST_PICKAXE = false;
 }

@@ -42,6 +42,10 @@ public class FeaturesPage extends AbstractPage {
                 new ModuleItemView(client, "Entrance notifier", "Pop up a system notification when entering Dungeon/Kuudra if the game window is not focused.", ConfigManager.FEATURES.ENABLE_ENTRANCE_NOTIFIER, newValue -> {
                     ConfigManager.FEATURES.ENABLE_ENTRANCE_NOTIFIER = newValue;
                     ConfigManager.FEATURES.markAsChanged();
+                }),
+                new ModuleItemView(client, "Allow legacy Ghost Pickaxe", "Allow legacy mode that directly removes blocks you look at from client side.", ConfigManager.FEATURES.ENABLE_LEGACY_GHOST_PICKAXE, newValue -> {
+                    ConfigManager.FEATURES.ENABLE_LEGACY_GHOST_PICKAXE = newValue;
+                    ConfigManager.FEATURES.markAsChanged();
                 })
         ), 4F, LAYER_DEPTH + 1));
     }

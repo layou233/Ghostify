@@ -2,6 +2,7 @@ package com.launium.ghostify.client.feature;
 
 import com.google.common.collect.Sets;
 import com.launium.ghostify.client.GhostifyClient;
+import com.launium.ghostify.client.config.ConfigManager;
 import com.launium.ghostify.client.ui.container.GhostPickaxeContainer;
 import com.launium.ghostify.client.util.SkyblockLocation;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -37,9 +38,7 @@ public class GhostPickaxe extends AbstractModule implements ClientTickEvents.Sta
     @Override
     public void onStartTick(Minecraft client) {
         if (client.player != null && GHOST_PICKAXE_KEY.isDown()) {
-            GhostPickaxeContainer.INSTANCE.isActivated = true;
-            GhostifyClient.island.show(GhostPickaxeContainer.INSTANCE);
-            GhostifyClient.moduleList.showModule(this);
+            boolean enable = true;
             if (BetterDungeonbreaker.slot > 0 && SkyblockLocation.isInDungeons()) { // found Dungeonbreaker in hotbar
                 if (lastSlot < 0) { // not swapped yet
                     GhostPickaxeContainer.INSTANCE.isLegacy = false;
@@ -47,7 +46,7 @@ public class GhostPickaxe extends AbstractModule implements ClientTickEvents.Sta
                     lastSlot = inventory.getSelectedSlot();
                     inventory.setSelectedSlot(BetterDungeonbreaker.slot);
                 }
-            } else { // legacy mode
+            } else if (ConfigManager.FEATURES.ENABLE_LEGACY_GHOST_PICKAXE) { // legacy mode
                 GhostPickaxeContainer.INSTANCE.isLegacy = true;
                 if (client.options.keyAttack.isDown()) {
                     HitResult hitResult = client.player.pick(20F, 0, false);
@@ -59,6 +58,13 @@ public class GhostPickaxe extends AbstractModule implements ClientTickEvents.Sta
                         }
                     }
                 }
+            } else {
+                enable = false;
+            }
+            if (enable) {
+                GhostPickaxeContainer.INSTANCE.isActivated = true;
+                GhostifyClient.island.show(GhostPickaxeContainer.INSTANCE);
+                GhostifyClient.moduleList.showModule(this);
             }
         } else {
             if (client.player != null && lastSlot >= 0) {
