@@ -25,16 +25,8 @@ public class PatchesPage extends AbstractPage {
                     ConfigManager.PATCHES.CANCEL_SHORTBOW_PULL = newValue;
                     ConfigManager.PATCHES.markAsChanged();
                 }),
-                new ModuleItemView(client, "Fix dungeon block place", "Allow placing onto enchantment tables in Dungeons. May help lava high jump with enchantment tables.", ConfigManager.PATCHES.FIX_DUNGEON_BLOCK_PLACE, newValue -> {
-                    ConfigManager.PATCHES.FIX_DUNGEON_BLOCK_PLACE = newValue;
-                    ConfigManager.PATCHES.markAsChanged();
-                }),
                 new ModuleItemView(client, "No command execution confirmation", "Skip the confirmation dialog from Mojang. Just execute it.", ConfigManager.PATCHES.NO_COMMAND_EXECUTION_CONFIRMATION, newValue -> {
                     ConfigManager.PATCHES.NO_COMMAND_EXECUTION_CONFIRMATION = newValue;
-                    ConfigManager.PATCHES.markAsChanged();
-                }),
-                new ModuleItemView(client, "Overrule Skyblocker glowing depth test", "Legitness? Or more appropriately, yǎn ěr dào líng.", ConfigManager.PATCHES.OVERRULE_SKYBLOCKER_GLOW_DEPTH_TEST, newValue -> {
-                    ConfigManager.PATCHES.OVERRULE_SKYBLOCKER_GLOW_DEPTH_TEST = newValue;
                     ConfigManager.PATCHES.markAsChanged();
                 })
         ), 4F, LAYER_DEPTH + 1));

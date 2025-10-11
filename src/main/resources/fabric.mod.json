@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "ghostify",
+  "id": "ghostify-lite",
   "version": "${version}",
-  "name": "Ghostify",
+  "name": "Ghostify Lite",
   "description": "Modern SkyBlock experience enhanced.",
   "authors": [
     "Launium"
@@ -32,7 +32,8 @@
     "modmenu": {
       "links": {
         "ghostify.bilibili": "https://space.bilibili.com/404017926",
-        "modmenu.donate": "https://afdian.com/a/launium"
+        "modmenu.donate": "https://afdian.com/a/launium",
+        "modmenu.modrinth": "https://modrinth.com/mod/ghostify-lite"
       }
     }
   }
