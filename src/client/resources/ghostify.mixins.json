@@ -6,19 +6,14 @@
   "client": [
     "AccessFont",
     "AccessKeyMapping",
-    "MixinAbstractContainerScreen",
-    "MixinCamera",
     "MixinClientCommonPacketListenerImpl",
     "MixinClientPacketListener",
     "MixinItemStack",
     "MixinLavaFogEnvironment",
     "MixinLevelRenderer",
-    "MixinMinecraft",
     "MixinPlayer",
-    "MixinPlayerGameMode",
     "MixinScreenEffectRenderer",
-    "MixinToggleKeyMapping",
-    "skyblocker.MixinGlowRenderer"
+    "MixinToggleKeyMapping"
   ],
   "injectors": {
     "defaultRequire": 1
