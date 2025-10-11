@@ -13,9 +13,6 @@ public class FeaturesConfig extends AbstractConfig {
     @SerializedName("enable_day_viewer")
     public boolean ENABLE_DAY_VIEWER = false;
 
-    @SerializedName("enable_harp_bot")
-    public boolean ENABLE_HARP_BOT = false;
-
     @SerializedName("enable_auto_tip")
     public boolean ENABLE_AUTO_TIP = false;
 
@@ -27,7 +24,4 @@ public class FeaturesConfig extends AbstractConfig {
 
     @SerializedName("enable_entrance_notifier")
     public boolean ENABLE_ENTRANCE_NOTIFIER = true;
-
-    @SerializedName("enable_legacy_ghost_pickaxe")
-    public boolean ENABLE_LEGACY_GHOST_PICKAXE = false;
 }
