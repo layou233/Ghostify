@@ -7,7 +7,6 @@ import com.launium.ghostify.client.compat.Compat;
 import com.launium.ghostify.client.config.ConfigManager;
 import com.launium.ghostify.client.events.SimpleChatEventHandler;
 import com.launium.ghostify.client.feature.*;
-import com.launium.ghostify.client.feature.experimentation.AbstractExperimentSolver;
 import com.launium.ghostify.client.ui.RoundRectRenderer;
 import com.launium.ghostify.client.ui.container.ServerTPSContainer;
 import com.launium.ghostify.client.ui.font.FontManager;
@@ -17,7 +16,6 @@ import com.launium.ghostify.client.ui.speeddial.HudSpeedDial;
 import com.launium.ghostify.client.util.ClientTaskScheduler;
 import com.launium.ghostify.client.util.SkyblockItem;
 import com.launium.ghostify.client.util.SkyblockLocation;
-import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
@@ -32,13 +30,11 @@ import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
-import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
 public class GhostifyClient implements ClientModInitializer {
@@ -76,10 +72,7 @@ public class GhostifyClient implements ClientModInitializer {
         ClientTickEvents.START_CLIENT_TICK.register(GhostPickaxe.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(ServerTPSContainer.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(ClientTaskScheduler::whenClientStartTick);
-        ClientTickEvents.START_CLIENT_TICK.register(AutoClicker.INSTANCE);
         //ClientTickEvents.START_CLIENT_TICK.register(KuudraAutoPearl.INSTANCE);
-        ClientTickEvents.START_CLIENT_TICK.register(CameraNoClip.INSTANCE);
-        ClientTickEvents.START_CLIENT_TICK.register(HarpBot.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(DayViewer.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(ClickGUI.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(SpeedDial.INSTANCE);
@@ -93,26 +86,11 @@ public class GhostifyClient implements ClientModInitializer {
         WorldRenderEvents.END_EXTRACTION.register(PickobulusPreview.INSTANCE);
         WorldRenderEvents.AFTER_ENTITIES.register(PickobulusPreview.INSTANCE);
         ScreenEvents.BEFORE_INIT.register(SpeedDial.INSTANCE);
-        UseBlockCallback.EVENT.register(DungeonPlaceFix.INSTANCE);
         AttackEntityCallback.EVENT.register(GoonBlocker.INSTANCE);
-        AbstractExperimentSolver.init();
-        HarpBot.INSTANCE.init();
 
         // register commands
         ClientCommandRegistrationCallback.EVENT.register(((dispatcher, buildContext) -> {
             var builder = ClientCommandManager.literal("ghostify")
-                    .then(literal("harpDelayMultiplier")
-                            .then(argument("min", FloatArgumentType.floatArg(0))
-                                    .then(argument("max", FloatArgumentType.floatArg(0))
-                                            .executes(context -> {
-                                                HarpBot.delayMultiplierMin = FloatArgumentType.getFloat(context, "min");
-                                                HarpBot.delayMultiplierMax = FloatArgumentType.getFloat(context, "max");
-                                                context.getSource().sendFeedback(
-                                                        Component.literal("[Ghostify] Updated harp delay multiplier to ["
-                                                                + HarpBot.delayMultiplierMin + ", "
-                                                                + HarpBot.delayMultiplierMax + "]."));
-                                                return 0;
-                                            }))))
                     .then(literal("resetLifeTimer")
                             .executes(context -> {
                                 LifeSaverTimer.INSTANCE.reset();
@@ -140,7 +118,6 @@ public class GhostifyClient implements ClientModInitializer {
                                         "\", isInDungeons=" + SkyblockLocation.isInDungeons()));
                                 return 0;
                             }));
-            AutoClicker.registerCommand(builder);
             moduleList.registerCommand(builder);
             var command = dispatcher.register(builder);
             dispatcher.register(ClientCommandManager.literal("gy").redirect(command));
