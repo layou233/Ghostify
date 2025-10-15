@@ -8,7 +8,7 @@ import net.minecraft.world.item.Items;
 
 public class BetterDungeonbreaker implements ClientTickEvents.StartTick {
     public static final BetterDungeonbreaker INSTANCE = new BetterDungeonbreaker();
-    private static final String NAME_DUNGEONBREAKER = "§cDungeonbreaker";
+    private static final String NAME_DUNGEONBREAKER = "Dungeonbreaker";
 
     public static boolean isHolding;
     public static int slot = -1;
