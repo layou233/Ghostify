@@ -21,14 +21,19 @@ public class GhostifyRenderTypes {
                     .withLocation(ResourceLocation.fromNamespaceAndPath("ghostify", "pipeline/round_rect"))
                     .withFragmentShader(ResourceLocation.fromNamespaceAndPath("ghostify", "core/round_rect"))
                     .withVertexShader(ResourceLocation.fromNamespaceAndPath("ghostify", "core/round_rect"))
-                    //.withColorWrite(true)
-                    .withDepthWrite(true)
-                    .withCull(false)
-                    .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
-                    .withColorLogic(LogicOp.NONE)
                     .withBlend(BlendFunction.TRANSLUCENT)
                     .withUniform("u", UniformType.UNIFORM_BUFFER)
                     .withVertexFormat(DefaultVertexFormat.POSITION, VertexFormat.Mode.QUADS)
+                    .build()
+    );
+
+    static final RenderPipeline PIPELINE_DEBUG_TRIANGLE_STRIP = RenderPipelines.register(
+            RenderPipeline.builder(RenderPipelines.DEBUG_FILLED_SNIPPET)
+                    .withLocation(ResourceLocation.fromNamespaceAndPath("ghostify", "pipeline/debug_triangle_strip"))
+                    .withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.TRIANGLE_STRIP)
+                    .withCull(false)
+                    .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+                    .withUsePipelineDrawModeForGui(true) // by Fabric API
                     .build()
     );
 

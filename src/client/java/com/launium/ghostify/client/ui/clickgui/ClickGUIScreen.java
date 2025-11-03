@@ -18,6 +18,7 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 
@@ -152,30 +153,30 @@ public class ClickGUIScreen extends Screen {
 
     @SkipObfuscation
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        float mouseXF = (float) mouseX;
-        float mouseYF = (float) mouseY;
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        float mouseXF = (float) event.x();
+        float mouseYF = (float) event.y();
         lastMouseClickRelativeX = mouseXF - centerX;
         lastMouseClickRelativeY = mouseYF - centerY;
 
         for (Element child : children) {
             if (child.mouseClicked(mouseXF, mouseYF)) return true;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @SkipObfuscation
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        float mouseXF = (float) mouseX;
-        float mouseYF = (float) mouseY;
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        float mouseXF = (float) event.x();
+        float mouseYF = (float) event.y();
         centerX = mouseXF - lastMouseClickRelativeX;
         centerY = mouseYF - lastMouseClickRelativeY;
 
         for (Element child : children) {
             if (child.mouseDragged(mouseXF, mouseYF, (float) dragX, (float) dragY)) return true;
         }
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @SkipObfuscation

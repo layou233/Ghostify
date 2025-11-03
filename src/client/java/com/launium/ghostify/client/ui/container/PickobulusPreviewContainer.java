@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.phys.AABB;
 
 public class PickobulusPreviewContainer implements IContainer {
     public static final PickobulusPreviewContainer INSTANCE = new PickobulusPreviewContainer();
@@ -16,15 +17,17 @@ public class PickobulusPreviewContainer implements IContainer {
     private String text;
 
     @AllArgsConstructor
-    public static class Stat {
+    public static class State {
         public int blocks;
         public int glasses;
         public int ice;
+        public AABB bounds;
 
         public void reset() {
             this.blocks = 0;
             this.glasses = 0;
             this.ice = 0;
+            this.bounds = null;
         }
     }
 
@@ -40,13 +43,13 @@ public class PickobulusPreviewContainer implements IContainer {
 
     @Override
     public void prepareRender(float scale) {
-        Stat stat = PickobulusPreview.INSTANCE.statSlot.get();
+        State state = PickobulusPreview.INSTANCE.stateSlot.get();
         StringBuilder builder = new StringBuilder("Pickobulus | ");
-        builder.append(stat.blocks);
+        builder.append(state.blocks);
         builder.append(" blocks | ");
-        builder.append(stat.glasses);
+        builder.append(state.glasses);
         builder.append(" glasses | ");
-        builder.append(stat.ice);
+        builder.append(state.ice);
         builder.append(" ice");
         text = builder.toString();
     }

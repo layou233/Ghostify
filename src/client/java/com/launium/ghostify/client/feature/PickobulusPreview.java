@@ -12,8 +12,9 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -31,7 +32,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
-public class PickobulusPreview extends AbstractModule implements WorldRenderEvents.AfterEntities, ClientTickEvents.EndTick, SimpleChatEventHandler.NonOverlay {
+public class PickobulusPreview extends AbstractModule implements WorldRenderEvents.EndExtraction, WorldRenderEvents.AfterEntities, ClientTickEvents.EndTick, SimpleChatEventHandler.NonOverlay {
     public static final PickobulusPreview INSTANCE = new PickobulusPreview();
     private static final KeyMapping PICKOBULUS_PREVIEW_KEY = KeyBindingHelper.registerKeyBinding(
             new KeyMapping("key.ghostify.switch_pickobulus_preview", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_X, GhostifyClient.KEY_CATEGORY)
@@ -39,9 +40,9 @@ public class PickobulusPreview extends AbstractModule implements WorldRenderEven
 
     private boolean isEnabled = false;
     private boolean onCooldown = false;
-    public final SwappingSlot<PickobulusPreviewContainer.Stat> statSlot = new SwappingSlot<>(
-            new PickobulusPreviewContainer.Stat(0, 0, 0),
-            new PickobulusPreviewContainer.Stat(0, 0, 0)
+    public final SwappingSlot<PickobulusPreviewContainer.State> stateSlot = new SwappingSlot<>(
+            new PickobulusPreviewContainer.State(0, 0, 0, null),
+            new PickobulusPreviewContainer.State(0, 0, 0, null)
     );
     public boolean isHoldingPickobulus = false;
 
@@ -60,7 +61,7 @@ public class PickobulusPreview extends AbstractModule implements WorldRenderEven
 
     @SkipObfuscation
     @Override
-    public void afterEntities(WorldRenderContext context) {
+    public void endExtraction(WorldExtractionContext context) {
         if (!isEnabled || !isHoldingPickobulus || onCooldown) {
             PickobulusPreviewContainer.INSTANCE.isActivated = false;
             return;
@@ -82,37 +83,46 @@ public class PickobulusPreview extends AbstractModule implements WorldRenderEven
                 ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
         if (hitResult.getType() == HitResult.Type.BLOCK) {
             BlockPos hitPos = hitResult.getBlockPos();
-            AABB bounds = new AABB(hitPos.getX() - 3F, hitPos.getY() - 3F, hitPos.getZ() - 3F,
+            PickobulusPreviewContainer.State state = stateSlot.getBack();
+            state.reset();
+            state.bounds = new AABB(hitPos.getX() - 3F, hitPos.getY() - 3F, hitPos.getZ() - 3F,
                     hitPos.getX() + 3F, hitPos.getY() + 3F, hitPos.getZ() + 3F);
-            PickobulusPreviewContainer.Stat stat = statSlot.getBack();
-            stat.reset();
-            context.world().getBlockStates(bounds.contract(1F, 1F, 1F)).forEach(blockState -> {
+            context.world().getBlockStates(state.bounds.contract(1F, 1F, 1F)).forEach(blockState -> {
                 Block block = blockState.getBlock();
                 if (block != Blocks.AIR) {
-                    stat.blocks++;
+                    state.blocks++;
                     String blockDescription = block.getDescriptionId();
                     if (blockDescription.endsWith("glass") || blockDescription.endsWith("glass_pane")) {
-                        stat.glasses++;
+                        state.glasses++;
                     } else if (blockDescription.endsWith("ice")) {
-                        stat.ice++;
+                        state.ice++;
                     }
                 }
             });
-            statSlot.swap();
+            stateSlot.swap();
             PickobulusPreviewContainer.INSTANCE.isActivated = true;
             GhostifyClient.island.show(PickobulusPreviewContainer.INSTANCE);
+        } else {
+            PickobulusPreviewContainer.INSTANCE.isActivated = false;
+        }
+    }
+
+    @SkipObfuscation
+    @Override
+    public void afterEntities(WorldRenderContext context) {
+        if (PickobulusPreviewContainer.INSTANCE.isActivated) {
             int color = FadingColor.pink(3, 0, 0xFF);
-            AABB transformedBounds = bounds.move(context.camera().getPosition().reverse());
+            AABB bounds = stateSlot.get().bounds;
+            if (bounds == null) return;
+            AABB transformedBounds = bounds.move(context.gameRenderer().getMainCamera().getPosition().reverse());
             VertexConsumer buffer = context.consumers().getBuffer(GhostifyRenderTypes.BOX_FILLED_NO_CULL);
-            ShapeRenderer.addChainedFilledBoxVertices(context.matrixStack(), buffer,
+            ShapeRenderer.addChainedFilledBoxVertices(context.matrices(), buffer,
                     transformedBounds.minX, transformedBounds.minY, transformedBounds.minZ,
                     transformedBounds.maxX, transformedBounds.maxY, transformedBounds.maxZ,
                     ARGB.red(color) / 255F, ARGB.green(color) / 255F, ARGB.blue(color) / 255F, 0.2F);
             buffer = context.consumers().getBuffer(GhostifyRenderTypes.BOX_OUTLINE_NO_CULL);
-            ShapeRenderer.renderLineBox(context.matrixStack(), buffer, transformedBounds,
+            ShapeRenderer.renderLineBox(context.matrices().last(), buffer, transformedBounds,
                     ARGB.red(color) / 255F, ARGB.green(color) / 255F, ARGB.blue(color) / 255F, 1.0F);
-        } else {
-            PickobulusPreviewContainer.INSTANCE.isActivated = false;
         }
     }
 

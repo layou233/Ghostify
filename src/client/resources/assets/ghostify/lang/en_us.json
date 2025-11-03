@@ -1,7 +1,7 @@
 {
   "ghostify.bilibili": "bilibili",
 
-  "category.ghostify.main": "Ghostify",
+  "key.category.ghostify.main": "Ghostify",
   "key.ghostify.ghost_pickaxe": "Ghost Pickaxe",
   "key.ghostify.show_click_gui": "Show Click GUI",
   "key.ghostify.switch_auto_clicker": "Switch Auto Clicker",

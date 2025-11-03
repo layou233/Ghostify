@@ -1,27 +1,32 @@
 package com.launium.ghostify.client.util;
 
+import com.google.gson.JsonParser;
+import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ResolvableProfile;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
 public class PlayerHead {
     public static void setHeadSkin(ItemStack skull, String skinB64) {
-        PropertyMap map = new PropertyMap();
-        map.put("textures", new Property("textures", skinB64));
-        ResolvableProfile profile = new ResolvableProfile(Optional.of("skull"), Optional.of(UUID.nameUUIDFromBytes(skinB64.getBytes())), map);
-        skull.set(DataComponents.PROFILE, profile);
+        PropertyMap properties = ExtraCodecs.PROPERTY_MAP.parse(JsonOps.INSTANCE, JsonParser.parseString("[{\"name\":\"textures\",\"value\":\"" + skinB64 + "\"}]")).getOrThrow();
+        GameProfile profile = new GameProfile(UUID.randomUUID(), "Ghostify Fake Profile", properties);
+        skull.set(DataComponents.PROFILE, ResolvableProfile.createResolved(profile));
     }
 
     public static Optional<String> getSkinFromHead(@NotNull ItemStack skull) {
         ResolvableProfile profile = skull.get(DataComponents.PROFILE);
         if (profile == null) return Optional.empty();
-        return profile.properties().get("textures").stream()
+        return profile.partialProfile().properties().get("textures").stream()
+                .filter(Objects::nonNull)
                 .map(Property::value)
                 .findAny();
     }
