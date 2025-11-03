@@ -29,6 +29,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
@@ -79,6 +80,7 @@ public class GhostifyClient implements ClientModInitializer {
         ClientLifecycleEvents.CLIENT_STOPPING.register(client -> ConfigManager.processChanges());
         WorldRenderEvents.AFTER_ENTITIES.register(PickobulusPreview.INSTANCE);
         ScreenEvents.BEFORE_INIT.register(SpeedDial.INSTANCE);
+        UseBlockCallback.EVENT.register(DungeonPlaceFix.INSTANCE);
         AbstractExperimentSolver.init();
         HarpBot.INSTANCE.init();
         ClientCommandRegistrationCallback.EVENT.register(((dispatcher, buildContext) -> {

@@ -3,10 +3,10 @@ package com.launium.ghostify.client.feature;
 import com.launium.ghostify.client.GhostifyClient;
 import com.launium.ghostify.client.annotations.SkipObfuscation;
 import com.launium.ghostify.client.events.SimpleChatEventHandler;
+import com.launium.ghostify.client.interfaces.AccessItemStack;
 import com.launium.ghostify.client.ui.GhostifyRenderTypes;
 import com.launium.ghostify.client.ui.container.PickobulusPreviewContainer;
 import com.launium.ghostify.client.util.FadingColor;
-import com.launium.ghostify.client.util.Remember;
 import com.launium.ghostify.client.util.SwappingSlot;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -19,11 +19,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -42,7 +39,6 @@ public class PickobulusPreview extends AbstractModule implements WorldRenderEven
 
     private boolean isEnabled = false;
     private boolean onCooldown = false;
-    private final Remember<Integer> rememberItemComponentsHash = new Remember<>(null);
     public final SwappingSlot<PickobulusPreviewContainer.Stat> statSlot = new SwappingSlot<>(
             new PickobulusPreviewContainer.Stat(0, 0, 0),
             new PickobulusPreviewContainer.Stat(0, 0, 0)
@@ -59,15 +55,7 @@ public class PickobulusPreview extends AbstractModule implements WorldRenderEven
             return;
         }
         ItemStack mainHandItem = client.player.getMainHandItem();
-        DataComponentMap componentMap = mainHandItem.getComponents();
-        if (rememberItemComponentsHash.updateObject(componentMap.hashCode())) {
-            // fast path; item in hand is not changed
-            // only store the hash to avoid the reference to the object
-            return;
-        }
-        isHoldingPickobulus = componentMap.getOrDefault(DataComponents.LORE, ItemLore.EMPTY)
-                .styledLines().stream()
-                .anyMatch(line -> line.getString().startsWith("Ability: Pickobulus"));
+        isHoldingPickobulus = ((AccessItemStack) (Object) mainHandItem).ghostify$hasPickobulusAbility();
     }
 
     @SkipObfuscation

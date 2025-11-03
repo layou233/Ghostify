@@ -22,6 +22,9 @@ public class PatchesConfig extends AbstractConfig {
     @SerializedName("cancel_shortbow_pull")
     public boolean CANCEL_SHORTBOW_PULL = true;
 
+    @SerializedName("fix_dungeon_block_place")
+    public boolean FIX_DUNGEON_BLOCK_PLACE = false;
+
     @SerializedName("no_command_execution_confirmation")
     public boolean NO_COMMAND_EXECUTION_CONFIRMATION = false;
 

@@ -11,7 +11,7 @@ public class SimpleChatEventHandler implements ClientReceiveMessageEvents.Game {
     public void onReceiveGameMessage(Component message, boolean isOverlay) {
         String text = message.getString();
         if (isOverlay) {
-            // :(
+            RagnarockTimer.INSTANCE.onReceiveOverlay(text);
         } else {
             LifeSaverTimer.INSTANCE.onReceiveChat(text);
             SpiritPetWarning.INSTANCE.onReceiveChat(text);

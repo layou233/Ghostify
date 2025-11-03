@@ -5,6 +5,7 @@ import com.launium.ghostify.client.mixin.AccessFont;
 import com.launium.ghostify.client.ui.Easy2D;
 import com.launium.ghostify.client.ui.VanillaText;
 import com.launium.ghostify.client.ui.island.ContainerLevel;
+import com.launium.ghostify.client.util.SimpleDuration;
 import it.unimi.dsi.fastutil.objects.ObjectLongImmutablePair;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -51,13 +52,7 @@ public class LifeSaverTimerContainer implements IContainer {
                     StringBuilder builder = new StringBuilder(20);
                     builder.append(lifeSaver.left().name);
                     builder.append(" in ");
-                    if (lifeSaver.rightLong() < 1000L) {
-                        builder.append(lifeSaver.rightLong());
-                        builder.append("ms");
-                    } else {
-                        builder.append(lifeSaver.rightLong() / 1000L);
-                        builder.append("s");
-                    }
+                    builder.append(new SimpleDuration(lifeSaver.rightLong()).toTimerString());
                     elements.add(new VanillaText(builder.toString()));
                 });
         this.vanillaTexts = elements;

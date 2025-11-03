@@ -43,7 +43,7 @@ public abstract class MixinClientPacketListener {
         }
     }
 
-    @Inject(method = "handlePlayerInfoUpdate", at =@At("TAIL"))
+    @Inject(method = "handlePlayerInfoUpdate", at = @At("TAIL"))
     private void ghostify$handleScoreboardUpdate(ClientboundPlayerInfoUpdatePacket packet, CallbackInfo ci) {
         SkyblockLocation.whenScoreboardUpdate(packet.entries());
     }

@@ -37,4 +37,8 @@ public record SimpleDuration(long millis) {
         }
         return builder.isEmpty() ? "NOW" : builder.toString();
     }
+
+    public @NotNull String toTimerString() {
+        return millis < 1000L ? millis + "ms" : millis / 1000L + "s";
+    }
 }
