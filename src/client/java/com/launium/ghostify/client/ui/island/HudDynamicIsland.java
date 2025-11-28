@@ -7,13 +7,12 @@ import com.launium.ghostify.client.ui.animation.Animation;
 import com.launium.ghostify.client.ui.animation.Smooth;
 import com.launium.ghostify.client.ui.container.IContainer;
 import com.mojang.blaze3d.platform.Window;
+import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
 import net.minecraft.Util;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-
-import java.util.HashSet;
 
 public class HudDynamicIsland implements HudElement {
 
@@ -22,7 +21,7 @@ public class HudDynamicIsland implements HudElement {
 
     Animation halfWidth = new Smooth(0, 40), halfHeight = new Smooth(0, 30);
 
-    private final HashSet<IContainer> activeContainers = HashSet.newHashSet(8);
+    private final ObjectArraySet<IContainer> activeContainers = new ObjectArraySet<>(8);
 
     @SkipObfuscation
     @Override

@@ -21,8 +21,9 @@ public class CheckMarkRenderState implements GuiElementRenderState {
 
     private final float x, y, scale;
     private final int color;
-    private final GuiGraphics context;
+    private final Matrix3x2f pose;
     private final Animation progress;
+    private final ScreenRectangle scissorArea;
     private final ScreenRectangle bounds;
 
     public CheckMarkRenderState(GuiGraphics context, float x, float y, float scale, int color, Animation progress) {
@@ -30,10 +31,12 @@ public class CheckMarkRenderState implements GuiElementRenderState {
         this.y = y;
         this.scale = scale;
         this.color = color;
-        this.context = context;
+        this.pose = new Matrix3x2f(context.pose());
         this.progress = progress;
 
-        this.bounds = new ScreenRectangle(Mth.floor(x), Mth.floor(y), Mth.ceil(LENGTH * scale), Mth.ceil(LENGTH * scale));
+        this.scissorArea = context.scissorStack.peek();
+        ScreenRectangle bounds = new ScreenRectangle(Mth.floor(x), Mth.floor(y), Mth.ceil(LENGTH * scale), Mth.ceil(LENGTH * scale));
+        this.bounds = scissorArea == null ? bounds : scissorArea.intersection(bounds);
     }
 
     @Override
@@ -42,7 +45,6 @@ public class CheckMarkRenderState implements GuiElementRenderState {
         if (progressRatio < 0F) progressRatio = 0F;
         else if (progressRatio > 1F) progressRatio = 1F;
 
-        Matrix3x2f pose = context.pose();
         if (progressRatio > STARTING_PERCENT) {
             float ratio = (progressRatio - STARTING_PERCENT) / (INFLECTION_PERCENT - STARTING_PERCENT);
             if (ratio > 1F) ratio = 1F;
@@ -81,12 +83,11 @@ public class CheckMarkRenderState implements GuiElementRenderState {
 
     @Override
     public @Nullable ScreenRectangle scissorArea() {
-        return context.scissorStack.peek();
+        return scissorArea;
     }
 
     @Override
     public @Nullable ScreenRectangle bounds() {
-        ScreenRectangle scissorArea = this.scissorArea();
-        return scissorArea == null ? bounds : scissorArea.intersection(bounds);
+        return bounds;
     }
 }

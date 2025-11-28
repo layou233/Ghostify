@@ -24,7 +24,7 @@ public class RagnarockTimer implements SimpleChatEventHandler.Overlay {
             Player player = Minecraft.getInstance().player;
             if (player == null) return;
             ItemStack mainHandItem = player.getMainHandItem();
-            if (mainHandItem.is(Items.GOLDEN_SWORD) && mainHandItem.getHoverName().getString().endsWith("Ragnarock")) {
+            if (mainHandItem.is(Items.GOLDEN_SWORD) && mainHandItem.getHoverName().getString().replace("✪", "").stripTrailing().endsWith("Ragnarock")) {
                 Component strengthComponent = mainHandItem.getComponents().getOrDefault(DataComponents.LORE, ItemLore.EMPTY)
                         .styledLines().stream().filter(line -> line.getString().startsWith("Strength: "))
                         .findAny().orElse(null);

@@ -15,6 +15,7 @@ import com.launium.ghostify.client.util.Commands;
 import com.launium.ghostify.client.util.FadingColor;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import it.unimi.dsi.fastutil.objects.ObjectRBTreeSet;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
 import net.minecraft.Util;
@@ -24,13 +25,11 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 
-import java.util.TreeSet;
-
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
 public class HudModuleList implements HudElement {
     private long lastRenderTime = 0;
-    private final TreeSet<AbstractModule> moduleSet = new TreeSet<>();
+    private final ObjectRBTreeSet<AbstractModule> moduleSet = new ObjectRBTreeSet<>();
     private final Smooth animatedStartingY = new Smooth(52, 52);
     private Alignment verticalAlignment = Alignment.START;
     private Alignment horizontalAlignment = Alignment.END;
