@@ -1,11 +1,11 @@
 package com.launium.ghostify.client.feature;
 
-import com.google.common.collect.Sets;
 import com.launium.ghostify.client.GhostifyClient;
 import com.launium.ghostify.client.config.ConfigManager;
 import com.launium.ghostify.client.ui.container.GhostPickaxeContainer;
 import com.launium.ghostify.client.util.SkyblockLocation;
 import com.mojang.blaze3d.platform.InputConstants;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
@@ -20,18 +20,16 @@ import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.HashSet;
-
 public class GhostPickaxe extends AbstractModule implements ClientTickEvents.StartTick {
     public static final GhostPickaxe INSTANCE = new GhostPickaxe();
 
     private static final KeyMapping GHOST_PICKAXE_KEY = KeyBindingHelper.registerKeyBinding(
             new KeyMapping("key.ghostify.ghost_pickaxe", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, GhostifyClient.KEY_CATEGORY)
     );
-    private static final HashSet<Block> ignoreBlockSet = Sets.newHashSet(
+    private static final ObjectOpenHashSet<Block> ignoreBlockSet = new ObjectOpenHashSet<>(new Block[]{
             Blocks.CHEST, Blocks.TRAPPED_CHEST, Blocks.LEVER
             //Blocks.PLAYER_WALL_HEAD, Blocks.PLAYER_HEAD
-    );
+    });
 
     private static int lastSlot = -1;
 

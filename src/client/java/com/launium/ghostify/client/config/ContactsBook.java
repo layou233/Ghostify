@@ -1,10 +1,9 @@
 package com.launium.ghostify.client.config;
 
 import com.google.gson.annotations.SerializedName;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.util.HashMap;
 
 public class ContactsBook extends AbstractConfig {
     static String CONFIG_NAME = "contacts.json";
@@ -15,7 +14,7 @@ public class ContactsBook extends AbstractConfig {
     }
 
     @SerializedName("contacts")
-    public HashMap<String, Contact> CONTACTS = new HashMap<>(); // <name, contact>
+    public Object2ObjectOpenHashMap<String, Contact> CONTACTS = new Object2ObjectOpenHashMap<>(); // <name, contact>
 
     @Data
     @AllArgsConstructor

@@ -8,7 +8,6 @@ import com.mojang.blaze3d.buffers.Std140SizeCalculator;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.systems.ScissorState;
 import com.mojang.blaze3d.vertex.*;
 import lombok.EqualsAndHashCode;
 import net.fabricmc.fabric.api.client.rendering.v1.SpecialGuiElementRegistry;
@@ -103,10 +102,8 @@ public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRendere
                 )
         ) {
             pass.setPipeline(GhostifyRenderTypes.PIPELINE_ROUND_RECT);
-            ScissorState scissor = RenderSystem.getScissorStateForRenderTypeDraws();
-            if (scissor.enabled()) {
-                pass.enableScissor(scissor.x(), scissor.y(), scissor.width(), scissor.height());
-            }
+            // store scissor areas in render states may reduce texture reuse, so the render scissor is temporarily not applied
+            // scissoring effect would be still applied at the screen blit stage
             RenderSystem.bindDefaultUniforms(pass);
             pass.setUniform("DynamicTransforms", dynamicTransformsBuffer);
             pass.setUniform("u", myUniformBuffer);
@@ -139,7 +136,7 @@ public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRendere
 
         private final float subpixelX, subpixelY; // pad texture for subpixel rendering
         private final float extentX, extentY;
-        private transient final GuiGraphics context;
+        private transient final ScreenRectangle scissorArea;
         private transient final ScreenRectangle bounds;
 
         public State(GuiGraphics context, float left, float top, float right, float bottom,
@@ -163,8 +160,9 @@ public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRendere
             this.extentX = right - left;
             this.extentY = bottom - top;
             this.radiusLT = this.radiusRT = this.radiusLB = this.radiusRB = Math.min(radius, Math.min(extentX, extentY) * 0.5F);
-            this.context = context;
-            this.bounds = new ScreenRectangle(this.x0(), this.y0(), this.x1() - this.x0(), this.y1() - this.y0());
+            this.scissorArea = context.scissorStack.peek();
+            ScreenRectangle bounds = new ScreenRectangle(this.x0(), this.y0(), this.x1() - this.x0(), this.y1() - this.y0());
+            this.bounds = scissorArea == null ? bounds : scissorArea.intersection(bounds);
         }
 
         public State setGradiantColor(int color) {
@@ -216,14 +214,13 @@ public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRendere
         @SkipObfuscation
         @Override
         public @Nullable ScreenRectangle scissorArea() {
-            return context.scissorStack.peek();
+            return scissorArea;
         }
 
         @SkipObfuscation
         @Override
         public @Nullable ScreenRectangle bounds() {
-            ScreenRectangle scissorArea = this.scissorArea();
-            return scissorArea == null ? bounds : scissorArea.intersection(bounds);
+            return bounds;
         }
     }
 
