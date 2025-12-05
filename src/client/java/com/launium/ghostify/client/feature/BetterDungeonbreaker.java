@@ -1,5 +1,6 @@
 package com.launium.ghostify.client.feature;
 
+import com.launium.ghostify.client.util.SkyblockItem;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Inventory;
@@ -8,7 +9,7 @@ import net.minecraft.world.item.Items;
 
 public class BetterDungeonbreaker implements ClientTickEvents.StartTick {
     public static final BetterDungeonbreaker INSTANCE = new BetterDungeonbreaker();
-    private static final String NAME_DUNGEONBREAKER = "Dungeonbreaker";
+    private static final String ID_DUNGEONBREAKER = "DUNGEONBREAKER";
 
     public static boolean isHolding;
     public static int slot = -1;
@@ -24,8 +25,11 @@ public class BetterDungeonbreaker implements ClientTickEvents.StartTick {
         slot = -1;
         for (int i = 0; i < 9; i++) { // hotbar slots
             ItemStack itemStack = inventory.getItem(i);
-            if (itemStack.is(Items.DIAMOND_PICKAXE) && // fast check
-                    NAME_DUNGEONBREAKER.equals(itemStack.getHoverName().getString())) {
+            if (itemStack.is(Items.DIAMOND_PICKAXE) &&
+                    SkyblockItem.from(itemStack)
+                            .flatMap(SkyblockItem::getID)
+                            .map(ID_DUNGEONBREAKER::equals)
+                            .orElse(false)) {
                 slot = i;
                 break;
             }

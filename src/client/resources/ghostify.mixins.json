@@ -17,6 +17,7 @@
     "MixinPlayerGameMode",
     "MixinRenderSystem",
     "MixinScreenEffectRenderer",
+    "MixinToggleKeyMapping",
     "skyblocker.MixinMobGlow"
   ],
   "injectors": {

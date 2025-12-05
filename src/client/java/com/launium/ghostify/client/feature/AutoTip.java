@@ -3,10 +3,12 @@ package com.launium.ghostify.client.feature;
 import com.launium.ghostify.client.GhostifyClient;
 import com.launium.ghostify.client.config.ConfigManager;
 import com.launium.ghostify.client.util.ClientTaskScheduler;
+import com.launium.ghostify.client.util.Remember;
 import com.launium.ghostify.client.util.SimpleDuration;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class AutoTip extends AbstractModule {
@@ -14,6 +16,9 @@ public class AutoTip extends AbstractModule {
 
     private long nextTipTimestamp = 0L;
     private boolean isInHypixel = false;
+
+    private final Remember<SimpleDuration> rememberLeftTime = new Remember<>();
+    private @NotNull String leftTime = "";
 
     static {
         if (ConfigManager.FEATURES.ENABLE_AUTO_TIP) {
@@ -63,9 +68,14 @@ public class AutoTip extends AbstractModule {
     @Override
     public @Nullable String subtitle() {
         if (!isInHypixel) return "OFF";
-        return new SimpleDuration(nextTipTimestamp - Util.getMillis())
-                .truncatedToSeconds()
-                .toString();
+        SimpleDuration left = new SimpleDuration(nextTipTimestamp - Util.getMillis())
+                .truncatedToSeconds();
+        if (!rememberLeftTime.updateObject(left)) {
+            String newLeftTime = left.toString();
+            if (newLeftTime.length() != leftTime.length()) moduleList.needResort = true;
+            leftTime = newLeftTime;
+        }
+        return leftTime;
     }
 
     @Override

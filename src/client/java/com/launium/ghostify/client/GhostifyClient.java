@@ -15,6 +15,7 @@ import com.launium.ghostify.client.ui.island.HudDynamicIsland;
 import com.launium.ghostify.client.ui.modulelist.HudModuleList;
 import com.launium.ghostify.client.ui.speeddial.HudSpeedDial;
 import com.launium.ghostify.client.util.ClientTaskScheduler;
+import com.launium.ghostify.client.util.SkyblockItem;
 import com.launium.ghostify.client.util.SkyblockLocation;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.logging.LogUtils;
@@ -29,6 +30,8 @@ import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.fabricmc.fabric.api.event.Event;
+import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
@@ -45,12 +48,18 @@ public class GhostifyClient implements ClientModInitializer {
             .create();
     public static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(ResourceLocation.fromNamespaceAndPath("ghostify", "main"));
 
+    public static final ResourceLocation POST_PHASE = ResourceLocation.fromNamespaceAndPath("ghostify", "post");
+
     public static final HudDynamicIsland island = new HudDynamicIsland();
     public static final HudModuleList moduleList = new HudModuleList();
     public static final HudSpeedDial speedDial = new HudSpeedDial();
 
     @Override
     public void onInitializeClient() {
+        // register phases
+        ClientTickEvents.END_CLIENT_TICK.addPhaseOrdering(Event.DEFAULT_PHASE, POST_PHASE);
+
+        // register events
         ConfigManager.init();
         Compat.init();
         FontManager.init();
@@ -75,7 +84,9 @@ public class GhostifyClient implements ClientModInitializer {
         ClientTickEvents.START_CLIENT_TICK.register(ClickGUI.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(SpeedDial.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(BetterDungeonbreaker.INSTANCE);
+        ClientTickEvents.START_CLIENT_TICK.register(ToggleUse.INSTANCE);
         ClientTickEvents.END_CLIENT_TICK.register(PickobulusPreview.INSTANCE);
+        ClientTickEvents.END_CLIENT_TICK.register(POST_PHASE, SkyblockItem::clearCache);
         ClientReceiveMessageEvents.GAME.register(SimpleChatEventHandler.INSTANCE);
         ClientPlayConnectionEvents.INIT.register(LobbyHistory.INSTANCE);
         ClientLifecycleEvents.CLIENT_STOPPING.register(client -> ConfigManager.processChanges());
@@ -83,8 +94,11 @@ public class GhostifyClient implements ClientModInitializer {
         WorldRenderEvents.AFTER_ENTITIES.register(PickobulusPreview.INSTANCE);
         ScreenEvents.BEFORE_INIT.register(SpeedDial.INSTANCE);
         UseBlockCallback.EVENT.register(DungeonPlaceFix.INSTANCE);
+        AttackEntityCallback.EVENT.register(GoonBlocker.INSTANCE);
         AbstractExperimentSolver.init();
         HarpBot.INSTANCE.init();
+
+        // register commands
         ClientCommandRegistrationCallback.EVENT.register(((dispatcher, buildContext) -> {
             var builder = ClientCommandManager.literal("ghostify")
                     .then(literal("harpDelayMultiplier")

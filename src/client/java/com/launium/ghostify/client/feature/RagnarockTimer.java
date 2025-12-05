@@ -3,17 +3,17 @@ package com.launium.ghostify.client.feature;
 import com.launium.ghostify.client.GhostifyClient;
 import com.launium.ghostify.client.events.SimpleChatEventHandler;
 import com.launium.ghostify.client.ui.container.RagnarockTimerContainer;
+import com.launium.ghostify.client.util.SkyblockItem;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.ItemLore;
 
 public class RagnarockTimer implements SimpleChatEventHandler.Overlay {
     public static final RagnarockTimer INSTANCE = new RagnarockTimer();
+    private static final String ID_RAGNAROCK = "RAGNAROCK_AXE";
 
     @Override
     public void onReceiveOverlay(String message) {
@@ -24,10 +24,14 @@ public class RagnarockTimer implements SimpleChatEventHandler.Overlay {
             Player player = Minecraft.getInstance().player;
             if (player == null) return;
             ItemStack mainHandItem = player.getMainHandItem();
-            if (mainHandItem.is(Items.GOLDEN_SWORD) && mainHandItem.getHoverName().getString().replace("✪", "").stripTrailing().endsWith("Ragnarock")) {
-                Component strengthComponent = mainHandItem.getComponents().getOrDefault(DataComponents.LORE, ItemLore.EMPTY)
-                        .styledLines().stream().filter(line -> line.getString().startsWith("Strength: "))
-                        .findAny().orElse(null);
+            SkyblockItem skyblockItem = SkyblockItem.from(mainHandItem).orElse(null);
+            if (skyblockItem == null) return;
+            if (mainHandItem.is(Items.GOLDEN_SWORD) && skyblockItem.getID().map(ID_RAGNAROCK::equals).orElse(false)) {
+                Component strengthComponent = skyblockItem.getStyledLoreLines()
+                        .flatMap(it -> it.stream()
+                                .filter(line -> line.getString().startsWith("Strength: "))
+                                .findAny())
+                        .orElse(null);
                 if (strengthComponent != null) {
                     String strengthText = strengthComponent.getString();
                     int endIndex = strengthText.indexOf(' ', "Strength: ".length());

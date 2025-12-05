@@ -30,4 +30,10 @@ public class FeaturesConfig extends AbstractConfig {
 
     @SerializedName("enable_legacy_ghost_pickaxe")
     public boolean ENABLE_LEGACY_GHOST_PICKAXE = false;
+
+    @SerializedName("enable_force_toggle_use")
+    public boolean ENABLE_FORCE_TOGGLE_USE = false;
+
+    @SerializedName("enable_prevent_attacking_on_goons")
+    public boolean ENABLE_PREVENT_ATTACKING_ON_GOONS = false;
 }

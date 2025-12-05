@@ -15,7 +15,7 @@ import com.launium.ghostify.client.util.Commands;
 import com.launium.ghostify.client.util.FadingColor;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import it.unimi.dsi.fastutil.objects.ObjectRBTreeSet;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
 import net.minecraft.Util;
@@ -29,10 +29,11 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.lit
 
 public class HudModuleList implements HudElement {
     private long lastRenderTime = 0;
-    private final ObjectRBTreeSet<AbstractModule> moduleSet = new ObjectRBTreeSet<>();
+    private final ObjectArrayList<AbstractModule> moduleSet = new ObjectArrayList<>();
     private final Smooth animatedStartingY = new Smooth(52, 52);
     private Alignment verticalAlignment = Alignment.START;
     private Alignment horizontalAlignment = Alignment.END;
+    private boolean needResort = false;
 
     public void registerCommand(LiteralArgumentBuilder<FabricClientCommandSource> builder) {
         builder.then(literal("list")
@@ -101,6 +102,10 @@ public class HudModuleList implements HudElement {
                     return true;
                 }
             }
+            if (module.moduleList.needResort) {
+                module.moduleList.needResort = false;
+                needResort = true;
+            }
             Easy2D.drawRoundRect(module.moduleList.animatedX.current,
                     module.moduleList.animatedY.current,
                     module.moduleList.animatedX.current + elementWidth,
@@ -117,6 +122,10 @@ public class HudModuleList implements HudElement {
             return false;
         });
         Easy2D.cleanup();
+        if (needResort) {
+            needResort = false;
+            moduleSet.unstableSort(null);
+        }
         lastRenderTime = now;
     }
 
@@ -146,6 +155,7 @@ public class HudModuleList implements HudElement {
         if (module.isActive() && !moduleSet.contains(module)) {
             module.moduleList.initializeAnimation = true;
             moduleSet.add(module);
+            moduleSet.unstableSort(null);
         }
     }
 }

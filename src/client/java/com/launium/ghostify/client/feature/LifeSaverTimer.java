@@ -3,13 +3,12 @@ package com.launium.ghostify.client.feature;
 import com.launium.ghostify.client.GhostifyClient;
 import com.launium.ghostify.client.events.SimpleChatEventHandler;
 import com.launium.ghostify.client.ui.container.LifeSaverTimerContainer;
+import com.launium.ghostify.client.util.SkyblockItem;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.ItemLore;
 
 import java.util.Arrays;
 
@@ -78,9 +77,12 @@ public class LifeSaverTimer implements SimpleChatEventHandler.NonOverlay {
         if (helmet.isEmpty()) { // how?
             throw new IllegalStateException("failed to read lore from helmet: helmet is empty");
         }
-        Component cooldownComponent = helmet.getComponents().getOrDefault(DataComponents.LORE, ItemLore.EMPTY)
-                .styledLines().stream().filter(line -> line.getString().startsWith("Cooldown: "))
-                .findAny().orElse(null);
+        Component cooldownComponent = SkyblockItem.from(helmet)
+                .flatMap(SkyblockItem::getStyledLoreLines)
+                .flatMap(it -> it.stream()
+                        .filter(line -> line.getString().startsWith("Cooldown: "))
+                        .findAny())
+                .orElse(null);
         if (cooldownComponent == null) { // why?
             throw new IllegalStateException("failed to read lore from helmet: cooldown is not found");
         }

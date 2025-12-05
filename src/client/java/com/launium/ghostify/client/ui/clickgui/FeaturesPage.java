@@ -46,6 +46,14 @@ public class FeaturesPage extends AbstractPage {
                 new ModuleItemView(client, "Allow legacy Ghost Pickaxe", "Allow legacy mode that directly removes blocks you look at from client side.", ConfigManager.FEATURES.ENABLE_LEGACY_GHOST_PICKAXE, newValue -> {
                     ConfigManager.FEATURES.ENABLE_LEGACY_GHOST_PICKAXE = newValue;
                     ConfigManager.FEATURES.markAsChanged();
+                }),
+                new ModuleItemView(client, "Force toggle use on specific items", "Always use toggle mode when holding Tribal Spear, etc.", ConfigManager.FEATURES.ENABLE_FORCE_TOGGLE_USE, newValue -> {
+                    ConfigManager.FEATURES.ENABLE_FORCE_TOGGLE_USE = newValue;
+                    ConfigManager.FEATURES.markAsChanged();
+                }),
+                new ModuleItemView(client, "Prevent attacking on Goons", "Reduce worries when totalitarianism is in power.", ConfigManager.FEATURES.ENABLE_PREVENT_ATTACKING_ON_GOONS, newValue -> {
+                    ConfigManager.FEATURES.ENABLE_PREVENT_ATTACKING_ON_GOONS = newValue;
+                    ConfigManager.FEATURES.markAsChanged();
                 })
         ), 4F, LAYER_DEPTH + 1));
     }
