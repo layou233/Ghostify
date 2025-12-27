@@ -85,7 +85,7 @@ public class NavigationSpinner implements Element {
         float halfHeight = this.height * 0.5F;
         RoundRectRenderer.State backgroundState = new RoundRectRenderer.State(context,
                 this.startX, this.startY - halfHeight, this.startX + this.width, this.startY + halfHeight,
-                layerDepth, 0F, 1F, color, 0);
+                0F, 1F, color, 0);
         backgroundState.radiusRT = backgroundState.radiusRB = radius.current;
         context.guiRenderState.submitPicturesInPictureState(backgroundState);
 

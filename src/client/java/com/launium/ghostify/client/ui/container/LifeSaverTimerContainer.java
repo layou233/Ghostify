@@ -6,12 +6,13 @@ import com.launium.ghostify.client.ui.Easy2D;
 import com.launium.ghostify.client.ui.VanillaText;
 import com.launium.ghostify.client.ui.island.ContainerLevel;
 import com.launium.ghostify.client.util.SimpleDuration;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectLongImmutablePair;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -33,11 +34,11 @@ public class LifeSaverTimerContainer implements IContainer {
         return LifeSaverTimer.INSTANCE.invincibleTicks > 0 ? ContainerLevel.EMERGENCY : ContainerLevel.BACKGROUND;
     }
 
-    private ArrayList<VanillaText> vanillaTexts;
+    private List<VanillaText> vanillaTexts;
 
     @Override
     public void prepareRender(float scale) {
-        ArrayList<VanillaText> elements = new ArrayList<>(1 + LifeSaverTimer.LifeSavers.values().length);
+        List<VanillaText> elements = ObjectArrayList.wrap(new VanillaText[1 + LifeSaverTimer.LifeSavers.values().length], 0);
         int invincibleTicks = LifeSaverTimer.INSTANCE.invincibleTicks;
         if (invincibleTicks > 0) {
             elements.add(new VanillaText(LifeSaverTimer.INSTANCE.lastTriggered.name + " lasts for " + invincibleTicks + " ticks").color(0xFFFFB4AB));
@@ -77,7 +78,7 @@ public class LifeSaverTimerContainer implements IContainer {
     @Override
     public void render(GuiGraphics context, float left, float top, float right, float bottom, float scale) {
         Easy2D.drawScreenTextElements(Minecraft.getInstance().font, left, right, (top + bottom) * 0.5F,
-                false, vanillaTexts.toArray(new VanillaText[0]));
+                false, vanillaTexts);
         vanillaTexts.clear();
         vanillaTexts = null;
     }

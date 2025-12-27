@@ -1,18 +1,18 @@
 package com.launium.ghostify.client.feature.experimentation;
 
 import com.launium.ghostify.client.GhostifyClient;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.Util;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.world.Container;
 
-import java.util.ArrayList;
-
 public class ChronomatronSolver extends AbstractExperimentSolver {
     public static final ChronomatronSolver INSTANCE = new ChronomatronSolver();
     public static final String TITLE_PREFIX = "Chronomatron (";
 
-    private ArrayList<Integer> memory = new ArrayList<>(49 + 1); // max 49 notes, stores slot IDs
+    private final IntList memory = new IntArrayList(49 + 1); // max 49 notes, stores slot IDs
     private boolean isShowingGlint = false;
     private int current = 0;
     private long lastClickTimestamp = 0;
@@ -26,7 +26,7 @@ public class ChronomatronSolver extends AbstractExperimentSolver {
 
     @Override
     public int redirectedSlot() {
-        int slot = memory.get(current++);
+        int slot = memory.getInt(current++);
         if (current == memory.size()) memory.clear();
         lastClickTimestamp = Util.getMillis();
         return slot;

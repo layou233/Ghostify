@@ -4,16 +4,19 @@ import com.launium.ghostify.client.GhostifyClient;
 import com.launium.ghostify.client.mixin.AccessFont;
 import com.launium.ghostify.client.ui.Easy2D;
 import com.launium.ghostify.client.ui.island.ContainerLevel;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 
-import java.util.ArrayList;
+import java.text.DecimalFormat;
+import java.util.List;
 
 public class ServerTPSContainer implements IContainer, ClientTickEvents.StartTick {
     public static final ServerTPSContainer INSTANCE = new ServerTPSContainer();
+    private static final DecimalFormat TPS_FORMAT = new DecimalFormat("0.00");
     public long lastTickTimestamp;
     private long lastWorldLoad;
     private float tps = 20F;
@@ -60,22 +63,22 @@ public class ServerTPSContainer implements IContainer, ClientTickEvents.StartTic
 
     @Override
     public float estimateWidth() {
-        return 18F + ((AccessFont) Minecraft.getInstance().font).getSplitter().stringWidth(tps < 15F ? LOW_TPS_WARNING : "TPS %.2f");
+        return 18F + ((AccessFont) Minecraft.getInstance().font).getSplitter().stringWidth(tps < 15F ? LOW_TPS_WARNING : "TPS 00.00");
     }
 
     private static final String LOW_TPS_WARNING = "⚠ Server may be lagging";
 
     @Override
     public void render(GuiGraphics context, float left, float top, float right, float bottom, float scale) {
-        ArrayList<String> lines = new ArrayList<>(2);
+        List<String> lines = ObjectArrayList.wrap(new String[2], 0);
         if (tps > 0) {
-            lines.add(String.format("TPS %.2f", tps));
+            lines.add("TPS " + TPS_FORMAT.format(tps));
         }
         if (tps < 15F) {
             lines.add(LOW_TPS_WARNING);
         }
         Font font = Minecraft.getInstance().font;
         Easy2D.drawScreenTextsCentered(font, (left + right) * 0.5F, (top + bottom) * 0.5F,
-                Easy2D.TEXT_DEFAULT_COLOR, false, lines.toArray(new String[0]));
+                Easy2D.TEXT_DEFAULT_COLOR, false, lines);
     }
 }

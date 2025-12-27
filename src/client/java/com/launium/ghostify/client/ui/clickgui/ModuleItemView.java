@@ -55,11 +55,11 @@ public class ModuleItemView implements MeasurableElement {
         float scale = (float) window.getGuiScale();
         RenderedText titleText = FontManager.requestRenderedText(
                 new RenderInfo(FontManager.DEFAULT_FONT, title, 8F), scale);
-        titleText.draw(context, startX, startY, 4F, scale, 0xFFFFFFFF);
+        titleText.draw(context, startX, startY, scale, 0xFFFFFFFF);
         if (subtitle != null) {
             RenderedText subtitleText = FontManager.requestRenderedText(
                     new RenderInfo(FontManager.DEFAULT_FONT, subtitle, 6F), scale);
-            subtitleText.draw(context, startX, startY + 8F, 4F, scale, 0xFFFFFFFF);
+            subtitleText.draw(context, startX, startY + 8F, scale, 0xFFFFFFFF);
         }
 
         if (simpleSwitcher != null) {

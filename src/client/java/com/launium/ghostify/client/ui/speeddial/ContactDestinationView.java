@@ -80,7 +80,7 @@ public class ContactDestinationView implements NavigationView {
         // render text
         float scale = window.getGuiScale();
         RenderedText renderedText = FontManager.requestRenderedText(new RenderInfo(FontManager.DEFAULT_FONT, contactShortName, 9F), scale);
-        renderedText.draw(context, startX + 18F, startY + (MEASURED_HEIGHT - (float) Math.floor(renderedText.lineHeight / scale)) * 0.5F, layerDepth, scale, 0xFFFFFFFF);
+        renderedText.draw(context, startX + 18F, startY + (MEASURED_HEIGHT - (float) Math.floor(renderedText.lineHeight / scale)) * 0.5F, scale, 0xFFFFFFFF);
     }
 
     @Override

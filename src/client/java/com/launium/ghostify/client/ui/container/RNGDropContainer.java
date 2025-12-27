@@ -10,11 +10,12 @@ import com.launium.ghostify.client.ui.animation.Animation;
 import com.launium.ghostify.client.ui.animation.Smooth;
 import com.launium.ghostify.client.ui.island.ContainerLevel;
 import com.launium.ghostify.client.util.ChromaColor;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class RNGDropContainer implements IContainer {
     public static final RNGDropContainer INSTANCE = new RNGDropContainer();
@@ -30,7 +31,7 @@ public class RNGDropContainer implements IContainer {
     }
 
     private final Animation checkIconProgress = new Smooth(0F, 1F);
-    private ArrayList<VanillaText> vanillaTexts;
+    private List<VanillaText> vanillaTexts;
     private long lastTickTime;
 
     public void resetAnimation() {
@@ -46,7 +47,7 @@ public class RNGDropContainer implements IContainer {
         if (Util.getMillis() - RNGDrop.INSTANCE.lastDropTimestamp > 1000L) {
             checkIconProgress.tick(timeDiff * 0.005F);
         }
-        vanillaTexts = new ArrayList<>(3);
+        vanillaTexts = ObjectArrayList.wrap(new VanillaText[3], 0);
         vanillaTexts.add(new VanillaText("🎉 RNG DROP CLAIMED, GG!").color(ChromaColor.pale(2L, 0L, 0xFF)));
         vanillaTexts.add(new VanillaText("> " + RNGDrop.INSTANCE.itemName).startFrom(Alignment.START));
         if (RNGDrop.INSTANCE.sourceName != null) {
@@ -76,7 +77,7 @@ public class RNGDropContainer implements IContainer {
         }
         Easy2D.drawScreenTextElements(Minecraft.getInstance().font,
                 left + 4F + CheckMarkRenderState.LENGTH * 0.4F, right, (top + bottom) * 0.5F,
-                false, vanillaTexts.toArray(new VanillaText[0]));
+                false, vanillaTexts);
         vanillaTexts.clear();
         vanillaTexts = null;
     }

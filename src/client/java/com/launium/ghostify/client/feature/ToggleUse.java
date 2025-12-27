@@ -14,7 +14,11 @@ import java.util.function.BooleanSupplier;
 public class ToggleUse extends AbstractModule implements ClientTickEvents.StartTick, BooleanSupplier {
     public static final ToggleUse INSTANCE = new ToggleUse();
     private static final ObjectOpenHashSet<String> FORCE_ITEM_IDS = new ObjectOpenHashSet<>(new String[]{
-            "TRIBAL_SPEAR"
+            "TRIBAL_SPEAR",
+            // Hydro Can
+            "HYDRO_CAN_1000", "HYDRO_CAN_TURBO_2000", "HYDRO_CAN_ULTRA_3000", "AQUAMASTER_HYDROMAX",
+            // Rift
+            "FROZEN_WATER_PUNGI", "TIME_GUN"
     });
 
     private boolean forceUse = false;

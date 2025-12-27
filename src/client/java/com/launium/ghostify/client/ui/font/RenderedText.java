@@ -61,7 +61,7 @@ public class RenderedText implements AutoCloseable {
         return new RenderedText(texture, bounds, baseline, TextureSetup.singleTexture(texture.getTextureView()));
     }
 
-    public void draw(GuiGraphics context, float x, float y, float z, float scale, int color) {
+    public void draw(GuiGraphics context, float x, float y, float scale, int color) {
         Matrix3x2fStack pose = context.pose().pushMatrix();
         pose.translate(x, y);
         pose.scale(1f / scale, 1f / scale, pose);

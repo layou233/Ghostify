@@ -9,9 +9,9 @@ import com.launium.ghostify.client.ui.font.RenderInfo;
 import com.launium.ghostify.client.ui.font.RenderedText;
 import com.mojang.blaze3d.platform.Window;
 import it.unimi.dsi.fastutil.floats.FloatFloatImmutablePair;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.gui.GuiGraphics;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class NavigationCategories implements Element {
@@ -19,7 +19,7 @@ public class NavigationCategories implements Element {
     public float width, height;
     public float buttonHeight;
     public float fontSize;
-    public final ArrayList<NavigationDestination> destinations = new ArrayList<>();
+    public final List<NavigationDestination> destinations = new ObjectArrayList<>();
     public int layerDepth;
 
     private final Window window;
@@ -46,7 +46,7 @@ public class NavigationCategories implements Element {
         // draw selected background
         final float buttonY = startY + (height - buttonHeight) * 0.5F;
         Easy2D.drawRoundRect(highlightStartX.current + startX, buttonY,
-                highlightEndX.current + startX, buttonY + buttonHeight, this.getLayerDepth(), buttonHeight * 0.5F,
+                highlightEndX.current + startX, buttonY + buttonHeight, buttonHeight * 0.5F,
                 16F, 0xFF004CFF, 0xFF004CFF);
 
         // draw navigation buttons
@@ -67,11 +67,11 @@ public class NavigationCategories implements Element {
                     .reduce(Double::sum)
                     .orElseThrow()) / (destinations.size() - 1));
             float currentX = startX;
-            ArrayList<FloatFloatImmutablePair> bounds = new ArrayList<>(categoryRenderedTexts.size());
+            List<FloatFloatImmutablePair> bounds = new ObjectArrayList<>(categoryRenderedTexts.size());
             for (int i = 0; i < categoryRenderedTexts.size(); i++) {
                 RenderedText text = categoryRenderedTexts.get(i);
                 // TODO: pass alpha value
-                text.draw(context, currentX, startY + (height + text.bounds.y / scale) * 0.5F, 1F, (float) window.getGuiScale(), 0xFFFFFFFF);
+                text.draw(context, currentX, startY + (height + text.bounds.y / scale) * 0.5F, (float) window.getGuiScale(), 0xFFFFFFFF);
                 if (i == selectedIndex) {
                     highlightStartX.target = currentX - buttonHeight * 0.5F - startX;
                     highlightEndX.target = currentX + text.bounds.width / scale + buttonHeight * 0.5F - startX;

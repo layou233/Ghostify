@@ -110,14 +110,14 @@ public class HudModuleList implements HudElement {
                     module.moduleList.animatedY.current,
                     module.moduleList.animatedX.current + elementWidth,
                     module.moduleList.animatedY.current + elementHeight,
-                    4F, 5F, 0F, 0x66454545, 0x66454545);
+                    5F, 0F, 0x66454545, 0x66454545);
             title.draw(context, module.moduleList.animatedX.current + 3F,
                     module.moduleList.animatedY.current + (elementHeight - title.lineHeight / scale) / 2,
-                    5F, scale, ChromaColor.pale(3L, ((long) (y - animatedStartingY.current)) << 24, 0xFF));
+                    scale, ChromaColor.pale(3L, ((long) (y - animatedStartingY.current)) << 24, 0xFF));
             if (subtitle != null) {
                 subtitle.draw(context, module.moduleList.animatedX.current + 3F + title.bounds.width / scale + 1.5F,
                         module.moduleList.animatedY.current + +(elementHeight - subtitle.lineHeight / scale) / 2,
-                        5F, scale, FadingColor.aqua(3L, 0L, 0xFF));
+                        scale, FadingColor.aqua(3L, 0L, 0xFF));
             }
             return false;
         });

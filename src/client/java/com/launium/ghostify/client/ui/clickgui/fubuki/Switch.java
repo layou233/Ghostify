@@ -57,13 +57,13 @@ public class Switch implements MeasurableElement {
 
         // draw background
         int color = Mth.hsvToArgb(colorHSV.h, colorHSV.s, Math.max(colorHSV.v * percent.current, 0.3F), colorAlpha);
-        Easy2D.drawRoundRect(startX, startY, startX + WIDTH, startY + HEIGHT, 4F,
+        Easy2D.drawRoundRect(startX, startY, startX + WIDTH, startY + HEIGHT,
                 HEIGHT * 0.5F, 10F, color, 0xFFFFFFFF);
 
         // draw white dot
         float dotCenterX = (WIDTH - 2 * BUTTON_PAD - 2 * BUTTON_RADIUS) * percent.current;
         Easy2D.drawRoundRect(startX + dotCenterX + BUTTON_PAD, startY + BUTTON_PAD, startX + dotCenterX + BUTTON_PAD + 2 * BUTTON_RADIUS, startY + BUTTON_PAD + 2 * BUTTON_RADIUS,
-                5F, BUTTON_RADIUS, 1F, 0xFFFFFFFF, 0xFFFFFFFF);
+                BUTTON_RADIUS, 1F, 0xFFFFFFFF, 0xFFFFFFFF);
     }
 
     @Override

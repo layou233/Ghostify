@@ -62,10 +62,10 @@ public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRendere
         {
             float textureWidth = width + state.subpixelX * state.scale;
             float textureHeight = height + state.subpixelY * state.scale;
-            builder.addVertex(0F, 0F, state.depth);
-            builder.addVertex(0F, textureHeight, state.depth);
-            builder.addVertex(textureWidth, textureHeight, state.depth);
-            builder.addVertex(textureWidth, 0, state.depth);
+            builder.addVertex(0F, 0F, 0F);
+            builder.addVertex(0F, textureHeight, 0F);
+            builder.addVertex(textureWidth, textureHeight, 0F);
+            builder.addVertex(textureWidth, 0F, 0F);
         }
         MeshData mesh = builder.buildOrThrow();
 
@@ -126,7 +126,7 @@ public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRendere
         public final static float OUTSET = 14F; // conservative
 
         public transient final float left, top, right, bottom;
-        public final float depth, scale;
+        public final float scale;
         public final float shadow;
         public final Vector4f color, shadowColor; // normalized RGBA
         public @Nullable Vector4f color2;
@@ -140,7 +140,7 @@ public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRendere
         private transient final ScreenRectangle bounds;
 
         public State(GuiGraphics context, float left, float top, float right, float bottom,
-                     float depth, float radius, float shadow, int color, int shadowColor) {
+                     float radius, float shadow, int color, int shadowColor) {
             if (!Float.isFinite(radius) || radius < 0.0f) { // NaN, Inf, negative
                 radius = 0;
             }
@@ -151,7 +151,6 @@ public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRendere
             this.bottom = bottom;
             this.subpixelX = left - Mth.floor(left);
             this.subpixelY = top - Mth.floor(top);
-            this.depth = depth;
             this.scale = Minecraft.getInstance().getWindow().getGuiScale();
             this.shadow = shadow;
             this.color = new Vector4f(ARGB.red(color) / 255F, ARGB.green(color) / 255F, ARGB.blue(color) / 255F, ARGB.alpha(color) / 255F);

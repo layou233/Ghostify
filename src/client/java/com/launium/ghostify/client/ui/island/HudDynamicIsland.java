@@ -13,13 +13,15 @@ import net.minecraft.Util;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.util.Mth;
 
 public class HudDynamicIsland implements HudElement {
 
     private long lastRenderTime;
     private boolean lastVisibility;
 
-    Animation halfWidth = new Smooth(0, 40), halfHeight = new Smooth(0, 30);
+    Animation width = new Smooth(0, 80), height = new Smooth(0, 60);
 
     private final ObjectArraySet<IContainer> activeContainers = new ObjectArraySet<>(8);
 
@@ -27,13 +29,13 @@ public class HudDynamicIsland implements HudElement {
     @Override
     public void render(GuiGraphics drawContext, DeltaTracker deltaTracker) {
         activeContainers.removeIf(container -> !container.isActive());
-        if (activeContainers.isEmpty() && halfWidth.current < 0.6F && halfHeight.current < 0.6F) {
+        if (activeContainers.isEmpty() && width.current < 1.2F && height.current < 1.2F) {
             lastVisibility = false;
             return;
         }
         if (!lastVisibility) { // reset size
-            halfWidth.current = 0;
-            halfHeight.current = 0;
+            width.current = 0;
+            height.current = 0;
             lastRenderTime = 0;
         }
         Easy2D.configure(drawContext);
@@ -47,20 +49,26 @@ public class HudDynamicIsland implements HudElement {
                 .reduce(((a, b) -> a.getLevel() > b.getLevel() ? a : b))
                 .orElse(null);
         if (container != null) container.prepareRender(scale);
-        halfWidth.update(container == null ? 0F : Math.max(24F, container.estimateWidth()) * 0.5F);
-        halfHeight.update(container == null ? 0F : Math.max(10F, container.estimateHeight()) * 0.5F);
-        halfWidth.tick(timeDiff / 180F);
-        halfHeight.tick(timeDiff / 180F);
-        float left = (float) windowWidth / 2 - halfWidth.current;
+        width.update(container == null ? 0F : Math.max(48F, container.estimateWidth()));
+        height.update(container == null ? 0F : Math.max(20F, container.estimateHeight()));
+        width.tick(timeDiff / 180F);
+        height.tick(timeDiff / 180F);
+        float halfWidth = 0.5F * width.current;
+        float left = (float) windowWidth / 2 - halfWidth;
+        float right = (float) windowWidth / 2 + halfWidth;
         float top = 36F;
         if (SkyCubedCompat.IS_EXISTS) {
             top = 50F;
         }
-        float right = (float) windowWidth / 2 + halfWidth.current;
-        float bottom = top + 2 * halfHeight.current;
-        Easy2D.drawRoundRect(left, top, right, bottom, 5, 12, 16F, 0xDB000000, 0xDB000000);
-        if (container != null && halfWidth.ratio() > 0.8F)
-            container.render(drawContext, left, top, right, bottom, scale);
+        float bottom = top + height.current;
+        Easy2D.drawRoundRect(left, top, right, bottom, 12F, 16F, 0xDB000000, 0xDB000000);
+        if (container != null) {
+            // using scissor here ignores the actual rounded shape, it is just easier to implement
+            // stencil buffer or depth testing might be a better alternative for this
+            drawContext.scissorStack.push(new ScreenRectangle(Mth.ceil(left + 4F), Mth.ceil(top + 1F), Mth.floor(right - left - 8F), Mth.floor(bottom - top - 2F)));
+            container.render(drawContext, left, top, left + width.target, top + height.target, scale);
+            drawContext.scissorStack.pop();
+        }
         Easy2D.cleanup();
         lastRenderTime = now;
         lastVisibility = true;

@@ -118,7 +118,7 @@ public class Spinner<T extends MeasurableElement> implements Element {
             int color = Mth.hsvToArgb(colorHSV.h, colorHSV.s * colorPercent.current, colorHSV.v, 0xFF);
             RoundRectRenderer.State highlightState = new RoundRectRenderer.State(context,
                     startX + highlightStartX.current, centerY - selectedElementHalfHeight, startX + highlightEndX.current, centerY + selectedElementHalfHeight,
-                    layerDepth, 4F, 16F, color, color);
+                    4F, 16F, color, color);
             if (!isFocused) {
                 highlightState.radiusLT = highlightState.radiusLB = 0F;
             }

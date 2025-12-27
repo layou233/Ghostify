@@ -2,20 +2,21 @@ package com.launium.ghostify.client.feature.experimentation;
 
 import com.launium.ghostify.client.GhostifyClient;
 import it.unimi.dsi.fastutil.ints.IntIntImmutablePair;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.Util;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.world.Container;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 public class UltraSequencerSolver extends AbstractExperimentSolver {
     public static final UltraSequencerSolver INSTANCE = new UltraSequencerSolver();
     public static final String TITLE_PREFIX = "Ultrasequencer (";
 
-    private ArrayList<IntIntImmutablePair> memory = new ArrayList<>(28); // max 28 clicks, number to slot
+    private final List<IntIntImmutablePair> memory = new ObjectArrayList<>(28); // max 28 clicks, number to slot
     private int current = 0;
 
     @Override

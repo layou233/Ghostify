@@ -41,9 +41,6 @@ public class LobbyHistoryContainer implements IContainer {
     @Override
     public void render(GuiGraphics context, float left, float top, float right, float bottom, float scale) {
         Font font = Minecraft.getInstance().font;
-        Easy2D.drawScreenText(font, text,
-                (left + right - ((AccessFont) font).getSplitter().stringWidth(text)) * 0.5F,
-                (top + bottom - font.lineHeight) * 0.5F,
-                Easy2D.TEXT_DEFAULT_COLOR, false);
+        Easy2D.drawScreenTextCentered(font, text, left, top, right, bottom, Easy2D.TEXT_DEFAULT_COLOR, false);
     }
 }

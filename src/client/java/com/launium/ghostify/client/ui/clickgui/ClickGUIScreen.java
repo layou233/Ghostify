@@ -117,10 +117,10 @@ public class ClickGUIScreen extends Screen {
         float startY = centerY - HALF_HEIGHT;
         // draw background
         Easy2D.drawRoundRect(startX, startY, centerX + HALF_WIDTH, centerY + HALF_HEIGHT,
-                LAYER_DEPTH, OUTER_RADIUS, 16F, ARGB.color((int) alpha.current, 0), 0xFFFFFFFF);
+                OUTER_RADIUS, 16F, ARGB.color((int) alpha.current, 0), 0xFFFFFFFF);
         // draw title
         RenderedText titleText = FontManager.requestRenderedText(new RenderInfo(FontManager.BOLD_FONT, "GHOSTIFY", 14F), (float) window.getGuiScale());
-        titleText.draw(context, startX + OUTER_PADDING, startY + OUTER_PADDING, 2F, (float) window.getGuiScale(), ARGB.color((int) alpha.current, 0xFFFFFF));
+        titleText.draw(context, startX + OUTER_PADDING, startY + OUTER_PADDING, (float) window.getGuiScale(), ARGB.color((int) alpha.current, 0xFFFFFF));
 
         // set navigation categories
         this.nav.updateStartPosition(

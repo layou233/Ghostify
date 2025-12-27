@@ -2,7 +2,6 @@ package com.launium.ghostify.client.ui.container;
 
 import com.launium.ghostify.client.mixin.AccessFont;
 import com.launium.ghostify.client.ui.Easy2D;
-import com.launium.ghostify.client.ui.VanillaText;
 import com.launium.ghostify.client.ui.island.ContainerLevel;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -11,7 +10,7 @@ import net.minecraft.client.gui.GuiGraphics;
 
 public class SpiritPetWarningContainer implements IContainer {
     public static final SpiritPetWarningContainer instance = new SpiritPetWarningContainer();
-    private static final VanillaText WARNING_TEXT = new VanillaText("⚠ WARNING: Spirit Pet is equipped").color(0xFFFF0000);
+    private static final String WARNING_TEXT = "⚠ WARNING: Spirit Pet is equipped";
 
     public long lastTriggeredTimestamp = 0;
 
@@ -36,12 +35,12 @@ public class SpiritPetWarningContainer implements IContainer {
 
     @Override
     public float estimateWidth() {
-        return 18F + ((AccessFont) Minecraft.getInstance().font).getSplitter().stringWidth(WARNING_TEXT.text);
+        return 18F + ((AccessFont) Minecraft.getInstance().font).getSplitter().stringWidth(WARNING_TEXT);
     }
 
     @Override
     public void render(GuiGraphics context, float left, float top, float right, float bottom, float scale) {
         Font font = Minecraft.getInstance().font;
-        Easy2D.drawScreenTextElements(font, left, right, (top + bottom) * 0.5F, false, WARNING_TEXT);
+        Easy2D.drawScreenTextCentered(font, WARNING_TEXT, left, top, right, bottom, 0xFFFF0000, false);
     }
 }
