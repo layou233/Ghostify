@@ -66,7 +66,7 @@ public class HudDynamicIsland implements HudElement {
             // using scissor here ignores the actual rounded shape, it is just easier to implement
             // stencil buffer or depth testing might be a better alternative for this
             drawContext.scissorStack.push(new ScreenRectangle(Mth.ceil(left + 4F), Mth.ceil(top + 1F), Mth.floor(right - left - 8F), Mth.floor(bottom - top - 2F)));
-            container.render(drawContext, left, top, left + width.target, top + height.target, scale);
+            container.render(drawContext, left, top, left + width.target, bottom, scale);
             drawContext.scissorStack.pop();
         }
         Easy2D.cleanup();
