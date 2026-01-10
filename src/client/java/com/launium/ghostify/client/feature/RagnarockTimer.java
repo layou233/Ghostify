@@ -34,7 +34,7 @@ public class RagnarockTimer implements SimpleChatEventHandler.Overlay {
                     strengthText = strengthText.substring("Strength: ".length(), endIndex > 0 ? endIndex : strengthText.length());
 
                     RagnarockTimerContainer.INSTANCE.lastTriggeredTimestamp = Util.getMillis();
-                    RagnarockTimerContainer.INSTANCE.gainedStrength = Integer.parseInt(strengthText) * 1.5F;
+                    RagnarockTimerContainer.INSTANCE.gainedStrength = Float.parseFloat(strengthText) * 1.5F;
                     GhostifyClient.island.show(RagnarockTimerContainer.INSTANCE);
                 }
             }
