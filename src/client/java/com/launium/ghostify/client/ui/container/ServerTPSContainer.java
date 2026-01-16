@@ -6,10 +6,10 @@ import com.launium.ghostify.client.ui.Easy2D;
 import com.launium.ghostify.client.ui.island.ContainerLevel;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.util.Util;
 
 import java.text.DecimalFormat;
 import java.util.List;

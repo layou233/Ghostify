@@ -3,9 +3,9 @@ package com.launium.ghostify.client.feature.experimentation;
 import com.launium.ghostify.client.GhostifyClient;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import net.minecraft.Util;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.util.Util;
 import net.minecraft.world.Container;
 
 public class ChronomatronSolver extends AbstractExperimentSolver {

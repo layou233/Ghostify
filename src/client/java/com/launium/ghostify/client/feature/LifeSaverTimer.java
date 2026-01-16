@@ -4,9 +4,9 @@ import com.launium.ghostify.client.GhostifyClient;
 import com.launium.ghostify.client.events.SimpleChatEventHandler;
 import com.launium.ghostify.client.ui.container.LifeSaverTimerContainer;
 import com.launium.ghostify.client.util.SkyblockItem;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Util;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 

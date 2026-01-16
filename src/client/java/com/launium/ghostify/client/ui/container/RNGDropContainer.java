@@ -11,9 +11,9 @@ import com.launium.ghostify.client.ui.animation.Smooth;
 import com.launium.ghostify.client.ui.island.ContainerLevel;
 import com.launium.ghostify.client.util.ChromaColor;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.util.Util;
 
 import java.util.List;
 

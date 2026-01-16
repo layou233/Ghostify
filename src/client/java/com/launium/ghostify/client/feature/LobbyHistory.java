@@ -7,9 +7,9 @@ import com.launium.ghostify.client.events.SimpleChatEventHandler;
 import com.launium.ghostify.client.ui.container.LobbyHistoryContainer;
 import com.launium.ghostify.client.util.SimpleDuration;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.util.Util;
 
 public class LobbyHistory implements SimpleChatEventHandler.NonOverlay, ClientPlayConnectionEvents.Init {
     public static final LobbyHistory INSTANCE = new LobbyHistory();

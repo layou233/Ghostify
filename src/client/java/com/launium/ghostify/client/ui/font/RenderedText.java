@@ -58,7 +58,7 @@ public class RenderedText implements AutoCloseable {
             }
         }
         DynamicTexture texture = new DynamicTexture(() -> "Ghostify Smooth Font Texture", nativeImage);
-        return new RenderedText(texture, bounds, baseline, TextureSetup.singleTexture(texture.getTextureView()));
+        return new RenderedText(texture, bounds, baseline, TextureSetup.singleTexture(texture.getTextureView(), texture.getSampler()));
     }
 
     public void draw(GuiGraphics context, float x, float y, float scale, int color) {

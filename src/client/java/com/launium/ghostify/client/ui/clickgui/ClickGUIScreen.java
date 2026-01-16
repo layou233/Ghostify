@@ -14,13 +14,13 @@ import com.launium.ghostify.client.ui.font.FontManager;
 import com.launium.ghostify.client.ui.font.RenderInfo;
 import com.launium.ghostify.client.ui.font.RenderedText;
 import com.mojang.blaze3d.platform.Window;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.Util;
 
 import java.util.PriorityQueue;
 
@@ -192,11 +192,11 @@ public class ClickGUIScreen extends Screen {
 
     @SkipObfuscation
     @Override
-    public void resize(Minecraft minecraft, int width, int height) {
+    public void resize(int width, int height) {
         for (Element child : children) {
             child.resize();
         }
-        super.resize(minecraft, width, height);
+        super.resize(width, height);
     }
 
     @SkipObfuscation

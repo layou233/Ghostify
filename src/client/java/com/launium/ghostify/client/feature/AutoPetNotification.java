@@ -3,7 +3,7 @@ package com.launium.ghostify.client.feature;
 import com.launium.ghostify.client.GhostifyClient;
 import com.launium.ghostify.client.events.SimpleChatEventHandler;
 import com.launium.ghostify.client.ui.container.AutoPetNotificationContainer;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 
 public class AutoPetNotification implements SimpleChatEventHandler.NonOverlay {
     public static final AutoPetNotification INSTANCE = new AutoPetNotification();

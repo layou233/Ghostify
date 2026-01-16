@@ -1,7 +1,7 @@
 package com.launium.ghostify.client.util;
 
-import net.minecraft.Util;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Util;
 
 public class ChromaColor {
     public static int custom(long slow, long offset, int alpha, float saturation, float value) {

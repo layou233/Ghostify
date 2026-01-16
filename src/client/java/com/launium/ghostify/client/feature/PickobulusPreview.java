@@ -20,6 +20,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.gizmos.GizmoStyle;
+import net.minecraft.gizmos.Gizmos;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
@@ -114,15 +116,7 @@ public class PickobulusPreview extends AbstractModule implements WorldRenderEven
             int color = FadingColor.pink(3, 0, 0xFF);
             AABB bounds = stateSlot.get().bounds;
             if (bounds == null) return;
-            AABB transformedBounds = bounds.move(context.gameRenderer().getMainCamera().getPosition().reverse());
-            VertexConsumer buffer = context.consumers().getBuffer(GhostifyRenderTypes.BOX_FILLED_NO_CULL);
-            ShapeRenderer.addChainedFilledBoxVertices(context.matrices(), buffer,
-                    transformedBounds.minX, transformedBounds.minY, transformedBounds.minZ,
-                    transformedBounds.maxX, transformedBounds.maxY, transformedBounds.maxZ,
-                    ARGB.red(color) / 255F, ARGB.green(color) / 255F, ARGB.blue(color) / 255F, 0.2F);
-            buffer = context.consumers().getBuffer(GhostifyRenderTypes.BOX_OUTLINE_NO_CULL);
-            ShapeRenderer.renderLineBox(context.matrices().last(), buffer, transformedBounds,
-                    ARGB.red(color) / 255F, ARGB.green(color) / 255F, ARGB.blue(color) / 255F, 1.0F);
+            Gizmos.cuboid(bounds, new GizmoStyle(color, 3F, ARGB.multiplyAlpha(color, 0.2F)));
         }
     }
 

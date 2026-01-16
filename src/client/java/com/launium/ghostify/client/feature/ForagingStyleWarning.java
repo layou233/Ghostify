@@ -3,16 +3,16 @@ package com.launium.ghostify.client.feature;
 import com.launium.ghostify.client.GhostifyClient;
 import com.launium.ghostify.client.config.ConfigManager;
 import com.launium.ghostify.client.ui.container.ForagingStyleWarningContainer;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.world.level.biome.Biome;
 
 public class ForagingStyleWarning {
-    private static final ResourceLocation HYPIXEL_GALATEA_BIOME = ResourceLocation.fromNamespaceAndPath("hypixel", "moonglade");
+    private static final Identifier HYPIXEL_GALATEA_BIOME = Identifier.fromNamespaceAndPath("hypixel", "moonglade");
 
     public static void whenWoodBreakSound(ClientboundSoundPacket packet) {
         if (!ConfigManager.FEATURES.ENABLE_FORAGING_STYLE_WARNING) return;

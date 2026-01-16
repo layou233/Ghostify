@@ -4,10 +4,10 @@ import com.launium.ghostify.client.mixin.AccessFont;
 import com.launium.ghostify.client.ui.Easy2D;
 import com.launium.ghostify.client.ui.island.ContainerLevel;
 import com.launium.ghostify.client.util.SimpleDuration;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.util.Util;
 
 public class RagnarockTimerContainer implements IContainer {
     public static RagnarockTimerContainer INSTANCE = new RagnarockTimerContainer();

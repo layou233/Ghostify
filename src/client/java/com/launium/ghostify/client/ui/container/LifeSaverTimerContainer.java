@@ -8,9 +8,9 @@ import com.launium.ghostify.client.ui.island.ContainerLevel;
 import com.launium.ghostify.client.util.SimpleDuration;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectLongImmutablePair;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.util.Util;
 
 import java.util.List;
 import java.util.stream.Collectors;

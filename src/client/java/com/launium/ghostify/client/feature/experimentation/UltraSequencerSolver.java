@@ -3,9 +3,9 @@ package com.launium.ghostify.client.feature.experimentation;
 import com.launium.ghostify.client.GhostifyClient;
 import it.unimi.dsi.fastutil.ints.IntIntImmutablePair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.Util;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.util.Util;
 import net.minecraft.world.Container;
 import org.apache.commons.lang3.StringUtils;
 

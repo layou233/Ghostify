@@ -1,7 +1,7 @@
 package com.launium.ghostify.client.ui.font;
 
 import com.launium.ghostify.client.GhostifyClient;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;

@@ -9,12 +9,12 @@ import com.launium.ghostify.client.ui.container.IContainer;
 import com.mojang.blaze3d.platform.Window;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
-import net.minecraft.Util;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Util;
 
 public class HudDynamicIsland implements HudElement {
 

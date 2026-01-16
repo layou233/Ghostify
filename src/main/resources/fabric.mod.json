@@ -25,9 +25,9 @@
   ],
   "accessWidener": "ghostify.accesswidener",
   "depends": {
-    "fabricloader": ">=0.16.14",
+    "fabricloader": ">=0.18.0",
     "fabric": ">=0.137.0",
-    "minecraft": ">=1.21.9- <1.21.11-"
+    "minecraft": ">=1.21.11- <1.21.12-"
   },
   "custom": {
     "modmenu": {

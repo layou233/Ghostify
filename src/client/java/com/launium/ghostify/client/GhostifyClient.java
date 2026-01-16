@@ -35,7 +35,7 @@ import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
@@ -46,9 +46,9 @@ public class GhostifyClient implements ClientModInitializer {
     public static final Gson GSON = new GsonBuilder()
             .setFormattingStyle(FormattingStyle.COMPACT.withNewline("\n"))
             .create();
-    public static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(ResourceLocation.fromNamespaceAndPath("ghostify", "main"));
+    public static final KeyMapping.Category KEY_CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("ghostify", "main"));
 
-    public static final ResourceLocation POST_PHASE = ResourceLocation.fromNamespaceAndPath("ghostify", "post");
+    public static final Identifier POST_PHASE = Identifier.fromNamespaceAndPath("ghostify", "post");
 
     public static final HudDynamicIsland island = new HudDynamicIsland();
     public static final HudModuleList moduleList = new HudModuleList();
@@ -65,13 +65,13 @@ public class GhostifyClient implements ClientModInitializer {
         FontManager.init();
         RoundRectRenderer.init();
         HudElementRegistry.attachElementAfter(VanillaHudElements.MISC_OVERLAYS,
-                ResourceLocation.fromNamespaceAndPath("ghostify", "dynamic_island"),
+                Identifier.fromNamespaceAndPath("ghostify", "dynamic_island"),
                 island);
         HudElementRegistry.attachElementAfter(VanillaHudElements.MISC_OVERLAYS,
-                ResourceLocation.fromNamespaceAndPath("ghostify", "module_list"),
+                Identifier.fromNamespaceAndPath("ghostify", "module_list"),
                 moduleList);
         HudElementRegistry.attachElementAfter(VanillaHudElements.MISC_OVERLAYS,
-                ResourceLocation.fromNamespaceAndPath("ghostify", "speed_dial"),
+                Identifier.fromNamespaceAndPath("ghostify", "speed_dial"),
                 speedDial);
         ClientTickEvents.START_CLIENT_TICK.register(GhostPickaxe.INSTANCE);
         ClientTickEvents.START_CLIENT_TICK.register(ServerTPSContainer.INSTANCE);

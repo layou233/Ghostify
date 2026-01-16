@@ -22,6 +22,7 @@ import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -73,8 +74,7 @@ public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRendere
                 RenderSystem.getModelViewMatrix(),
                 new Vector4f(),
                 new Vector3f(),
-                RenderSystem.getTextureMatrix(),
-                RenderSystem.getShaderLineWidth()
+                new Matrix4f()
         );
         GpuBufferSlice myUniformBuffer = Uniform.STORAGE.writeUniform(buffer -> {
             Std140Builder.intoBuffer(buffer)

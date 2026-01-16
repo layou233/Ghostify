@@ -4,7 +4,6 @@ import com.launium.ghostify.client.GhostifyClient;
 import com.launium.ghostify.client.annotations.SkipObfuscation;
 import com.launium.ghostify.client.ui.animation.Animation;
 import com.launium.ghostify.client.ui.animation.Smooth;
-import net.minecraft.Util;
 import net.minecraft.client.resources.sounds.AbstractSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.resources.sounds.TickableSoundInstance;
@@ -12,8 +11,9 @@ import net.minecraft.client.sounds.AudioStream;
 import net.minecraft.client.sounds.JOrbisAudioStream;
 import net.minecraft.client.sounds.LoopingAudioStream;
 import net.minecraft.client.sounds.SoundBufferLibrary;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Util;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class MusicInstance extends AbstractSoundInstance implements TickableSoun
     private long lastTickTime;
 
     public MusicInstance(String resourceID, String resourcePath, boolean forceRepeat, long stopAt) {
-        super(ResourceLocation.fromNamespaceAndPath("ghostify", resourceID),
+        super(Identifier.fromNamespaceAndPath("ghostify", resourceID),
                 SoundSource.MASTER, SoundInstance.createUnseededRandom());
         this.resourcePath = resourcePath;
         this.forceRepeat = this.looping = forceRepeat;
@@ -39,7 +39,7 @@ public class MusicInstance extends AbstractSoundInstance implements TickableSoun
 
     @SkipObfuscation
     @Override
-    public CompletableFuture<AudioStream> getAudioStream(SoundBufferLibrary loader, ResourceLocation id, boolean repeatInstantly) {
+    public CompletableFuture<AudioStream> getAudioStream(SoundBufferLibrary loader, Identifier id, boolean repeatInstantly) {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 InputStream oggInput = new FileInputStream(resourcePath);

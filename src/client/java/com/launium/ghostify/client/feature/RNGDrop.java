@@ -5,8 +5,8 @@ import com.launium.ghostify.client.config.ConfigManager;
 import com.launium.ghostify.client.events.SimpleChatEventHandler;
 import com.launium.ghostify.client.ui.container.RNGDropContainer;
 import com.launium.ghostify.client.util.MusicInstance;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.Util;
 
 public class RNGDrop implements SimpleChatEventHandler.NonOverlay {
     public static final RNGDrop INSTANCE = new RNGDrop();

@@ -10,7 +10,7 @@ public class Smooth extends Animation {
 
     @Override
     public float tick(float delta) {
-        current = Mth.clampedLerp(current, target, delta);
+        current = Mth.clampedLerp(delta, current, target);
         return current;
     }
 }

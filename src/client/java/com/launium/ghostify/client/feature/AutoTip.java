@@ -5,9 +5,9 @@ import com.launium.ghostify.client.config.ConfigManager;
 import com.launium.ghostify.client.util.ClientTaskScheduler;
 import com.launium.ghostify.client.util.Remember;
 import com.launium.ghostify.client.util.SimpleDuration;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

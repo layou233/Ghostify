@@ -1,7 +1,7 @@
 package com.launium.ghostify.client.util;
 
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.Util;
 
 import java.util.PriorityQueue;
 
