@@ -1,6 +1,5 @@
 package com.launium.ghostify.client.ui.clickgui;
 
-import com.launium.ghostify.client.annotations.SkipObfuscation;
 import com.launium.ghostify.client.config.ConfigManager;
 import com.launium.ghostify.client.ui.Easy2D;
 import com.launium.ghostify.client.ui.Space;
@@ -97,7 +96,6 @@ public class ClickGUIScreen extends Screen {
         //this.children.add(new FragmentView(0F, 0F, new GeneralPage(), LAYER_DEPTH + 1));
     }
 
-    @SkipObfuscation
     @Override
     public void render(GuiGraphics context, int mouseX, int mouseY, float partialTick) {
         super.render(context, mouseX, mouseY, partialTick);
@@ -143,7 +141,6 @@ public class ClickGUIScreen extends Screen {
         lastTickTime = now;
     }
 
-    @SkipObfuscation
     @Override
     protected void renderBlurredBackground(GuiGraphics context) {
         if (ConfigManager.GENERAL.CLICK_GUI_BLUR) {
@@ -151,7 +148,6 @@ public class ClickGUIScreen extends Screen {
         }
     }
 
-    @SkipObfuscation
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         float mouseXF = (float) event.x();
@@ -165,7 +161,6 @@ public class ClickGUIScreen extends Screen {
         return super.mouseClicked(event, isDoubleClick);
     }
 
-    @SkipObfuscation
     @Override
     public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         float mouseXF = (float) event.x();
@@ -179,7 +174,6 @@ public class ClickGUIScreen extends Screen {
         return super.mouseDragged(event, dragX, dragY);
     }
 
-    @SkipObfuscation
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         for (Element child : children) {
@@ -190,7 +184,6 @@ public class ClickGUIScreen extends Screen {
         return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
     }
 
-    @SkipObfuscation
     @Override
     public void resize(int width, int height) {
         for (Element child : children) {
@@ -199,19 +192,16 @@ public class ClickGUIScreen extends Screen {
         super.resize(width, height);
     }
 
-    @SkipObfuscation
     @Override
     public boolean isPauseScreen() {
         return false;
     }
 
-    @SkipObfuscation
     @Override
     public boolean shouldCloseOnEsc() {
         return children.stream().allMatch(Element::shouldCloseOnEsc);
     }
 
-    @SkipObfuscation
     @Override
     public void removed() {
         for (Element child : children) {
@@ -220,7 +210,6 @@ public class ClickGUIScreen extends Screen {
         super.removed();
     }
 
-    @SkipObfuscation
     @Override
     public void onClose() {
         ConfigManager.processChanges();

@@ -1,6 +1,5 @@
 package com.launium.ghostify.client.ui.modulelist;
 
-import com.launium.ghostify.client.annotations.SkipObfuscation;
 import com.launium.ghostify.client.compat.SkyblockerCompat;
 import com.launium.ghostify.client.feature.AbstractModule;
 import com.launium.ghostify.client.ui.Alignment;
@@ -43,7 +42,6 @@ public class HudModuleList implements HudElement {
                 ));
     }
 
-    @SkipObfuscation
     @Override
     public void render(GuiGraphics context, DeltaTracker deltaTracker) {
         Minecraft client = Minecraft.getInstance();

@@ -1,6 +1,5 @@
 package com.launium.ghostify.client.ui.island;
 
-import com.launium.ghostify.client.annotations.SkipObfuscation;
 import com.launium.ghostify.client.compat.SkyCubedCompat;
 import com.launium.ghostify.client.ui.Easy2D;
 import com.launium.ghostify.client.ui.animation.Animation;
@@ -25,7 +24,6 @@ public class HudDynamicIsland implements HudElement {
 
     private final ObjectArraySet<IContainer> activeContainers = new ObjectArraySet<>(8);
 
-    @SkipObfuscation
     @Override
     public void render(GuiGraphics drawContext, DeltaTracker deltaTracker) {
         activeContainers.removeIf(container -> !container.isActive());

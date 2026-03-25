@@ -1,6 +1,5 @@
 package com.launium.ghostify.client.ui;
 
-import com.launium.ghostify.client.annotations.SkipObfuscation;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.buffers.Std140Builder;
@@ -41,19 +40,16 @@ public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRendere
         super(bufferSource);
     }
 
-    @SkipObfuscation
     @Override
     public @NotNull Class<State> getRenderStateClass() {
         return State.class;
     }
 
-    @SkipObfuscation
     @Override
     protected boolean textureIsReadyToBlit(State state) {
         return Objects.equals(lastState, state);
     }
 
-    @SkipObfuscation
     @Override
     protected void renderToTexture(State state, PoseStack poseStack) {
         float width = (state.extentX + 2 * State.OUTSET) * state.scale;
@@ -115,7 +111,7 @@ public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRendere
         lastState = state;
     }
 
-    @SkipObfuscation
+
     @Override
     protected @NotNull String getTextureLabel() {
         return "Ghostify Rounded Rectangle PIP";
@@ -180,43 +176,43 @@ public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRendere
             return this;
         }
 
-        @SkipObfuscation
+
         @Override
         public int x0() {
             return Mth.floor(left) - (int) OUTSET;
         }
 
-        @SkipObfuscation
+
         @Override
         public int x1() {
             return Mth.ceil(right + OUTSET);
         }
 
-        @SkipObfuscation
+
         @Override
         public int y0() {
             return Mth.floor(top) - (int) OUTSET;
         }
 
-        @SkipObfuscation
+
         @Override
         public int y1() {
             return Mth.ceil(bottom + OUTSET);
         }
 
-        @SkipObfuscation
+
         @Override
         public float scale() {
             return 1F;
         }
 
-        @SkipObfuscation
+
         @Override
         public @Nullable ScreenRectangle scissorArea() {
             return scissorArea;
         }
 
-        @SkipObfuscation
+
         @Override
         public @Nullable ScreenRectangle bounds() {
             return bounds;

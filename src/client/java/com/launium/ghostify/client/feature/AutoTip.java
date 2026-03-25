@@ -5,6 +5,7 @@ import com.launium.ghostify.client.config.ConfigManager;
 import com.launium.ghostify.client.util.ClientTaskScheduler;
 import com.launium.ghostify.client.util.Remember;
 import com.launium.ghostify.client.util.SimpleDuration;
+import com.launium.ghostify.client.util.SkyblockLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.util.Util;
@@ -15,7 +16,6 @@ public class AutoTip extends AbstractModule {
     public static final AutoTip INSTANCE = new AutoTip();
 
     private long nextTipTimestamp = 0L;
-    private boolean isInHypixel = false;
 
     private final Remember<SimpleDuration> rememberLeftTime = new Remember<>();
     private @NotNull String leftTime = "";
@@ -27,7 +27,6 @@ public class AutoTip extends AbstractModule {
     }
 
     public void whenServerBrandUpdate(String brand) {
-        this.isInHypixel = brand.startsWith("Hypixel ");
         setupTask();
     }
 
@@ -37,7 +36,7 @@ public class AutoTip extends AbstractModule {
     }
 
     public void setupTask() {
-        if (isInHypixel) {
+        if (SkyblockLocation.isInHypixel()) {
             long now = Util.getMillis();
             if (now > nextTipTimestamp) {
                 ClientTaskScheduler.CLIENT_TASKS.add(new ClientTaskScheduler.AbstractTask(nextTipTimestamp) {
@@ -47,7 +46,7 @@ public class AutoTip extends AbstractModule {
                         if (AutoTip.INSTANCE.nextTipTimestamp > now) return;
 
                         ClientPacketListener clientPacketListener = client.getConnection();
-                        if (clientPacketListener == null || !AutoTip.INSTANCE.isInHypixel || !ConfigManager.FEATURES.ENABLE_AUTO_TIP)
+                        if (clientPacketListener == null || !SkyblockLocation.isInHypixel() || !ConfigManager.FEATURES.ENABLE_AUTO_TIP)
                             return;
                         clientPacketListener.sendCommand("tipall");
 
@@ -67,7 +66,7 @@ public class AutoTip extends AbstractModule {
 
     @Override
     public @Nullable String subtitle() {
-        if (!isInHypixel) return "OFF";
+        if (!SkyblockLocation.isInHypixel()) return "OFF";
         SimpleDuration left = new SimpleDuration(nextTipTimestamp - Util.getMillis())
                 .truncatedToSeconds();
         if (!rememberLeftTime.updateObject(left)) {

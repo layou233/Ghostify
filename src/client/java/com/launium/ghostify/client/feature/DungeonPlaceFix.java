@@ -1,6 +1,5 @@
 package com.launium.ghostify.client.feature;
 
-import com.launium.ghostify.client.annotations.SkipObfuscation;
 import com.launium.ghostify.client.config.ConfigManager;
 import com.launium.ghostify.client.util.SkyblockLocation;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -31,7 +30,6 @@ public class DungeonPlaceFix implements UseBlockCallback {
         }
     }
 
-    @SkipObfuscation
     @Override
     public InteractionResult interact(Player player, Level level, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         if (ConfigManager.PATCHES.FIX_DUNGEON_BLOCK_PLACE && SkyblockLocation.isInDungeons()) {

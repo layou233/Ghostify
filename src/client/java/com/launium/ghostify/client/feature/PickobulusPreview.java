@@ -1,7 +1,6 @@
 package com.launium.ghostify.client.feature;
 
 import com.launium.ghostify.client.GhostifyClient;
-import com.launium.ghostify.client.annotations.SkipObfuscation;
 import com.launium.ghostify.client.events.SimpleChatEventHandler;
 import com.launium.ghostify.client.interfaces.AccessItemStack;
 import com.launium.ghostify.client.ui.GhostifyRenderTypes;
@@ -61,7 +60,6 @@ public class PickobulusPreview extends AbstractModule implements WorldRenderEven
         isHoldingPickobulus = ((AccessItemStack) (Object) mainHandItem).ghostify$hasPickobulusAbility();
     }
 
-    @SkipObfuscation
     @Override
     public void endExtraction(WorldExtractionContext context) {
         if (!isEnabled || !isHoldingPickobulus || onCooldown) {
@@ -109,7 +107,7 @@ public class PickobulusPreview extends AbstractModule implements WorldRenderEven
         }
     }
 
-    @SkipObfuscation
+
     @Override
     public void afterEntities(WorldRenderContext context) {
         if (PickobulusPreviewContainer.INSTANCE.isActivated) {

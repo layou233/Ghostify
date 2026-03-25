@@ -1,6 +1,7 @@
 package com.launium.ghostify.client.util;
 
 import com.launium.ghostify.client.compat.SkyblockerCompat;
+import lombok.Getter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
@@ -11,11 +12,18 @@ import java.util.List;
 public class SkyblockLocation {
     public static @NotNull String LOCATION_STRING = "";
 
+    @Getter
+    private static boolean isInHypixel = false;
+
     private static boolean isInDungeons = false;
 
     public static void whenRespawn() {
         LOCATION_STRING = "";
         isInDungeons = false;
+    }
+
+    public static void whenServerBrandUpdate(String brand) {
+        isInHypixel = brand.startsWith("Hypixel ");
     }
 
     public static void whenScoreboardUpdate(List<ClientboundPlayerInfoUpdatePacket.Entry> entries) {
