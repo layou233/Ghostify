@@ -9,10 +9,11 @@ import com.mojang.blaze3d.platform.Window;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.Util;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 
@@ -71,7 +72,7 @@ public class HudSpeedDial implements HudElement {
     }
 
     @Override
-    public void render(GuiGraphics context, DeltaTracker deltaTracker) {
+    public void extractRenderState(@NonNull GuiGraphicsExtractor context, @NonNull DeltaTracker deltaTracker) {
         if (navDock == null) return;
 
         Easy2D.configure(context);

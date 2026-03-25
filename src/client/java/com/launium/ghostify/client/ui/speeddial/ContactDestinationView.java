@@ -7,7 +7,7 @@ import com.launium.ghostify.client.ui.font.RenderedText;
 import com.launium.ghostify.client.util.PlayerHead;
 import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -67,14 +67,14 @@ public class ContactDestinationView implements NavigationView {
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, long timeDiff) {
+    public void render(GuiGraphicsExtractor context, int mouseX, int mouseY, long timeDiff) {
         //context.fill((int) startX, (int) startY, (int) startX + 30, (int) startY + (int) MEASURED_HEIGHT, 0xAFFFFFFF);
 
         // render icon
         Matrix3x2fStack pose = context.pose().pushMatrix();
         pose.translate(startX + 3F, startY + 0.5F);
         pose.scale(0.8F);
-        context.renderFakeItem(contactIcon, 0, 0);
+        context.fakeItem(contactIcon, 0, 0);
         pose.popMatrix();
 
         // render text

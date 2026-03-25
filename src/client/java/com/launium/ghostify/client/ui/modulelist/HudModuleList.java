@@ -19,12 +19,13 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.Util;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
+import org.jspecify.annotations.NonNull;
 
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.literal;
 
 public class HudModuleList implements HudElement {
     private long lastRenderTime = 0;
@@ -43,7 +44,7 @@ public class HudModuleList implements HudElement {
     }
 
     @Override
-    public void render(GuiGraphics context, DeltaTracker deltaTracker) {
+    public void extractRenderState(@NonNull GuiGraphicsExtractor context, @NonNull DeltaTracker deltaTracker) {
         Minecraft client = Minecraft.getInstance();
         if (client.player == null) return;
         long now = Util.getMillis();
@@ -114,7 +115,7 @@ public class HudModuleList implements HudElement {
                     scale, ChromaColor.pale(3L, ((long) (y - animatedStartingY.current)) << 24, 0xFF));
             if (subtitle != null) {
                 subtitle.draw(context, module.moduleList.animatedX.current + 3F + title.bounds.width / scale + 1.5F,
-                        module.moduleList.animatedY.current + +(elementHeight - subtitle.lineHeight / scale) / 2,
+                        module.moduleList.animatedY.current + (elementHeight - subtitle.lineHeight / scale) / 2,
                         scale, FadingColor.aqua(3L, 0L, 0xFF));
             }
             return false;

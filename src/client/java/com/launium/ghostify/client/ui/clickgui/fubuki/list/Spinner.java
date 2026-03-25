@@ -7,7 +7,7 @@ import com.launium.ghostify.client.ui.clickgui.Element;
 import com.launium.ghostify.client.ui.clickgui.fubuki.ScrollWrapper;
 import com.launium.ghostify.client.util.HSV;
 import lombok.Setter;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.Mth;
 
 import java.util.Iterator;
@@ -95,7 +95,7 @@ public class Spinner<T extends MeasurableElement> implements Element {
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, long timeDiff) {
+    public void render(GuiGraphicsExtractor context, int mouseX, int mouseY, long timeDiff) {
         float sumY = listView.gap;
         Iterator<T> iterator = elementList.iterator();
         for (int i = 0; i < selectedIndex; i++) {
@@ -122,7 +122,7 @@ public class Spinner<T extends MeasurableElement> implements Element {
             if (!isFocused) {
                 highlightState.radiusLT = highlightState.radiusLB = 0F;
             }
-            context.guiRenderState.submitPicturesInPictureState(highlightState);
+            context.guiRenderState.addPicturesInPictureState(highlightState);
         }
 
         // draw scroll wrapper with the list view

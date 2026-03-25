@@ -7,7 +7,7 @@ import com.launium.ghostify.client.util.SkyblockLocation;
 import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -17,13 +17,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 public class GhostPickaxe extends AbstractModule implements ClientTickEvents.StartTick {
     public static final GhostPickaxe INSTANCE = new GhostPickaxe();
 
-    private static final KeyMapping GHOST_PICKAXE_KEY = KeyBindingHelper.registerKeyBinding(
+    private static final KeyMapping GHOST_PICKAXE_KEY = KeyMappingHelper.registerKeyMapping(
             new KeyMapping("key.ghostify.ghost_pickaxe", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, GhostifyClient.KEY_CATEGORY)
     );
     private static final ObjectOpenHashSet<Block> ignoreBlockSet = new ObjectOpenHashSet<>(new Block[]{

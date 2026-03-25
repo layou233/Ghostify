@@ -5,7 +5,7 @@ import com.launium.ghostify.client.config.ConfigManager;
 import com.launium.ghostify.client.util.ClientTaskScheduler;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -14,8 +14,9 @@ import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.Util;
 import net.minecraft.world.Container;
-import net.minecraft.world.inventory.ClickType;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.inventory.ContainerInput;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Arrays;
@@ -25,7 +26,7 @@ public class HarpBot extends AbstractModule implements ClientTickEvents.StartTic
     public static final HarpBot INSTANCE = new HarpBot();
     public static float delayMultiplierMin = 0.6F;
     public static float delayMultiplierMax = 0.63F;
-    private static final KeyMapping HARP_BOT_KEY = KeyBindingHelper.registerKeyBinding(
+    private static final KeyMapping HARP_BOT_KEY = KeyMappingHelper.registerKeyMapping(
             new KeyMapping("key.ghostify.switch_harp_bot", InputConstants.Type.KEYSYM, InputConstants.UNKNOWN.getValue(), GhostifyClient.KEY_CATEGORY)
     );
 
@@ -51,7 +52,7 @@ public class HarpBot extends AbstractModule implements ClientTickEvents.StartTic
     }
 
     @Override
-    public void onStartTick(Minecraft client) {
+    public void onStartTick(@NonNull Minecraft client) {
         while (HARP_BOT_KEY.consumeClick()) {
             ConfigManager.FEATURES.ENABLE_HARP_BOT = !ConfigManager.FEATURES.ENABLE_HARP_BOT;
             if (ConfigManager.FEATURES.ENABLE_HARP_BOT) GhostifyClient.moduleList.showModule(this);
@@ -59,7 +60,7 @@ public class HarpBot extends AbstractModule implements ClientTickEvents.StartTic
     }
 
     @Override
-    public void afterTick(Screen screen) {
+    public void afterTick(@NonNull Screen screen) {
         if (screen instanceof ContainerScreen containerScreen) {
             Container container = containerScreen.getMenu().getContainer();
             boolean isChanged = false;
@@ -87,8 +88,8 @@ public class HarpBot extends AbstractModule implements ClientTickEvents.StartTic
                             public void execute(Minecraft client) {
                                 if (INSTANCE.isActive) {
                                     //GhostifyClient.LOGGER.info("Clicking on {}", slotToClick);
-                                    client.gameMode.handleInventoryMouseClick(containerScreen.getMenu().containerId,
-                                            slotToClick, GLFW.GLFW_MOUSE_BUTTON_3, ClickType.CLONE, // use middle-click
+                                    client.gameMode.handleContainerInput(containerScreen.getMenu().containerId,
+                                            slotToClick, GLFW.GLFW_MOUSE_BUTTON_3, ContainerInput.CLONE, // use middle-click
                                             client.player);
                                 }
                             }
@@ -101,7 +102,7 @@ public class HarpBot extends AbstractModule implements ClientTickEvents.StartTic
     }
 
     @Override
-    public void onRemove(Screen screen) {
+    public void onRemove(@NonNull Screen screen) {
         isActive = false;
         Arrays.fill(currentChart, null);
         GhostifyClient.LOGGER.info("Harp stopped.");

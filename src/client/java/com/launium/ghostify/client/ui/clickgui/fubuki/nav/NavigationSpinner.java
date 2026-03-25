@@ -6,8 +6,8 @@ import com.launium.ghostify.client.ui.animation.Smooth;
 import com.launium.ghostify.client.ui.clickgui.Element;
 import com.launium.ghostify.client.ui.clickgui.fubuki.list.Spinner;
 import com.mojang.blaze3d.platform.Window;
-import net.minecraft.client.gui.GuiGraphics;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -72,7 +72,7 @@ public class NavigationSpinner implements Element {
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, long timeDiff) {
+    public void render(GuiGraphicsExtractor context, int mouseX, int mouseY, long timeDiff) {
         // tick animations
         if (isFocused) {
             this.radius.target = targetRadius;
@@ -87,7 +87,7 @@ public class NavigationSpinner implements Element {
                 this.startX, this.startY - halfHeight, this.startX + this.width, this.startY + halfHeight,
                 0F, 1F, color, 0);
         backgroundState.radiusRT = backgroundState.radiusRB = radius.current;
-        context.guiRenderState.submitPicturesInPictureState(backgroundState);
+        context.guiRenderState.addPicturesInPictureState(backgroundState);
 
         // render spinner
         spinner.updateStartPosition(startX, startY - halfHeight);

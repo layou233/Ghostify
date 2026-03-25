@@ -3,7 +3,7 @@ package com.launium.ghostify.client.ui.clickgui.fubuki;
 import com.launium.ghostify.client.ui.animation.Animation;
 import com.launium.ghostify.client.ui.animation.Smooth;
 import com.launium.ghostify.client.ui.clickgui.Element;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.Mth;
 
 public class ScrollWrapper implements Element, CullingProvider {
@@ -23,7 +23,7 @@ public class ScrollWrapper implements Element, CullingProvider {
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, long timeDiff) {
+    public void render(GuiGraphicsExtractor context, int mouseX, int mouseY, long timeDiff) {
         // tick animations
         verticalScroll.tick(timeDiff * 0.05F);
 

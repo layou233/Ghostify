@@ -9,7 +9,7 @@ import com.launium.ghostify.client.util.PlayerHead;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -20,6 +20,7 @@ import net.minecraft.util.Util;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import org.jspecify.annotations.NonNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Objects;
@@ -27,25 +28,25 @@ import java.util.Objects;
 public class SpeedDial implements ClientTickEvents.StartTick, ScreenEvents.BeforeInit, ScreenEvents.Remove {
     public static final SpeedDial INSTANCE = new SpeedDial();
 
-    private static final KeyMapping SPEED_DIAL_UP_KEY = KeyBindingHelper.registerKeyBinding(
+    private static final KeyMapping SPEED_DIAL_UP_KEY = KeyMappingHelper.registerKeyMapping(
             new KeyMapping("key.ghostify.speed_dial_up", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_UP, GhostifyClient.KEY_CATEGORY)
     );
-    private static final KeyMapping SPEED_DIAL_PAGE_UP_KEY = KeyBindingHelper.registerKeyBinding(
+    private static final KeyMapping SPEED_DIAL_PAGE_UP_KEY = KeyMappingHelper.registerKeyMapping(
             new KeyMapping("key.ghostify.speed_dial_page_up", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_PAGE_UP, GhostifyClient.KEY_CATEGORY)
     );
-    private static final KeyMapping SPEED_DIAL_DOWN_KEY = KeyBindingHelper.registerKeyBinding(
+    private static final KeyMapping SPEED_DIAL_DOWN_KEY = KeyMappingHelper.registerKeyMapping(
             new KeyMapping("key.ghostify.speed_dial_down", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_DOWN, GhostifyClient.KEY_CATEGORY)
     );
-    private static final KeyMapping SPEED_DIAL_PAGE_DOWN_KEY = KeyBindingHelper.registerKeyBinding(
+    private static final KeyMapping SPEED_DIAL_PAGE_DOWN_KEY = KeyMappingHelper.registerKeyMapping(
             new KeyMapping("key.ghostify.speed_dial_page_down", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_PAGE_DOWN, GhostifyClient.KEY_CATEGORY)
     );
-    private static final KeyMapping SPEED_DIAL_LEFT_KEY = KeyBindingHelper.registerKeyBinding(
+    private static final KeyMapping SPEED_DIAL_LEFT_KEY = KeyMappingHelper.registerKeyMapping(
             new KeyMapping("key.ghostify.speed_dial_left", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_LEFT, GhostifyClient.KEY_CATEGORY)
     );
-    private static final KeyMapping SPEED_DIAL_RIGHT_KEY = KeyBindingHelper.registerKeyBinding(
+    private static final KeyMapping SPEED_DIAL_RIGHT_KEY = KeyMappingHelper.registerKeyMapping(
             new KeyMapping("key.ghostify.speed_dial_right", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT, GhostifyClient.KEY_CATEGORY)
     );
-    private static final KeyMapping SPEED_DIAL_STAR = KeyBindingHelper.registerKeyBinding(
+    private static final KeyMapping SPEED_DIAL_STAR = KeyMappingHelper.registerKeyMapping(
             new KeyMapping("key.ghostify.speed_dial_star", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_ENTER, GhostifyClient.KEY_CATEGORY)
     );
 
@@ -53,7 +54,7 @@ public class SpeedDial implements ClientTickEvents.StartTick, ScreenEvents.Befor
     private long lastActionTime = 0L;
 
     @Override
-    public void beforeInit(Minecraft client, Screen screen, int scaledWidth, int scaledHeight) {
+    public void beforeInit(@NonNull Minecraft client, @NonNull Screen screen, int scaledWidth, int scaledHeight) {
         if (screen instanceof ContainerScreen containerScreen) {
             String title = containerScreen.getTitle().getString();
             if (title.startsWith("Abiphone Basic") || title.startsWith("Abiphone X") || title.startsWith("Abiphone Flip")) {
@@ -63,7 +64,7 @@ public class SpeedDial implements ClientTickEvents.StartTick, ScreenEvents.Befor
     }
 
     @Override
-    public void onRemove(Screen screen) {
+    public void onRemove(@NonNull Screen screen) {
         if (screen instanceof ContainerScreen containerScreen) {
             // scan contacts
             Container container = containerScreen.getMenu().getContainer();
@@ -123,7 +124,7 @@ public class SpeedDial implements ClientTickEvents.StartTick, ScreenEvents.Befor
     }
 
     @Override
-    public void onStartTick(Minecraft client) {
+    public void onStartTick(@NonNull Minecraft client) {
         boolean action = false;
         boolean hideAll = false;
         long now = Util.getMillis();
@@ -190,9 +191,8 @@ public class SpeedDial implements ClientTickEvents.StartTick, ScreenEvents.Befor
                         ConfigManager.CONTACTS.markAsChanged();
                         ConfigManager.processChanges();
                         if (client.player != null) {
-                            client.player.displayClientMessage(Component.literal(
-                                            "[Ghostify] Marked " + contactDestinationView.contactName + " as " + (contact.starred ? "not starred." : "starred.")),
-                                    false);
+                            client.player.sendSystemMessage(Component.literal(
+                                    "[Ghostify] Marked " + contactDestinationView.contactName + " as " + (contact.starred ? "not starred." : "starred.")));
                         }
                     }
                 }

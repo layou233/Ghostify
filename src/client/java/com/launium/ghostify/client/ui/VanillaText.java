@@ -1,13 +1,13 @@
 package com.launium.ghostify.client.ui;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class VanillaText {
     public String text;
     public Alignment align = Alignment.CENTER;
     public int color = Easy2D.TEXT_DEFAULT_COLOR; // ARGB
 
-    public VanillaText(@NotNull String text) {
+    public VanillaText(@NonNull String text) {
         this.text = text;
     }
 

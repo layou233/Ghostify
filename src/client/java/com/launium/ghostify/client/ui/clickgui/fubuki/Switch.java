@@ -7,10 +7,10 @@ import com.launium.ghostify.client.ui.clickgui.fubuki.list.MeasurableElement;
 import com.launium.ghostify.client.util.HSV;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import lombok.Getter;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class Switch implements MeasurableElement {
     public static final float WIDTH = 15F;
@@ -51,7 +51,7 @@ public class Switch implements MeasurableElement {
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, long timeDiff) {
+    public void render(GuiGraphicsExtractor context, int mouseX, int mouseY, long timeDiff) {
         // tick animations
         percent.tick(timeDiff * 0.02F);
 

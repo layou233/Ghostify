@@ -3,7 +3,7 @@ package com.launium.ghostify.client.ui.speeddial;
 import com.launium.ghostify.client.feature.SpeedDial;
 import com.launium.ghostify.client.ui.Easy2D;
 import com.launium.ghostify.client.ui.clickgui.fubuki.nav.NavigationView;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
 
 class DockDestinationView implements NavigationView {
@@ -31,7 +31,7 @@ class DockDestinationView implements NavigationView {
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, long timeDiff) {
+    public void render(GuiGraphicsExtractor context, int mouseX, int mouseY, long timeDiff) {
         //context.fill((int) startX, (int) startY, (int) startX + 30, (int) startY + (int) measureHeight(), 0xAFFFFFFF);
         Easy2D.drawItem(itemIcon, startX + 2F, startY);
     }

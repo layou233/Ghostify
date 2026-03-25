@@ -5,7 +5,7 @@ import com.launium.ghostify.client.ui.Easy2D;
 import com.launium.ghostify.client.ui.island.ContainerLevel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class GhostPickaxeContainer implements IContainer {
     public static final GhostPickaxeContainer INSTANCE = new GhostPickaxeContainer();
@@ -40,7 +40,7 @@ public class GhostPickaxeContainer implements IContainer {
     }
 
     @Override
-    public void render(GuiGraphics context, float left, float top, float right, float bottom, float scale) {
+    public void render(GuiGraphicsExtractor context, float left, float top, float right, float bottom, float scale) {
         Font font = Minecraft.getInstance().font;
         String text = isLegacy ? legacyText : dungeonbreakerText;
         Easy2D.drawScreenTextCentered(font, text, left, top, right, bottom, Easy2D.TEXT_DEFAULT_COLOR, false);

@@ -14,12 +14,13 @@ import com.launium.ghostify.client.ui.font.RenderInfo;
 import com.launium.ghostify.client.ui.font.RenderedText;
 import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Util;
+import org.jspecify.annotations.NonNull;
 
 import java.util.PriorityQueue;
 
@@ -97,8 +98,8 @@ public class ClickGUIScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, float partialTick) {
-        super.render(context, mouseX, mouseY, partialTick);
+    public void extractRenderState(@NonNull GuiGraphicsExtractor context, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(context, mouseX, mouseY, partialTick);
         Easy2D.configure(context);
 
         float scale = (float) window.getGuiScale();
@@ -142,9 +143,9 @@ public class ClickGUIScreen extends Screen {
     }
 
     @Override
-    protected void renderBlurredBackground(GuiGraphics context) {
+    protected void extractBlurredBackground(@NonNull GuiGraphicsExtractor context) {
         if (ConfigManager.GENERAL.CLICK_GUI_BLUR) {
-            super.renderBlurredBackground(context);
+            super.extractBlurredBackground(context);
         }
     }
 

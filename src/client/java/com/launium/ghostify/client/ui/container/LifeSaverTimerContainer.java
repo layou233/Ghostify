@@ -9,7 +9,7 @@ import com.launium.ghostify.client.util.SimpleDuration;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectLongImmutablePair;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.Util;
 
 import java.util.List;
@@ -76,7 +76,7 @@ public class LifeSaverTimerContainer implements IContainer {
     }
 
     @Override
-    public void render(GuiGraphics context, float left, float top, float right, float bottom, float scale) {
+    public void render(GuiGraphicsExtractor context, float left, float top, float right, float bottom, float scale) {
         Easy2D.drawScreenTextElements(Minecraft.getInstance().font, left, right, (top + bottom) * 0.5F,
                 false, vanillaTexts);
         vanillaTexts.clear();

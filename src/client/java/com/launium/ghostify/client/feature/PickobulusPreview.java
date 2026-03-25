@@ -3,21 +3,18 @@ package com.launium.ghostify.client.feature;
 import com.launium.ghostify.client.GhostifyClient;
 import com.launium.ghostify.client.events.SimpleChatEventHandler;
 import com.launium.ghostify.client.interfaces.AccessItemStack;
-import com.launium.ghostify.client.ui.GhostifyRenderTypes;
 import com.launium.ghostify.client.ui.container.PickobulusPreviewContainer;
 import com.launium.ghostify.client.util.FadingColor;
 import com.launium.ghostify.client.util.SwappingSlot;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldExtractionContext;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gizmos.GizmoStyle;
 import net.minecraft.gizmos.Gizmos;
@@ -30,12 +27,13 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
-public class PickobulusPreview extends AbstractModule implements WorldRenderEvents.EndExtraction, WorldRenderEvents.AfterEntities, ClientTickEvents.EndTick, SimpleChatEventHandler.NonOverlay {
+public class PickobulusPreview extends AbstractModule implements LevelRenderEvents.EndExtraction, LevelRenderEvents.BeforeGizmos, ClientTickEvents.EndTick, SimpleChatEventHandler.NonOverlay {
     public static final PickobulusPreview INSTANCE = new PickobulusPreview();
-    private static final KeyMapping PICKOBULUS_PREVIEW_KEY = KeyBindingHelper.registerKeyBinding(
+    private static final KeyMapping PICKOBULUS_PREVIEW_KEY = KeyMappingHelper.registerKeyMapping(
             new KeyMapping("key.ghostify.switch_pickobulus_preview", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_X, GhostifyClient.KEY_CATEGORY)
     );
 
@@ -61,7 +59,7 @@ public class PickobulusPreview extends AbstractModule implements WorldRenderEven
     }
 
     @Override
-    public void endExtraction(WorldExtractionContext context) {
+    public void endExtraction(@NonNull LevelExtractionContext context) {
         if (!isEnabled || !isHoldingPickobulus || onCooldown) {
             PickobulusPreviewContainer.INSTANCE.isActivated = false;
             return;
@@ -79,7 +77,7 @@ public class PickobulusPreview extends AbstractModule implements WorldRenderEven
         Vec3 firePosition = new Vec3(player.getX(), eyeHeight, player.getZ());
         Vec3 viewVector = player.getViewVector(0F);
         Vec3 rayEnd = firePosition.add(viewVector.x * 30F, viewVector.y * 30F, viewVector.z * 30F);
-        BlockHitResult hitResult = context.world().clip(new ClipContext(firePosition, rayEnd,
+        BlockHitResult hitResult = context.level().clip(new ClipContext(firePosition, rayEnd,
                 ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
         if (hitResult.getType() == HitResult.Type.BLOCK) {
             BlockPos hitPos = hitResult.getBlockPos();
@@ -87,7 +85,7 @@ public class PickobulusPreview extends AbstractModule implements WorldRenderEven
             state.reset();
             state.bounds = new AABB(hitPos.getX() - 3F, hitPos.getY() - 3F, hitPos.getZ() - 3F,
                     hitPos.getX() + 3F, hitPos.getY() + 3F, hitPos.getZ() + 3F);
-            context.world().getBlockStates(state.bounds.contract(1F, 1F, 1F)).forEach(blockState -> {
+            context.level().getBlockStates(state.bounds.contract(1F, 1F, 1F)).forEach(blockState -> {
                 Block block = blockState.getBlock();
                 if (block != Blocks.AIR) {
                     state.blocks++;
@@ -107,9 +105,8 @@ public class PickobulusPreview extends AbstractModule implements WorldRenderEven
         }
     }
 
-
     @Override
-    public void afterEntities(WorldRenderContext context) {
+    public void beforeGizmos(@NonNull LevelRenderContext context) {
         if (PickobulusPreviewContainer.INSTANCE.isActivated) {
             int color = FadingColor.pink(3, 0, 0xFF);
             AABB bounds = stateSlot.get().bounds;
@@ -119,7 +116,7 @@ public class PickobulusPreview extends AbstractModule implements WorldRenderEven
     }
 
     @Override
-    public void onEndTick(Minecraft client) {
+    public void onEndTick(@NonNull Minecraft client) {
         checkPickobulusInHand(client);
         while (PICKOBULUS_PREVIEW_KEY.consumeClick()) {
             isEnabled = !isEnabled;

@@ -5,12 +5,12 @@ import lombok.Getter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 
 public class SkyblockLocation {
-    public static @NotNull String LOCATION_STRING = "";
+    public static @NonNull String LOCATION_STRING = "";
 
     @Getter
     private static boolean isInHypixel = false;

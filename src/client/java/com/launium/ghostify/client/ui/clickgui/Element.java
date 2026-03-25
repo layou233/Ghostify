@@ -1,10 +1,10 @@
 package com.launium.ghostify.client.ui.clickgui;
 
-import net.minecraft.client.gui.GuiGraphics;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import org.jspecify.annotations.NonNull;
 
 public interface Element extends Comparable<Element> {
-    default void render(GuiGraphics context, int mouseX, int mouseY, long timeDiff) {
+    default void render(GuiGraphicsExtractor context, int mouseX, int mouseY, long timeDiff) {
     }
 
     void updateStartPosition(float newX, float newY);
@@ -36,7 +36,7 @@ public interface Element extends Comparable<Element> {
     int getLayerDepth();
 
     @Override
-    default int compareTo(@NotNull Element o) {
+    default int compareTo(@NonNull Element o) {
         return Integer.compare(this.getLayerDepth(), o.getLayerDepth());
     }
 }

@@ -1,7 +1,7 @@
 package com.launium.ghostify.client.ui.clickgui.fubuki;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public interface CullingReceiver {
-    void setCullingProvider(@NotNull CullingProvider provider);
+    void setCullingProvider(@NonNull CullingProvider provider);
 }

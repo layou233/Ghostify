@@ -6,7 +6,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.util.Util;
 import net.minecraft.world.inventory.ChestMenu;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(AbstractContainerScreen.class)
 public class MixinAbstractContainerScreen {
     @WrapMethod(method = "slotClicked")
-    private void ghostify$hijackSlotClick(Slot slot, int slotId, int mouseButton, ClickType type, Operation<Void> original) {
+    private void ghostify$hijackSlotClick(Slot slot, int slotId, int mouseButton, ContainerInput type, Operation<Void> original) {
         if (slot != null && slot.index == 49 && AbstractExperimentSolver.ACTIVE_SOLVER != null) {
             if (Util.getMillis() - AbstractExperimentSolver.ACTIVE_SOLVER.startSolvingTimestamp < 300L) return;
             if (AbstractExperimentSolver.ACTIVE_SOLVER.willRedirectClick()) {
@@ -23,7 +23,7 @@ public class MixinAbstractContainerScreen {
                 slot = ((AbstractContainerScreen<ChestMenu>) (Object) this).getMenu().getSlot(slotId);
                 // use middle-click
                 mouseButton = GLFW.GLFW_MOUSE_BUTTON_3;
-                type = ClickType.CLONE;
+                type = ContainerInput.CLONE;
             } else {
                 return;
             }

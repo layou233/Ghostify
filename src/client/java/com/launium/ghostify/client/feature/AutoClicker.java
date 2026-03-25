@@ -10,18 +10,19 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import it.unimi.dsi.fastutil.floats.FloatFloatImmutablePair;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.Util;
 import net.minecraft.world.level.levelgen.BitRandomSource;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.argument;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.literal;
 
 public class AutoClicker extends AbstractModule implements ClientTickEvents.StartTick {
     public static final AutoClicker INSTANCE = new AutoClicker();
@@ -52,7 +53,7 @@ public class AutoClicker extends AbstractModule implements ClientTickEvents.Star
     }
 
     //private static final AutoClickerContainer autoClickerContainer = new AutoClickerContainer();
-    private static final KeyMapping SWITCH_AUTO_CLICKER_KEY = KeyBindingHelper.registerKeyBinding(
+    private static final KeyMapping SWITCH_AUTO_CLICKER_KEY = KeyMappingHelper.registerKeyMapping(
             new KeyMapping("key.ghostify.switch_auto_clicker", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT_ALT, GhostifyClient.KEY_CATEGORY)
     );
 
@@ -71,7 +72,7 @@ public class AutoClicker extends AbstractModule implements ClientTickEvents.Star
     }
 
     @Override
-    public void onStartTick(Minecraft client) {
+    public void onStartTick(@NonNull Minecraft client) {
         while (SWITCH_AUTO_CLICKER_KEY.consumeClick()) {
             this.isEnabled = !this.isEnabled;
         }
@@ -94,7 +95,7 @@ public class AutoClicker extends AbstractModule implements ClientTickEvents.Star
                     //breakingFinishTime = 0L;
                     nextLeftClickTime = rollNextClickTime();
                 }
-                // break cooldown to avoid to trigger anti-cheat (FastBreak)
+                // break cooldown to avoid triggering anti-cheat (FastBreak)
                 if (isBreaking && client.gameMode.getDestroyStage() > 8) breakingFinishTime = now + 400L;
             }
         }

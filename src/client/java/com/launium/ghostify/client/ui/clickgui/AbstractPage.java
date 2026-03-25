@@ -3,7 +3,7 @@ package com.launium.ghostify.client.ui.clickgui;
 import com.launium.ghostify.client.ui.clickgui.fubuki.ScrollWrapper;
 import com.launium.ghostify.client.ui.clickgui.fubuki.list.ListView;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public abstract class AbstractPage implements Element {
     public static final int LAYER_DEPTH = ClickGUIScreen.LAYER_DEPTH + 2;
@@ -18,7 +18,7 @@ public abstract class AbstractPage implements Element {
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, long timeDiff) {
+    public void render(GuiGraphicsExtractor context, int mouseX, int mouseY, long timeDiff) {
         scrollWrapper.render(context, mouseX, mouseY, timeDiff);
     }
 

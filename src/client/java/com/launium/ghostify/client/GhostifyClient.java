@@ -20,7 +20,7 @@ import com.launium.ghostify.client.util.SkyblockLocation;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -28,7 +28,7 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
@@ -38,8 +38,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.argument;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.literal;
 
 public class GhostifyClient implements ClientModInitializer {
     public static final Logger LOGGER = LogUtils.getLogger();
@@ -90,8 +90,8 @@ public class GhostifyClient implements ClientModInitializer {
         ClientReceiveMessageEvents.GAME.register(SimpleChatEventHandler.INSTANCE);
         ClientPlayConnectionEvents.INIT.register(LobbyHistory.INSTANCE);
         ClientLifecycleEvents.CLIENT_STOPPING.register(client -> ConfigManager.processChanges());
-        WorldRenderEvents.END_EXTRACTION.register(PickobulusPreview.INSTANCE);
-        WorldRenderEvents.AFTER_ENTITIES.register(PickobulusPreview.INSTANCE);
+        LevelRenderEvents.END_EXTRACTION.register(PickobulusPreview.INSTANCE);
+        LevelRenderEvents.BEFORE_GIZMOS.register(PickobulusPreview.INSTANCE);
         ScreenEvents.BEFORE_INIT.register(SpeedDial.INSTANCE);
         UseBlockCallback.EVENT.register(DungeonPlaceFix.INSTANCE);
         AttackEntityCallback.EVENT.register(GoonBlocker.INSTANCE);
@@ -100,7 +100,7 @@ public class GhostifyClient implements ClientModInitializer {
 
         // register commands
         ClientCommandRegistrationCallback.EVENT.register(((dispatcher, buildContext) -> {
-            var builder = ClientCommandManager.literal("ghostify")
+            var builder = ClientCommands.literal("ghostify")
                     .then(literal("harpDelayMultiplier")
                             .then(argument("min", FloatArgumentType.floatArg(0))
                                     .then(argument("max", FloatArgumentType.floatArg(0))
@@ -143,7 +143,7 @@ public class GhostifyClient implements ClientModInitializer {
             AutoClicker.registerCommand(builder);
             moduleList.registerCommand(builder);
             var command = dispatcher.register(builder);
-            dispatcher.register(ClientCommandManager.literal("gy").redirect(command));
+            dispatcher.register(ClientCommands.literal("gy").redirect(command));
         }));
     }
 }

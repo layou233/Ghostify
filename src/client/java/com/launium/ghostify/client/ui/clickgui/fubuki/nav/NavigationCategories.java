@@ -10,7 +10,7 @@ import com.launium.ghostify.client.ui.font.RenderedText;
 import com.mojang.blaze3d.platform.Window;
 import it.unimi.dsi.fastutil.floats.FloatFloatImmutablePair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ public class NavigationCategories implements Element {
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, long timeDiff) {
+    public void render(GuiGraphicsExtractor context, int mouseX, int mouseY, long timeDiff) {
         float scale = (float) window.getGuiScale();
 
         // tick animations

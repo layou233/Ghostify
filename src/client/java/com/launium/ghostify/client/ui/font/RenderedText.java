@@ -2,10 +2,10 @@ package com.launium.ghostify.client.ui.font;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import lombok.AllArgsConstructor;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.render.TextureSetup;
-import net.minecraft.client.gui.render.state.BlitRenderState;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.state.gui.BlitRenderState;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import org.joml.Matrix3x2f;
 import org.joml.Matrix3x2fStack;
@@ -61,12 +61,12 @@ public class RenderedText implements AutoCloseable {
         return new RenderedText(texture, bounds, baseline, TextureSetup.singleTexture(texture.getTextureView(), texture.getSampler()));
     }
 
-    public void draw(GuiGraphics context, float x, float y, float scale, int color) {
+    public void draw(GuiGraphicsExtractor context, float x, float y, float scale, int color) {
         Matrix3x2fStack pose = context.pose().pushMatrix();
         pose.translate(x, y);
         pose.scale(1f / scale, 1f / scale, pose);
-        // from GuiGraphics.innerBlit
-        context.guiRenderState.submitGuiElement(new BlitRenderState(
+        // from GuiGraphicsExtractor.innerBlit
+        context.guiRenderState.addGuiElement(new BlitRenderState(
                 RenderPipelines.GUI_TEXTURED, textureSetup,
                 new Matrix3x2f(pose),
                 0, 0,

@@ -12,7 +12,7 @@ import com.launium.ghostify.client.ui.island.ContainerLevel;
 import com.launium.ghostify.client.util.ChromaColor;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.Util;
 
 import java.util.List;
@@ -69,9 +69,9 @@ public class RNGDropContainer implements IContainer {
     }
 
     @Override
-    public void render(GuiGraphics context, float left, float top, float right, float bottom, float scale) {
+    public void render(GuiGraphicsExtractor context, float left, float top, float right, float bottom, float scale) {
         if (checkIconProgress.current > 0F) {
-            context.guiRenderState.submitGuiElement(new CheckMarkRenderState(context,
+            context.guiRenderState.addGuiElement(new CheckMarkRenderState(context,
                     left + 2F, (top + bottom - CheckMarkRenderState.LENGTH * 0.4F) * 0.5F,
                     0.4F, 0xFF539F54, checkIconProgress));
         }

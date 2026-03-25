@@ -3,14 +3,14 @@ package com.launium.ghostify.client.ui;
 import com.launium.ghostify.client.ui.animation.Animation;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
-import net.minecraft.client.gui.render.state.GuiElementRenderState;
+import net.minecraft.client.renderer.state.gui.GuiElementRenderState;
 import net.minecraft.util.Mth;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2f;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class CheckMarkRenderState implements GuiElementRenderState {
     public static final float LENGTH = 60F;
@@ -25,7 +25,7 @@ public class CheckMarkRenderState implements GuiElementRenderState {
     private final ScreenRectangle scissorArea;
     private final ScreenRectangle bounds;
 
-    public CheckMarkRenderState(GuiGraphics context, float x, float y, float scale, int color, Animation progress) {
+    public CheckMarkRenderState(GuiGraphicsExtractor context, float x, float y, float scale, int color, Animation progress) {
         this.x = x;
         this.y = y;
         this.scale = scale;
@@ -39,7 +39,7 @@ public class CheckMarkRenderState implements GuiElementRenderState {
     }
 
     @Override
-    public void buildVertices(VertexConsumer consumer) {
+    public void buildVertices(@NonNull VertexConsumer consumer) {
         float progressRatio = this.progress.ratio();
         if (progressRatio < 0F) progressRatio = 0F;
         else if (progressRatio > 1F) progressRatio = 1F;
@@ -62,12 +62,12 @@ public class CheckMarkRenderState implements GuiElementRenderState {
     }
 
     @Override
-    public @NotNull RenderPipeline pipeline() {
+    public @NonNull RenderPipeline pipeline() {
         return GhostifyRenderTypes.PIPELINE_DEBUG_TRIANGLE_STRIP;
     }
 
     @Override
-    public @NotNull TextureSetup textureSetup() {
+    public @NonNull TextureSetup textureSetup() {
         return TextureSetup.noTexture();
     }
 

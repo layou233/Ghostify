@@ -3,16 +3,16 @@ package com.launium.ghostify.client.ui;
 import com.launium.ghostify.client.mixin.AccessFont;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix3x2fStack;
 
 import java.util.Collection;
 
 public class Easy2D {
-    private static GuiGraphics context;
+    private static GuiGraphicsExtractor context;
 
-    public static void configure(GuiGraphics newContext) {
+    public static void configure(GuiGraphicsExtractor newContext) {
         context = newContext;
     }
 
@@ -25,7 +25,7 @@ public class Easy2D {
         if (!(left < right && top < bottom)) { // also capture NaN
             return;
         }
-        context.guiRenderState.submitPicturesInPictureState(new RoundRectRenderer.State(context,
+        context.guiRenderState.addPicturesInPictureState(new RoundRectRenderer.State(context,
                 left, top, right, bottom, radius, shadow, color, shadowColor
         ));
     }
@@ -35,7 +35,7 @@ public class Easy2D {
     public static void drawScreenText(Font font, String text, float x, float y, int color, boolean shadow) {
         Matrix3x2fStack pose = context.pose().pushMatrix();
         pose.translate(x, y);
-        context.drawString(font, text, 0, 0, color, shadow);
+        context.text(font, text, 0, 0, color, shadow);
         pose.popMatrix();
     }
 
@@ -62,7 +62,7 @@ public class Easy2D {
         int i = 0;
         for (String line : lines) {
             pose.setTranslation(x - splitter.stringWidth(line) * 0.5F, startY + font.lineHeight * i++);
-            context.drawString(font, line, 0, 0, color, shadow);
+            context.text(font, line, 0, 0, color, shadow);
         }
         pose.popMatrix();
     }
@@ -77,7 +77,7 @@ public class Easy2D {
         for (VanillaText element : elements) {
             pose.setTranslation(element.align.calculate(startX, endX, splitter.stringWidth(element.text)),
                     startY + font.lineHeight * i++);
-            context.drawString(font, element.text, 0, 0, element.color, shadow);
+            context.text(font, element.text, 0, 0, element.color, shadow);
         }
         pose.popMatrix();
     }
@@ -85,7 +85,7 @@ public class Easy2D {
     public static void drawItem(ItemStack itemStack, float x, float y) {
         Matrix3x2fStack pose = context.pose().pushMatrix();
         pose.translate(x, y);
-        context.renderFakeItem(itemStack, 0, 0);
+        context.fakeItem(itemStack, 0, 0);
         pose.popMatrix();
     }
 }

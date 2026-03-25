@@ -3,8 +3,8 @@ package com.launium.ghostify.client.ui.clickgui.fubuki.list;
 import com.launium.ghostify.client.ui.clickgui.Element;
 import com.launium.ghostify.client.ui.clickgui.fubuki.CullingProvider;
 import com.launium.ghostify.client.ui.clickgui.fubuki.CullingReceiver;
-import net.minecraft.client.gui.GuiGraphics;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import org.jspecify.annotations.NonNull;
 
 import java.util.SequencedCollection;
 
@@ -38,7 +38,7 @@ public class ListView<T extends MeasurableElement> implements Element, CullingRe
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, long timeDiff) {
+    public void render(GuiGraphicsExtractor context, int mouseX, int mouseY, long timeDiff) {
         float currentY = startY + gap;
         for (T element : elementList) {
             float measuredHeight = element.measureHeight();
@@ -106,12 +106,12 @@ public class ListView<T extends MeasurableElement> implements Element, CullingRe
     }
 
     @Override
-    public int compareTo(@NotNull Element o) {
+    public int compareTo(@NonNull Element o) {
         return 0;
     }
 
     @Override
-    public void setCullingProvider(@NotNull CullingProvider provider) {
+    public void setCullingProvider(@NonNull CullingProvider provider) {
         this.cullingProvider = provider;
     }
 }

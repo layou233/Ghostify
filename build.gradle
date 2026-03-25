@@ -5,7 +5,7 @@ buildscript {
 }
 
 plugins {
-    id 'fabric-loom' version '1.15-SNAPSHOT'
+    id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -29,8 +29,6 @@ loom {
     mixin {
         useLegacyMixinAp = false
     }
-
-    accessWidenerPath = file('src/main/resources/ghostify.accesswidener')
 }
 
 repositories {
@@ -39,10 +37,6 @@ repositories {
     // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
-    maven {
-        name = 'ParchmentMC'
-        url = 'https://maven.parchmentmc.org'
-    }
     maven {
         name = 'TerraformersMC' // for ModMenu
         url = "https://maven.terraformersmc.com/releases"
@@ -64,16 +58,13 @@ repositories {
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings loom.layered() {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${project.parchment_version}@zip")
-    }
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
+
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    api "com.terraformersmc:modmenu:${project.modmenu_version}"
 
     // for compat
-    modCompileOnly "maven.modrinth:skyblocker-liap:v6.2.0+1.21.11"
+    compileOnly "maven.modrinth:skyblocker-liap:v6.2.0+1.21.11"
 
     compileOnly("org.projectlombok:lombok:1.18.+")
     annotationProcessor("org.projectlombok:lombok:1.18.+")
@@ -120,7 +111,7 @@ processClientResources {
     }
 }
 
-def targetJavaVersion = 21
+def targetJavaVersion = 25
 tasks.withType(JavaCompile).configureEach {
     // ensure that the encoding is set to UTF-8, no matter what the system default is
     // this fixes some edge cases with special characters not displaying correctly

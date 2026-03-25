@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
 import java.util.function.Consumer;
 
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.literal;
 
 public class Commands {
     public static LiteralArgumentBuilder<FabricClientCommandSource> thenAlignment(LiteralArgumentBuilder<FabricClientCommandSource> builder, Consumer<Alignment> callback) {

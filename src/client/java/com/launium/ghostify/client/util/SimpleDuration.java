@@ -1,13 +1,13 @@
 package com.launium.ghostify.client.util;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public record SimpleDuration(long millis) {
     public SimpleDuration truncatedToSeconds() {
         return new SimpleDuration((millis / 1000L) * 1000L);
     }
 
-    public @NotNull String toString() {
+    public @NonNull String toString() {
         long t = millis;
         long ms = t % 1000L;
         long s = (t /= 1000L) % 60L;
@@ -38,7 +38,7 @@ public record SimpleDuration(long millis) {
         return builder.isEmpty() ? "NOW" : builder.toString();
     }
 
-    public @NotNull String toTimerString() {
+    public @NonNull String toTimerString() {
         return millis < 1000L ? millis + "ms" : millis / 1000L + "s";
     }
 }

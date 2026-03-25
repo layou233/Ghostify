@@ -1,6 +1,6 @@
 package com.launium.ghostify.client.ui.container;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public interface IContainer {
     boolean isActive();
@@ -13,5 +13,5 @@ public interface IContainer {
 
     float estimateWidth();
 
-    void render(GuiGraphics context, float left, float top, float right, float bottom, float scale);
+    void render(GuiGraphicsExtractor context, float left, float top, float right, float bottom, float scale);
 }

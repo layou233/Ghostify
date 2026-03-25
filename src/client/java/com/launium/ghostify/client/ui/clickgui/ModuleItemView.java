@@ -8,15 +8,15 @@ import com.launium.ghostify.client.ui.font.RenderedText;
 import com.mojang.blaze3d.platform.Window;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class ModuleItemView implements MeasurableElement {
     public static final int LAYER_DEPTH = ClickGUIScreen.LAYER_DEPTH + 3;
     public static final float HEIGHT = 14F;
 
-    public @NotNull String title;
+    public @NonNull String title;
     public @Nullable String subtitle;
 
     private float startX, startY, endX, endY;
@@ -24,18 +24,18 @@ public class ModuleItemView implements MeasurableElement {
     private Runnable callback;
     private Switch simpleSwitcher;
 
-    private ModuleItemView(Minecraft client, @NotNull String title, String subtitle) {
+    private ModuleItemView(Minecraft client, @NonNull String title, @Nullable String subtitle) {
         this.title = title;
         this.subtitle = subtitle;
         this.window = client.getWindow();
     }
 
-    ModuleItemView(Minecraft client, @NotNull String title, String subtitle, boolean switcherValue, @NotNull BooleanConsumer simpleSwitcherCallback) {
+    ModuleItemView(Minecraft client, @NonNull String title, String subtitle, boolean switcherValue, @NonNull BooleanConsumer simpleSwitcherCallback) {
         this(client, title, subtitle);
         this.simpleSwitcher = new Switch(0xFF004CFF, switcherValue, LAYER_DEPTH + 1, simpleSwitcherCallback);
     }
 
-    ModuleItemView(Minecraft client, @NotNull String title, String subtitle, @NotNull Runnable callback) {
+    ModuleItemView(Minecraft client, @NonNull String title, String subtitle, @NonNull Runnable callback) {
         this(client, title, subtitle);
         this.callback = callback;
     }
@@ -51,7 +51,7 @@ public class ModuleItemView implements MeasurableElement {
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, long timeDiff) {
+    public void render(GuiGraphicsExtractor context, int mouseX, int mouseY, long timeDiff) {
         float scale = (float) window.getGuiScale();
         RenderedText titleText = FontManager.requestRenderedText(
                 new RenderInfo(FontManager.DEFAULT_FONT, title, 8F), scale);

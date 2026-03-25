@@ -10,10 +10,11 @@ import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Util;
+import org.jspecify.annotations.NonNull;
 
 public class HudDynamicIsland implements HudElement {
 
@@ -25,7 +26,7 @@ public class HudDynamicIsland implements HudElement {
     private final ObjectArraySet<IContainer> activeContainers = new ObjectArraySet<>(8);
 
     @Override
-    public void render(GuiGraphics drawContext, DeltaTracker deltaTracker) {
+    public void extractRenderState(@NonNull GuiGraphicsExtractor drawContext, @NonNull DeltaTracker deltaTracker) {
         activeContainers.removeIf(container -> !container.isActive());
         if (activeContainers.isEmpty() && width.current < 1.2F && height.current < 1.2F) {
             lastVisibility = false;

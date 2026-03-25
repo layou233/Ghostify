@@ -9,21 +9,21 @@ import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import lombok.EqualsAndHashCode;
-import net.fabricmc.fabric.api.client.rendering.v1.SpecialGuiElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.PictureInPictureRendererRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
-import net.minecraft.client.gui.render.state.pip.PictureInPictureRenderState;
 import net.minecraft.client.renderer.DynamicUniformStorage;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.OptionalDouble;
@@ -33,7 +33,7 @@ public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRendere
     private State lastState;
 
     public static void init() {
-        SpecialGuiElementRegistry.register(context -> new RoundRectRenderer(context.vertexConsumers()));
+        PictureInPictureRendererRegistry.register(context -> new RoundRectRenderer(context.bufferSource()));
     }
 
     protected RoundRectRenderer(MultiBufferSource.BufferSource bufferSource) {
@@ -41,7 +41,7 @@ public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRendere
     }
 
     @Override
-    public @NotNull Class<State> getRenderStateClass() {
+    public @NonNull Class<State> getRenderStateClass() {
         return State.class;
     }
 
@@ -51,7 +51,7 @@ public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRendere
     }
 
     @Override
-    protected void renderToTexture(State state, PoseStack poseStack) {
+    protected void renderToTexture(State state, @NonNull PoseStack poseStack) {
         float width = (state.extentX + 2 * State.OUTSET) * state.scale;
         float height = (state.extentY + 2 * State.OUTSET) * state.scale;
 
@@ -113,7 +113,7 @@ public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRendere
 
 
     @Override
-    protected @NotNull String getTextureLabel() {
+    protected @NonNull String getTextureLabel() {
         return "Ghostify Rounded Rectangle PIP";
     }
 
@@ -135,7 +135,7 @@ public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRendere
         private transient final ScreenRectangle scissorArea;
         private transient final ScreenRectangle bounds;
 
-        public State(GuiGraphics context, float left, float top, float right, float bottom,
+        public State(GuiGraphicsExtractor context, float left, float top, float right, float bottom,
                      float radius, float shadow, int color, int shadowColor) {
             if (!Float.isFinite(radius) || radius < 0.0f) { // NaN, Inf, negative
                 radius = 0;

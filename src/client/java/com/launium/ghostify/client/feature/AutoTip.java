@@ -9,8 +9,8 @@ import com.launium.ghostify.client.util.SkyblockLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.util.Util;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class AutoTip extends AbstractModule {
     public static final AutoTip INSTANCE = new AutoTip();
@@ -18,7 +18,7 @@ public class AutoTip extends AbstractModule {
     private long nextTipTimestamp = 0L;
 
     private final Remember<SimpleDuration> rememberLeftTime = new Remember<>();
-    private @NotNull String leftTime = "";
+    private @NonNull String leftTime = "";
 
     static {
         if (ConfigManager.FEATURES.ENABLE_AUTO_TIP) {
