@@ -1,16 +1,11 @@
-import proguard.gradle.ProGuardTask
-
 buildscript {
     repositories {
         mavenCentral()
     }
-    dependencies {
-        classpath 'com.guardsquare:proguard-gradle:7.8.1'
-    }
 }
 
 plugins {
-    id 'fabric-loom' version '1.13-SNAPSHOT'
+    id 'fabric-loom' version '1.15-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -78,7 +73,7 @@ dependencies {
     modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
 
     // for compat
-    modCompileOnly "maven.modrinth:skyblocker-liap:v5.10.0+1.21.10"
+    modCompileOnly "maven.modrinth:skyblocker-liap:v6.2.0+1.21.10"
 
     compileOnly("org.projectlombok:lombok:1.18.+")
     annotationProcessor("org.projectlombok:lombok:1.18.+")
@@ -152,38 +147,6 @@ jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
     }
-}
-
-tasks.register('proguard', ProGuardTask) {
-    dependsOn tasks.remapJar
-    configuration 'proguard-rules.pro'
-
-    optimizationpasses(10)
-    verbose()
-
-    if (System.getProperty('java.version').startsWith('1.')) {
-        // Before Java 9, the runtime classes were packaged in a single jar file.
-        libraryjars "${System.getProperty('java.home')}/lib/rt.jar"
-    } else {
-        // As of Java 9, the runtime classes are packaged in modular jmod files.
-        libraryjars "${System.getProperty('java.home')}/jmods/java.base.jmod", jarfilter: '!**.jar', filter: '!module-info.class'
-        //libraryjars "${System.getProperty('java.home')}/jmods/....."
-    }
-    configurations.runtimeClasspath.incoming.files.each { File file ->
-        if (file.isFile() && file.getName().endsWith('.jar')) {
-            libraryjars(file.getPath())
-        }
-    }
-    libraryjars loom.files.remappedModCache
-    libraryjars loom.files.remapClasspathFile
-    libraryjars loom.unmappedModCollection.files.each { File file ->
-        if (file.isFile() && file.getName().endsWith('.jar')) {
-            libraryjars(file.getPath())
-        }
-    }
-    libraryjars loom.getIntermediaryMinecraftProvider().getMinecraftJarPaths()
-    injars tasks.remapJar.outputs.files.singleFile
-    outjars(layout.buildDirectory.file("libs/${project.archives_base_name}-${version}-minified.jar"))
 }
 
 // configure the maven publication

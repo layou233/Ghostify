@@ -1,7 +1,6 @@
 package com.launium.ghostify.client.util;
 
 import com.launium.ghostify.client.GhostifyClient;
-import com.launium.ghostify.client.annotations.SkipObfuscation;
 import com.launium.ghostify.client.ui.animation.Animation;
 import com.launium.ghostify.client.ui.animation.Smooth;
 import net.minecraft.Util;
@@ -37,7 +36,6 @@ public class MusicInstance extends AbstractSoundInstance implements TickableSoun
         this.stopAt = stopAt;
     }
 
-    @SkipObfuscation
     @Override
     public CompletableFuture<AudioStream> getAudioStream(SoundBufferLibrary loader, ResourceLocation id, boolean repeatInstantly) {
         return CompletableFuture.supplyAsync(() -> {
@@ -53,25 +51,21 @@ public class MusicInstance extends AbstractSoundInstance implements TickableSoun
         }, Util.ioPool());
     }
 
-    @SkipObfuscation
     @Override
     public boolean canStartSilent() {
         return true;
     }
 
-    @SkipObfuscation
     @Override
     public float getVolume() {
         return volume.current * super.getVolume();
     }
 
-    @SkipObfuscation
     @Override
     public boolean isStopped() {
         return volume.current < 0.004F && Util.getMillis() > stopAt;
     }
 
-    @SkipObfuscation
     @Override
     public void tick() {
         long now = Util.getMillis();

@@ -1,7 +1,6 @@
 package com.launium.ghostify.client.feature;
 
 import com.launium.ghostify.client.GhostifyClient;
-import com.launium.ghostify.client.annotations.SkipObfuscation;
 import com.launium.ghostify.client.config.ConfigManager;
 import com.launium.ghostify.client.util.SkyblockItem;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -30,7 +29,6 @@ public class ToggleUse extends AbstractModule implements ClientTickEvents.StartT
         return forceUse;
     }
 
-    @SkipObfuscation
     @Override
     public void onStartTick(Minecraft client) {
         forceUse = false;

@@ -1,6 +1,5 @@
 package com.launium.ghostify.client.ui.speeddial;
 
-import com.launium.ghostify.client.annotations.SkipObfuscation;
 import com.launium.ghostify.client.feature.SpeedDial;
 import com.launium.ghostify.client.ui.Easy2D;
 import com.launium.ghostify.client.ui.animation.Animation;
@@ -71,7 +70,6 @@ public class HudSpeedDial implements HudElement {
         this.navContactX.target = -2F - NAV_DOCK_WIDTH - NAV_CONTACT_WIDTH;
     }
 
-    @SkipObfuscation
     @Override
     public void render(GuiGraphics context, DeltaTracker deltaTracker) {
         if (navDock == null) return;

@@ -2,6 +2,7 @@ package com.launium.ghostify.client.mixin;
 
 import com.launium.ghostify.client.feature.AutoTip;
 import com.launium.ghostify.client.feature.LifeSaverTimer;
+import com.launium.ghostify.client.util.SkyblockLocation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
@@ -28,6 +29,7 @@ public class MixinClientCommonPacketListenerImpl {
                     ordinal = 1))
     private void ghostify$handleBrandUpdate(ClientboundCustomPayloadPacket packet, CallbackInfo ci, @Local BrandPayload brandPayload) {
         String brand = brandPayload.brand();
+        SkyblockLocation.whenServerBrandUpdate(brand);
         AutoTip.INSTANCE.whenServerBrandUpdate(brand);
     }
 }

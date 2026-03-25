@@ -1,7 +1,6 @@
 package com.launium.ghostify.client.feature;
 
 import com.launium.ghostify.client.GhostifyClient;
-import com.launium.ghostify.client.annotations.SkipObfuscation;
 import com.launium.ghostify.client.config.ConfigManager;
 import com.launium.ghostify.client.config.ContactsBook;
 import com.launium.ghostify.client.ui.clickgui.fubuki.nav.NavigationSpinner;
@@ -53,18 +52,16 @@ public class SpeedDial implements ClientTickEvents.StartTick, ScreenEvents.Befor
     private NavigationSpinner focusedNav;
     private long lastActionTime = 0L;
 
-    @SkipObfuscation
     @Override
     public void beforeInit(Minecraft client, Screen screen, int scaledWidth, int scaledHeight) {
         if (screen instanceof ContainerScreen containerScreen) {
             String title = containerScreen.getTitle().getString();
-            if (title.startsWith("Abiphone X") || title.startsWith("Abiphone Flip")) {
+            if (title.startsWith("Abiphone Basic") || title.startsWith("Abiphone X") || title.startsWith("Abiphone Flip")) {
                 ScreenEvents.remove(screen).register(this);
             }
         }
     }
 
-    @SkipObfuscation
     @Override
     public void onRemove(Screen screen) {
         if (screen instanceof ContainerScreen containerScreen) {
