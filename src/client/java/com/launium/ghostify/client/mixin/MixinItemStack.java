@@ -45,7 +45,7 @@ public abstract class MixinItemStack implements AccessItemStack {
         if (this.getItem() == Items.BOW) {
             this.ghostify$isShortbow = lines.stream().anyMatch(line -> line.getString().contains("Shortbow: Instantly shoots!"));
         } else {
-            this.ghostify$hasPickobulusAbility = lines.stream().anyMatch(line -> line.getString().startsWith("Ability: Pickobulus"));
+            this.ghostify$hasPickobulusAbility = lines.stream().anyMatch(line -> line.getString().startsWith("§6Ability: Pickobulus"));
         }
     }
 }
