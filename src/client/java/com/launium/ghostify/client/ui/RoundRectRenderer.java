@@ -1,10 +1,10 @@
 package com.launium.ghostify.client.ui;
 
+import com.mojang.blaze3d.PrimitiveTopology;
 import com.mojang.blaze3d.buffers.GpuBuffer;
 import com.mojang.blaze3d.buffers.GpuBufferSlice;
 import com.mojang.blaze3d.buffers.Std140Builder;
 import com.mojang.blaze3d.buffers.Std140SizeCalculator;
-import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -15,7 +15,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
 import net.minecraft.client.renderer.DynamicUniformStorage;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
@@ -26,18 +26,14 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.OptionalDouble;
-import java.util.OptionalInt;
 
 public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRenderer.State> {
     private State lastState;
 
     public static void init() {
-        PictureInPictureRendererRegistry.register(context -> new RoundRectRenderer(context.bufferSource()));
-    }
-
-    protected RoundRectRenderer(MultiBufferSource.BufferSource bufferSource) {
-        super(bufferSource);
+        PictureInPictureRendererRegistry.register(context -> new RoundRectRenderer());
     }
 
     @Override
@@ -51,23 +47,22 @@ public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRendere
     }
 
     @Override
-    protected void renderToTexture(State state, @NonNull PoseStack poseStack) {
+    protected void renderToTexture(State state, @NonNull PoseStack poseStack, @NonNull SubmitNodeCollector submitNodeCollector) {
         float width = (state.extentX + 2 * State.OUTSET) * state.scale;
         float height = (state.extentY + 2 * State.OUTSET) * state.scale;
+        float textureWidth = width + state.subpixelX * state.scale;
+        float textureHeight = height + state.subpixelY * state.scale;
 
-        BufferBuilder builder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
-        {
-            float textureWidth = width + state.subpixelX * state.scale;
-            float textureHeight = height + state.subpixelY * state.scale;
-            builder.addVertex(0F, 0F, 0F);
-            builder.addVertex(0F, textureHeight, 0F);
-            builder.addVertex(textureWidth, textureHeight, 0F);
-            builder.addVertex(textureWidth, 0F, 0F);
-        }
+        ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(DefaultVertexFormat.POSITION.getVertexSize() * 4);
+        BufferBuilder builder = new BufferBuilder(byteBufferBuilder, PrimitiveTopology.QUADS, DefaultVertexFormat.POSITION);
+        builder.addVertex(0F, 0F, 0F);
+        builder.addVertex(0F, textureHeight, 0F);
+        builder.addVertex(textureWidth, textureHeight, 0F);
+        builder.addVertex(textureWidth, 0F, 0F);
         MeshData mesh = builder.buildOrThrow();
 
         GpuBufferSlice dynamicTransformsBuffer = RenderSystem.getDynamicUniforms().writeTransform(
-                RenderSystem.getModelViewMatrix(),
+                RenderSystem.getModelViewMatrixCopy(),
                 new Vector4f(),
                 new Vector3f(),
                 new Matrix4f()
@@ -83,17 +78,21 @@ public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRendere
                     .putFloat(state.edgeSoftness * state.scale) // u_edgeSoftness
                     .putFloat(state.shadow * state.scale); // u_shadowSoftness
         });
-        GpuBuffer vertexBuffer = GhostifyRenderTypes.PIPELINE_ROUND_RECT.getVertexFormat().uploadImmediateVertexBuffer(mesh.vertexBuffer());
-        RenderSystem.AutoStorageIndexBuffer indexStorage = RenderSystem.getSequentialBuffer(mesh.drawState().mode());
+        GpuBuffer vertexBuffer = RenderSystem.getDevice().createBuffer(
+                () -> "Ghostify Rounded Rectangle Vertices", GpuBuffer.USAGE_VERTEX, mesh.vertexBuffer());
+        RenderSystem.AutoStorageIndexBuffer indexStorage = RenderSystem.getSequentialBuffer(mesh.drawState().primitiveTopology());
         GpuBuffer indexBuffer = indexStorage.getBuffer(mesh.drawState().indexCount());
-        RenderTarget renderTarget = Minecraft.getInstance().getMainRenderTarget();
+        // During PIP renderToTexture the output overrides point at this renderer's off-screen
+        // color/depth texture (set by PictureInPictureRenderer#prepare), so render straight into them.
         try (
+                byteBufferBuilder;
                 mesh;
+                vertexBuffer;
                 RenderPass pass = RenderSystem.getDevice().createCommandEncoder().createRenderPass(
                         () -> "Ghostify Rounded Rectangle Render Pass",
-                        Objects.requireNonNullElse(RenderSystem.outputColorTextureOverride, renderTarget.getColorTextureView()),
-                        OptionalInt.empty(),
-                        renderTarget.useDepth ? Objects.requireNonNullElse(RenderSystem.outputDepthTextureOverride, renderTarget.getDepthTextureView()) : null,
+                        RenderSystem.outputColorTextureOverride,
+                        Optional.empty(),
+                        RenderSystem.outputDepthTextureOverride,
                         OptionalDouble.empty()
                 )
         ) {
@@ -103,14 +102,13 @@ public class RoundRectRenderer extends PictureInPictureRenderer<RoundRectRendere
             RenderSystem.bindDefaultUniforms(pass);
             pass.setUniform("DynamicTransforms", dynamicTransformsBuffer);
             pass.setUniform("u", myUniformBuffer);
-            pass.setVertexBuffer(0, vertexBuffer);
+            pass.setVertexBuffer(0, vertexBuffer.slice());
             pass.setIndexBuffer(indexBuffer, indexStorage.type());
-            pass.drawIndexed(0, 0, mesh.drawState().indexCount(), 1);
+            pass.drawIndexed(mesh.drawState().indexCount(), 1, 0, 0, 0);
         }
 
         lastState = state;
     }
-
 
     @Override
     protected @NonNull String getTextureLabel() {

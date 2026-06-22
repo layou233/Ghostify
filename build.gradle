@@ -5,7 +5,7 @@ buildscript {
 }
 
 plugins {
-    id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT'
+    id 'net.fabricmc.fabric-loom' version '1.16-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -64,7 +64,7 @@ dependencies {
     api "com.terraformersmc:modmenu:${project.modmenu_version}"
 
     // for compat
-    compileOnly "maven.modrinth:skyblocker-liap:v6.2.0+1.21.11"
+    compileOnly "maven.modrinth:skyblocker-liap:v6.5.3-alpha.2+26.2"
 
     compileOnly("org.projectlombok:lombok:1.18.+")
     annotationProcessor("org.projectlombok:lombok:1.18.+")

@@ -214,6 +214,6 @@ public class ClickGUIScreen extends Screen {
     @Override
     public void onClose() {
         ConfigManager.processChanges();
-        this.minecraft.setScreen(parent);
+        this.minecraft.setScreenAndShow(parent);
     }
 }

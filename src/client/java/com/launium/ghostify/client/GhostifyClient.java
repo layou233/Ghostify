@@ -90,7 +90,7 @@ public class GhostifyClient implements ClientModInitializer {
         ClientReceiveMessageEvents.GAME.register(SimpleChatEventHandler.INSTANCE);
         ClientPlayConnectionEvents.INIT.register(LobbyHistory.INSTANCE);
         ClientLifecycleEvents.CLIENT_STOPPING.register(client -> ConfigManager.processChanges());
-        LevelRenderEvents.END_EXTRACTION.register(PickobulusPreview.INSTANCE);
+        LevelRenderEvents.COLLECT_SUBMITS.register(PickobulusPreview.INSTANCE);
         LevelRenderEvents.BEFORE_GIZMOS.register(PickobulusPreview.INSTANCE);
         ScreenEvents.BEFORE_INIT.register(SpeedDial.INSTANCE);
         UseBlockCallback.EVENT.register(DungeonPlaceFix.INSTANCE);

@@ -9,7 +9,6 @@ import com.launium.ghostify.client.util.SwappingSlot;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
-import net.fabricmc.fabric.api.client.rendering.v1.level.LevelExtractionContext;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.KeyMapping;
@@ -21,6 +20,7 @@ import net.minecraft.gizmos.Gizmos;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
@@ -31,7 +31,7 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
-public class PickobulusPreview extends AbstractModule implements LevelRenderEvents.EndExtraction, LevelRenderEvents.BeforeGizmos, ClientTickEvents.EndTick, SimpleChatEventHandler.NonOverlay {
+public class PickobulusPreview extends AbstractModule implements LevelRenderEvents.CollectSubmits, LevelRenderEvents.BeforeGizmos, ClientTickEvents.EndTick, SimpleChatEventHandler.NonOverlay {
     public static final PickobulusPreview INSTANCE = new PickobulusPreview();
     private static final KeyMapping PICKOBULUS_PREVIEW_KEY = KeyMappingHelper.registerKeyMapping(
             new KeyMapping("key.ghostify.switch_pickobulus_preview", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_X, GhostifyClient.KEY_CATEGORY)
@@ -59,7 +59,7 @@ public class PickobulusPreview extends AbstractModule implements LevelRenderEven
     }
 
     @Override
-    public void endExtraction(@NonNull LevelExtractionContext context) {
+    public void collectSubmits(@NonNull LevelRenderContext context) {
         if (!isEnabled || !isHoldingPickobulus || onCooldown) {
             PickobulusPreviewContainer.INSTANCE.isActivated = false;
             return;
@@ -77,7 +77,8 @@ public class PickobulusPreview extends AbstractModule implements LevelRenderEven
         Vec3 firePosition = new Vec3(player.getX(), eyeHeight, player.getZ());
         Vec3 viewVector = player.getViewVector(0F);
         Vec3 rayEnd = firePosition.add(viewVector.x * 30F, viewVector.y * 30F, viewVector.z * 30F);
-        BlockHitResult hitResult = context.level().clip(new ClipContext(firePosition, rayEnd,
+        Level level = Minecraft.getInstance().level;
+        BlockHitResult hitResult = level.clip(new ClipContext(firePosition, rayEnd,
                 ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
         if (hitResult.getType() == HitResult.Type.BLOCK) {
             BlockPos hitPos = hitResult.getBlockPos();
@@ -85,7 +86,7 @@ public class PickobulusPreview extends AbstractModule implements LevelRenderEven
             state.reset();
             state.bounds = new AABB(hitPos.getX() - 3F, hitPos.getY() - 3F, hitPos.getZ() - 3F,
                     hitPos.getX() + 3F, hitPos.getY() + 3F, hitPos.getZ() + 3F);
-            context.level().getBlockStates(state.bounds.contract(1F, 1F, 1F)).forEach(blockState -> {
+            level.getBlockStates(state.bounds.contract(1F, 1F, 1F)).forEach(blockState -> {
                 Block block = blockState.getBlock();
                 if (block != Blocks.AIR) {
                     state.blocks++;

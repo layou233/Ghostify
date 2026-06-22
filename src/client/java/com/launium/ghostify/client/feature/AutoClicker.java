@@ -79,7 +79,7 @@ public class AutoClicker extends AbstractModule implements ClientTickEvents.Star
         if (this.isActive()) {
             //GhostifyClient.island.show(autoClickerContainer);
             GhostifyClient.moduleList.showModule(this);
-            if (client.player != null && client.screen == null) {
+            if (client.player != null && client.gui.screen() == null) {
                 boolean isLeftDown = client.options.keyAttack.isDown();
                 boolean isUnchanged = rememberLeftClick.update(isLeftDown);
                 boolean isBreaking = client.gameMode.isDestroying();

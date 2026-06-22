@@ -23,7 +23,7 @@ public class ClickGUI implements ClientTickEvents.StartTick {
             clicked = true;
         }
         if (clicked) {
-            client.setScreen(new ClickGUIScreen(client, client.screen));
+            client.setScreenAndShow(new ClickGUIScreen(client, client.gui.screen()));
         }
     }
 }

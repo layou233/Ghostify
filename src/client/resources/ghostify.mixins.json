@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.launium.ghostify.client.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_25",
   "client": [
     "AccessFont",
     "AccessKeyMapping",
@@ -12,10 +12,10 @@
     "MixinClientPacketListener",
     "MixinItemStack",
     "MixinLavaFogEnvironment",
+    "MixinLevelRenderer",
     "MixinMinecraft",
     "MixinPlayer",
     "MixinPlayerGameMode",
-    "MixinRenderSystem",
     "MixinScreenEffectRenderer",
     "MixinToggleKeyMapping",
     "skyblocker.MixinGlowRenderer"
