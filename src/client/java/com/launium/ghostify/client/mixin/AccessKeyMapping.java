@@ -9,4 +9,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface AccessKeyMapping {
     @Accessor("key")
     InputConstants.Key getKey();
+
+    @Accessor("isDown")
+    boolean isRawDown();
 }
