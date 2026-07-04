@@ -2,7 +2,6 @@ package com.launium.ghostify.client.feature;
 
 import com.launium.ghostify.client.GhostifyClient;
 import com.launium.ghostify.client.mixin.AccessKeyMapping;
-import com.launium.ghostify.client.util.Remember;
 import com.launium.ghostify.client.util.SkyblockLocation;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.brigadier.arguments.FloatArgumentType;
@@ -31,6 +30,8 @@ public class AutoClicker extends AbstractModule implements ClientTickEvents.Star
     public static FloatFloatImmutablePair CPS = updateCPS();
     private static int MAX_MISS_DELAY = (int) (MAX_CLICK_DELAY * 0.6F);
     private static int MIN_MISS_DELAY = (int) (MIN_CLICK_DELAY * 0.6F);
+    private static final int MIN_HOLD_TIME = 55;
+    private static final int MAX_HOLD_TIME = 95;
 
     public static void resetCPS() {
         MAX_CLICK_DELAY = 135;
@@ -59,16 +60,25 @@ public class AutoClicker extends AbstractModule implements ClientTickEvents.Star
 
     public boolean isEnabled = false;
     private final BitRandomSource random = (BitRandomSource) RandomSource.create();
-    private long breakingFinishTime = 0;
-    private long nextLeftClickTime = 0;
-    private Remember<Boolean> rememberLeftClick = new Remember<>(false);
+    private long nextPressTime = 0;
+    private long releaseTime = 0;
+    private boolean simulating = false;
+    private boolean simulatedDown = false;
 
-    private long rollNextClickTime() {
-        long next = Util.getMillis() + random.nextIntBetweenInclusive(MIN_CLICK_DELAY, MAX_CLICK_DELAY);
+    private int rollHoldDuration() {
+        return random.nextIntBetweenInclusive(MIN_HOLD_TIME, MAX_HOLD_TIME);
+    }
+
+    private long rollClickInterval() {
+        long interval = random.nextIntBetweenInclusive(MIN_CLICK_DELAY, MAX_CLICK_DELAY);
         if (random.next(3) == 0) { // simulate click miss, 1 in 2**3
-            next += random.nextIntBetweenInclusive(MIN_MISS_DELAY, MAX_MISS_DELAY);
+            interval += random.nextIntBetweenInclusive(MIN_MISS_DELAY, MAX_MISS_DELAY);
         }
-        return next;
+        return interval;
+    }
+
+    public boolean modulateAttackDown(boolean down) {
+        return down && (!this.simulating || this.simulatedDown);
     }
 
     @Override
@@ -79,26 +89,33 @@ public class AutoClicker extends AbstractModule implements ClientTickEvents.Star
         if (this.isActive()) {
             //GhostifyClient.island.show(autoClickerContainer);
             GhostifyClient.moduleList.showModule(this);
-            if (client.player != null && client.screen == null) {
-                boolean isLeftDown = client.options.keyAttack.isDown();
-                boolean isUnchanged = rememberLeftClick.update(isLeftDown);
-                boolean isBreaking = client.gameMode.isDestroying();
-                long now = Util.getMillis();
-                if (isUnchanged) {
-                    if (isLeftDown && now > nextLeftClickTime) {
-                        if (now > breakingFinishTime) {
-                            KeyMapping.click(((AccessKeyMapping) client.options.keyAttack).getKey());
-                        }
-                        nextLeftClickTime = rollNextClickTime();
-                    }
-                } else {
-                    //breakingFinishTime = 0L;
-                    nextLeftClickTime = rollNextClickTime();
-                }
-                // break cooldown to avoid triggering anti-cheat (FastBreak)
-                if (isBreaking && client.gameMode.getDestroyStage() > 8) breakingFinishTime = now + 400L;
+        }
+        AccessKeyMapping attack = (AccessKeyMapping) client.options.keyAttack;
+        boolean shouldSimulate = this.isActive() &&
+                client.player != null &&
+                client.screen == null &&
+                client.mouseHandler.isMouseGrabbed() &&
+                attack.isRawDown();
+        if (!shouldSimulate) {
+            this.simulating = false;
+            this.simulatedDown = false;
+            return;
+        }
+        long now = Util.getMillis();
+        if (!this.simulating) {
+            // the first press is the player's own real click (GLFW already counted it);
+            // take over from its release onwards
+            this.simulating = true;
+            this.releaseTime = now + rollHoldDuration();
+            this.nextPressTime = now + rollClickInterval();
+        } else {
+            while (now >= this.nextPressTime) { // catch up on lag like queued GLFW events
+                KeyMapping.click(attack.getKey());
+                this.releaseTime = this.nextPressTime + rollHoldDuration();
+                this.nextPressTime += rollClickInterval();
             }
         }
+        this.simulatedDown = now < this.releaseTime;
     }
 
     public static void registerCommand(LiteralArgumentBuilder<FabricClientCommandSource> builder) {
